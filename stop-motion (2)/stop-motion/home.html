@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mundo da Animação - Stop Motion</title>
+    <link href="https://googleapis.com" rel="stylesheet">
+    <link rel="stylesheet" href="home-style.css">
+</head>
+<body>
+
+    <!-- EFEITOS DE ATMOSFERA CINEMATOGRÁFICA -->
+    <div class="vignette"></div>
+    <div id="snow-container"></div>
+
+    <!-- BARRA SUPERIOR INTEGRADA À LUA E À PLACA -->
+    <header class="navbar-top">
+        <div class="nav-logo">STOP_MOTION</div>
+        <nav class="nav-links">
+            <a href="home.html" class="active">INÍCIO</a>
+            <a href="aulas.html">AULAS</a>
+            <a href="estudio.html">ESTÚDIO</a>
+            <a href="galeria.html">GALERIA</a>
+            <a href="comunidade.html">COMUNIDADE</a>
+            <a href="sobre.html">SOBRE</a>
+        </nav>
+        <div class="nav-profile-icon">⚙️</div>
+    </header>
+
+    <!-- PALCO DE CONTEÚDO DISTRIBUÍDO CIRURGICAMENTE -->
+    <main class="page-fixed-layout">
+        
+        <!-- Bloco 1: Boas-Vindas (Alinhado no topo central do céu) -->
+        <section class="welcome-section">
+            <span class="subtitle-badge">BEM-VINDO AO</span>
+            <h1 class="main-title">MUNDO DA ANIMAÇÃO</h1>
+            <p class="welcome-desc">Aprenda, crie e dê vida às suas histórias quadro a quadro.</p>
+            <button class="btn-cinema-cta" onclick="window.location.href='aulas.html'">COMEÇAR AGORA ⚡</button>
+        </section>
+
+        <!-- Bloco 2: Carrossel de Molduras Rústicas -->
+        <section class="movies-section">
+            <h3 class="row-title">~ INSPIRAÇÕES EM DESTAQUE ~</h3>
+            
+            <div class="gothic-carousel-container">
+                <!-- Botões de Navegação do Carrossel -->
+                <button class="carousel-arrow prev-arrow" onclick="moveGothicSlide(-1)">&#10094;</button>
+                <button class="carousel-arrow next-arrow" onclick="moveGothicSlide(1)">&#10095;</button>
+                
+                <!-- Janela de Visualização -->
+                <div class="gothic-carousel-window">
+                    <div class="gothic-carousel-track" id="gothicTrack">
+                        
+                        <!-- SLIDE 1 (Imagem Profissional 1) -->
+                        <div class="gothic-slide">
+                            <div class="gothic-frame-card wide-frame">
+                                <div class="frame-thumb" style="background-image: url('https://unsplash.com');"></div>
+                                <div class="frame-label">Produção e Cenografia Digital</div>
+                            </div>
+                        </div>
+                        
+                        <!-- SLIDE 2 (Imagem Profissional 2) -->
+                        <div class="gothic-slide">
+                            <div class="gothic-frame-card wide-frame">
+                                <div class="frame-thumb" style="background-image: url('https://unsplash.com');"></div>
+                                <div class="frame-label">Modelagem de Personagens em Clay</div>
+                            </div>
+                        </div>
+                        
+                        <!-- SLIDE 3 (Imagem Profissional 3) -->
+                        <div class="gothic-slide">
+                            <div class="gothic-frame-card wide-frame">
+                                <div class="frame-thumb" style="background-image: url('https://unsplash.com');"></div>
+                                <div class="frame-label">Captura Frame a Frame no Estúdio</div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- Bloco 3: Botões de Costura na Base (Assentados no chão escuro) -->
+        <section class="why-section">
+            <h3 class="row-title">POR QUE STOP MOTION?</h3>
+            <div class="buttons-row">
+                <div class="stitch-button-item">
+                    <div class="stitch-circle">📷</div>
+                    <p>Contar histórias de forma única</p>
+                </div>
+                <div class="stitch-button-item">
+                    <div class="stitch-circle">🎨</div>
+                    <p>Criatividade sem limites</p>
+                </div>
+                <div class="stitch-button-item">
+                    <div class="stitch-circle">❤️</div>
+                    <p>Feito à mão</p>
+                </div>
+                <div class="stitch-button-item">
+                    <div class="stitch-circle">🎬</div>
+                    <p>Dê vida ao imaginário</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- CODIFICAÇÃO DA NEVE + CARROSSEL -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const container = document.getElementById("snow-container");
+            const count = 28;
+            for (let i = 0; i < count; i++) {
+                const flake = document.createElement("div");
+                flake.className = "snowflake";
+                flake.style.left = Math.random() * 100 + "vw";
+                flake.style.width = Math.random() * 3 + 1.5 + "px";
+                flake.style.height = flake.style.width;
+                flake.style.animationDuration = Math.random() * 4 + 7 + "s";
+                flake.style.animationDelay = Math.random() * 5 + "s";
+                flake.style.opacity = Math.random() * 0.4 + 0.15;
+                container.appendChild(flake);
+            }
+        });
+
+        // Lógica do Carrossel de 3 Imagens
+        let currentGothicSlide = 0;
+        function moveGothicSlide(direction) {
+            const track = document.getElementById("gothicTrack");
+            // Trava estritamente entre 0 e 2 (3 slides)
+            currentGothicSlide = (currentGothicSlide + direction + 3) % 3;
+            track.style.transform = `translateX(-${currentGothicSlide * 100}%)`;
+        }
+    </script>
+

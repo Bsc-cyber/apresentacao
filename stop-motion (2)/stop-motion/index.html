@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mundo Stop Motion - Login e Introdução</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Garantindo o carregamento da fonte Special Elite -->
+    <link href="https://googleapis.com" rel="stylesheet">
+</head>
+<body>
+
+    <!-- CONTAGEM REGRESSIVA -->
+    <div id="countdown-screen">
+        <div class="film-grain"></div>
+        <div class="projector-lines"></div>
+        <div class="countdown-circle">
+            <div class="radar-sweep"></div>
+            <h1 id="countdown-text"></h1>
+        </div>
+    </div>
+
+    <!-- TELA DE LOGIN E INTRODUÇÃO PANORÂMICA -->
+    <div id="main-site">
+        <div class="vignette"></div>
+
+        <main class="hero-section">
+            <!-- Balões informativos flutuantes sobre o site -->
+            <div class="intro-badge badge-left-top">
+                <h3>🎬 O QUE É?</h3>
+                <p>Um portal dedicado à arte do Stop Motion, onde o imaginário ganha vida quadro a quadro.</p>
+            </div>
+
+            <div class="intro-badge badge-left-bottom">
+                <h3>🛠️ APRENDA</h3>
+                <p>Descubra técnicas de animação, iluminação, cenografia e dê movimento aos seus bonecos.</p>
+            </div>
+
+            <!-- CONTAINER CENTRAL: O login maior e esticado -->
+            <div class="intro-container extended-login-card">
+                <h1 class="welcome-text">MUNDO DA ANIMAÇÃO</h1>
+
+                <!-- Formulário de Acesso -->
+                <form class="login-form" onsubmit="event.preventDefault(); irParaMenu();">
+                    <div class="input-group">
+                        <input type="email" placeholder="DIGITE SEU E-MAIL OU USUÁRIO" required autocomplete="off">
+                    </div>
+                    
+                    <div class="input-group">
+                        <input type="password" placeholder="DIGITE SUA SENHA DE ACESSO" required>
+                    </div>
+
+                    <button type="submit" class="cta-button">BORA ANIMAR!!!</button>
+                </form>
+
+                <!-- Links de ajuda para o usuário -->
+                <div class="login-links">
+                    <a href="#">Esqueceu a senha?</a>
+                    <a href="#">Criar uma conta</a>
+                </div>
+            </div>
+
+            <!-- Mais balões informativos na direita -->
+            <div class="intro-badge badge-right-top">
+                <h3>💡 INSPIRAÇÃO</h3>
+                <p>Explore carrosséis de referências, grandes obras e estúdios que moldaram o cinema.</p>
+            </div>
+
+            <div class="intro-badge badge-right-bottom">
+                <h3>🚀 COMUNIDADE</h3>
+                <p>Faça seu login para liberar o menu completo e fazer parte do nosso ecossistema criativo.</p>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function irParaMenu() {
+            window.location.href = "home.html";
+        }
+    </script>
+</body>
+</html>

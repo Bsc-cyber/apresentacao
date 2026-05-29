@@ -1,0 +1,262 @@
+/* ==========================================================================
+   1. RESETS E AMBIENTAÇÃO COM IMAGEM TRANCADA NO TOPO (SEM ZOOM)
+   ========================================================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    user-select: none;
+}
+
+body {
+    /* 1. Define a cor sólida roxa idêntica à base da sua imagem */
+    background-color: #0b070d; 
+    
+    /* 2. Aplica a imagem no topo e faz ela se misturar com o roxo escuro abaixo */
+    background-image: url('assets/cenario-principal.jpg');
+    background-size: 100% auto; /* Tranca a largura em 100% e deixa a altura real da foto */
+    background-position: center top; /* Garante que ela comece cravada no topo */
+    background-repeat: no-repeat;
+    
+    font-family: 'Special Elite', monospace;
+    color: #f5eedc;
+    
+    /* Ativa a rolagem natural e saudável do site */
+    min-height: 100vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+/* Sombra de cinema no topo e nas laterais da tela */
+.vignette {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    /* Gradiente que escurece as bordas e ajuda a sumir com a foto na rolagem */
+    background: radial-gradient(circle, transparent 40%, rgba(0, 0, 0, 0.9) 100%);
+    pointer-events: none; z-index: 10;
+}
+
+/* ==========================================================================
+   2. NAVBAR SUPERIOR INTEGRADA E FIXA
+   ========================================================================== */
+.navbar-top {
+    position: fixed; top: 0; width: 100%;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 25px 50px; z-index: 100;
+    background: linear-gradient(to bottom, rgba(5, 3, 6, 0.95), transparent);
+    backdrop-filter: blur(3px);
+}
+
+.nav-logo {
+    font-size: 1.2rem; letter-spacing: 4px; color: #ffffff;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.8); font-weight: bold;
+}
+
+.nav-links { display: flex; gap: 25px; }
+.nav-links a {
+    color: #a49b8c; text-decoration: none; font-size: 0.9rem;
+    letter-spacing: 2px; transition: all 0.3s; padding: 6px 12px;
+}
+.nav-links a:hover, .nav-links a.active {
+    color: #ff9d00; text-shadow: 0 0 10px rgba(255, 157, 0, 0.8);
+}
+.nav-profile-icon { font-size: 1.3rem; cursor: pointer; text-shadow: 2px 2px 4px #000; }
+
+/* ==========================================================================
+   3. FLUXO VERTICAL DE CONTEÚDO ESPAÇADO (SCROLLFLOW)
+   ========================================================================== */
+.page-fixed-layout {
+    position: relative; z-index: 20;
+    display: flex; flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin-top: 15vh;
+}
+
+/* SEÇÃO 1: BOAS-VINDAS (Centralizado perfeitamente entre a Coraline e a Lua) */
+.welcome-section {
+    text-align: center;
+    margin-bottom: 220px; /* Empurra os filmes bastante para baixo, limpando os rostos */
+}
+
+.subtitle-badge { font-size: 0.9rem; color: #ff9d00; letter-spacing: 5px; display: block; margin-bottom: 8px; text-shadow: 2px 2px 4px #000; }
+.main-title { font-size: 3.8rem; color: #ffffff; letter-spacing: 6px; line-height: 1.1; text-shadow: 0 0 15px rgba(0,0,0,0.9), 4px 4px 0px #5a3d75; }
+.welcome-desc { font-size: 1rem; color: #a49b8c; margin: 15px 0 30px 0; line-height: 1.6; text-shadow: 2px 2px 4px #000; }
+
+/* Botão Principal de Cinema */
+.btn-cinema-cta {
+    font-family: 'Special Elite', monospace; font-size: 1.1rem; font-weight: bold;
+    color: #000; background: #ff9d00; border: 2px dashed #000;
+    padding: 14px 45px; border-radius: 6px; cursor: pointer; letter-spacing: 2px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.5); transition: all 0.3s;
+}
+.btn-cinema-cta:hover { background: #fff; color: #5a3d75; transform: scale(1.05); }
+
+/* Títulos das Linhas de Conteúdo */
+.row-title {
+    font-size: 1.1rem; color: #ff9d00; letter-spacing: 3px;
+    margin-bottom: 30px; text-shadow: 2px 2px 4px #000; text-align: center;
+}
+
+/* SEÇÃO 2: CARROSSEL DE FILMES (Aparece na rolagem sobre o fundo infinito roxo) */
+.movies-section {
+    width: 90%; max-width: 1150px;
+    margin-bottom: 120px; 
+    display: flex; flex-direction: column; align-items: center;
+}
+
+.movies-row {
+    display: flex; justify-content: center; gap: 24px; width: 100%; margin-bottom: 25px;
+}
+
+/* Molduras Rústicas Grandes e Detalhadas */
+.gothic-frame-card {
+    width: 175px; background: #130d1a; border: 3px solid #635340; 
+    padding: 10px 10px 14px 10px; border-radius: 2px; text-align: center;
+    box-shadow: 5px 10px 25px rgba(0,0,0,0.9); transition: transform 0.3s, border-color 0.3s;
+}
+.gothic-frame-card:hover { transform: translateY(-10px); border-color: #ff9d00; }
+
+.frame-thumb {
+    width: 149px; height: 149px; background-size: cover; background-position: center;
+    border: 1px solid #3d3224; margin-bottom: 12px;
+}
+
+.thumb-coraline { background-image: radial-gradient(#283d73, #000); }
+.thumb-jack { background-image: radial-gradient(#555, #111); }
+.thumb-noiva { background-image: radial-gradient(#4a637d, #0b070d); }
+.thumb-galinhas { background-image: radial-gradient(#a65324, #140e1a); }
+.thumb-wallace { background-image: radial-gradient(#4d5c41, #000); }
+
+.frame-label { font-size: 0.8rem; color: #c9bfae; font-weight: bold; line-height: 1.3; }
+
+.btn-cinema-secondary {
+    font-family: 'Special Elite', monospace; background: rgba(19, 11, 23, 0.8);
+    color: #ff9d00; border: 2px dashed #4e3466; padding: 12px 40px;
+    font-size: 0.85rem; border-radius: 4px; cursor: pointer; letter-spacing: 1px; transition: all 0.3s;
+}
+.btn-cinema-secondary:hover { background: #ff9d00; color: #000; border-color: #fff; }
+
+/* SEÇÃO 3: POR QUE STOP MOTION (BOTÕES DE COSTURA GRANDES NO FINAL) */
+.why-section {
+    width: 90%; max-width: 1000px;
+    padding-bottom: 140px; 
+    display: flex; flex-direction: column; align-items: center;
+}
+
+.buttons-row {
+    display: flex; justify-content: space-around; width: 100%; gap: 30px;
+}
+
+.stitch-button-item {
+    display: flex; flex-direction: column; align-items: center; text-align: center; max-width: 180px;
+}
+
+.stitch-circle {
+    width: 80px; height: 80px; background: rgba(25, 17, 33, 0.85);
+    border: 3px dashed #4e3466; border-radius: 50%;
+    display: flex; justify-content: center; align-items: center;
+    font-size: 1.8rem; margin-bottom: 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+    transition: all 0.3s;
+}
+.stitch-button-item:hover .stitch-circle {
+    border-color: #ff9d00; transform: scale(1.1) rotate(5deg);
+}
+
+.stitch-button-item p { font-size: 0.85rem; color: #a49b8c; line-height: 1.4; text-shadow: 1px 1px 3px #000; }
+
+/* ==========================================================================
+   4. EFEITO DE NEVE FIXO NA TELA
+   ========================================================================== */
+#snow-container { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 15; overflow: hidden; }
+.snowflake { position: absolute; top: -10px; background-color: rgba(255, 255, 255, 0.45); border-radius: 50%; animation: fall infinite linear, sway infinite ease-in-out; }
+
+@keyframes fall { 0% { top: -10px; } 100% { top: 105vh; } }
+@keyframes sway { 0%, 100% { transform: translateX(0px); } 50% { transform: translateX(15px); } }
+
+@media (max-width: 950px) {
+    .movies-row, .buttons-row { flex-wrap: wrap; justify-content: center; gap: 20px; }
+    .main-title { font-size: 2.8rem; }
+}
+
+/* ==========================================================================
+   ADAPTAÇÃO DO CARROSSEL DE MOLDURAS (Requisito do Professor)
+   ========================================================================== */
+.gothic-carousel-container {
+    position: relative;
+    width: 100%;
+    max-width: 650px; /* Largura perfeita para destacar uma moldura grande centralizada */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.gothic-carousel-window {
+    width: 100%;
+    overflow: hidden; /* Esconde as outras duas imagens */
+    padding: 15px 0;
+}
+
+.gothic-carousel-track {
+    display: flex;
+    width: 300%; /* Largura total somando as 3 imagens (100% cada) */
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.gothic-slide {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Modificação do seu card para virar o slide profissional grandão */
+.gothic-frame-card.wide-frame {
+    width: 500px;
+    max-width: 90%;
+    background: #130d1a;
+    border: 4px solid #635340;
+    padding: 15px;
+    border-radius: 4px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.9);
+}
+
+/* Tamanho estendido para a foto profissional brilhar */
+.gothic-frame-card.wide-frame .frame-thumb {
+    width: 100%;
+    height: 280px;
+    background-size: cover;
+    background-position: center;
+    border: 2px solid #3d3224;
+    margin-bottom: 15px;
+}
+
+/* Setas estilizadas com a identidade visual do seu site */
+.carousel-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(19, 13, 26, 0.9);
+    color: #ff9d00;
+    border: 2px dashed #4e3466;
+    font-size: 1.5rem;
+    padding: 10px 15px;
+    cursor: pointer;
+    z-index: 50;
+    border-radius: 4px;
+    transition: all 0.3s;
+}
+.carousel-arrow:hover {
+    background: #ff9d00;
+    color: #000;
+    border-color: #fff;
+    transform: translateY(-50%) scale(1.1);
+}
+.prev-arrow { left: -60px; }
+.next-arrow { right: -60px; }
+
+/* Esconde as setas para fora em telas pequenas */
+@media (max-width: 768px) {
+    .prev-arrow { left: -10px; }
+    .next-arrow { right: -10px; }
+    .gothic-frame-card.wide-frame { width: 100%; }
+}

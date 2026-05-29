@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Set Pro B - Laboratório STOP_MOTION</title>
+    <link href="https://googleapis.com" rel="stylesheet">
+</head>
+<body>
+
+    <!-- ATMOSFERA DE CINEMA UNIFICADA -->
+    <div class="vignette"></div>
+    <div class="stars-bg"></div>
+    <div id="snow-container"></div>
+
+    <header class="studio-header">
+        <div class="studio-status">
+            <div class="live-indicator">● PROJETO ATIVO</div>
+            <span>TAXA REGULADA: 4 FPS</span>
+        </div>
+        <h1>LABORATÓRIO STOP MOTION</h1>
+        <a href="home.html">⬅ VOLTAR AO MENU</a>
+    </header>
+
+    <div class="workspace">
+        <!-- PAINEL LATERAL DE CONTROLE (ESTILO RETALHOS DE VIDRO) -->
+        <aside class="painel-lateral">
+            <div class="secao-painel">
+                <h3>Elementos Visuais</h3>
+                <div class="grupo-botoes">
+                    <button class="btn-opt ativo" onclick="toggleObj('sol',event)">Abóbora</button>
+                    <button class="btn-opt ativo" onclick="toggleObj('nuvem',event)">Névoa</button>
+                    <button class="btn-opt ativo" onclick="toggleObj('casa',event)">Moldura</button>
+                </div>
+            </div>
+
+            <div class="secao-painel">
+                <h3>Cinemática do Boneco</h3>
+                <div class="slider-control">
+                    <label>Eixo do Braço Esquerdo</label>
+                    <input type="range" min="-60" max="120" value="15" oninput="rodar('braco-esquerdo',this.value)">
+                </div>
+                <div class="slider-control">
+                    <label>Eixo do Braço Direito</label>
+                    <input type="range" min="-120" max="60" value="-15" oninput="rodar('braco-direito',this.value)">
+                </div>
+                <div class="slider-control">
+                    <label>Giro da Cabeça de Botão</label>
+                    <input type="range" min="-30" max="30" value="0" oninput="rodar('peca-cabeca',this.value)">
+                </div>
+            </div>
+
+            <div class="secao-painel">
+                <button class="btn-opt btn-danger" onclick="limpar()">Resetar Set</button>
+            </div>
+        </aside>
+
+        <!-- PALCO DA CÂMERA (AGORA É A PRÓPRIA TELA CHEIA DO SITE) -->
+        <main id="camera-box" class="palco-container">
+            
+<!-- NOVA MARIONETE CORALINE DETALHADA COM CAPA, BOLSA E GALOCHAS -->
+<div id="marionete" class="boneco-articulado" onmousedown="drag(event,this)">
+    
+    <!-- Cabeça e Cabelo -->
+    <div class="peca-cabeca">
+        <div class="cabelo-franja-esq"></div>
+        <div class="cabelo-franja-dir"></div>
+        <div class="presilha-libelula"></div>
+    </div>
+    
+    <!-- Pescoço e Corpo -->
+    <div class="pescoco-fino"></div>
+    <div class="peca-corpo">
+        <div class="gola-capa"></div>
+        <div class="ziper-central"></div>
+        <div class="bolsa-alca"></div> <!-- Alça transversal da bolsa -->
+        <div class="bolsa-lateral"></div> <!-- A bolsinha pendurada -->
+        <div class="saia-bainha"></div> <!-- Barra da saia vermelha aparecendo embaixo -->
+    </div>
+    
+    <!-- Membros Superiores (Articulados) -->
+    <div class="braco braco-esquerdo"></div>
+    <div class="braco braco-direito"></div>
+    
+    <!-- Membros Inferiores com Meias Listradas e Galochas Laranjas/Amarelas -->
+    <div class="perna perna-esquerda">
+        <div class="galocha-cano"></div>
+        <div class="galocha-pe"></div>
+    </div>
+    <div class="perna perna-direita">
+        <div class="galocha-cano"></div>
+        <div class="galocha-pe"></div>
+    </div>
+
+</div>
+
+
+            <!-- ADICIONAIS ADAPTADOS AO AMBIENTE -->
+            <div id="obj-sol" class="objeto-cenario obj-sol" onmousedown="drag(event,this)"></div>
+            <div id="obj-nuvem" class="objeto-cenario obj-nuvem" onmousedown="drag(event,this)"></div>
+            <div id="obj-casa" class="objeto-cenario obj-casa" onmousedown="drag(event,this)"></div>
+
+        </main>
+    </div>
+
+    <!-- TIMELINE ESTILO FITA DE FILME DE 35MM -->
+    <footer class="timeline">
+        <div class="controles-globais">
+            <button class="btn-master btn-trigger" onclick="capturar()">📸 CAPTURAR</button>
+            <button id="btn-play" class="btn-master" onclick="play()">▶ PLAY</button>
+        </div>
+        <div id="lista-frames" class="lista-frames"></div>
+    </footer>
+
+        <style>
+        :root { 
+            --dark: #0b070d; 
+            --panel: rgba(19, 11, 23, 0.7); /* Vidro escuro transparente */
+            --border: #4e3466; /* Linha de costura roxa */
+            --orange: #ff9d00; /* Laranja abóbora icônico */
+            --red: #a63232; 
+            --text: #8c8273; 
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
+        
+        body { 
+            /* CARREGA A MESMA IMAGEM DA TELA PRINCIPAL NO FUNDO DO ESTÚDIO */
+            background-image: url('assets/cenario-principal.jpg');
+            background-size: cover;
+            background-position: center bottom;
+            background-repeat: no-repeat;
+            color: #f5eedc; 
+            font-family: 'Special Elite', monospace; 
+            display: flex; 
+            flex-direction: column; 
+            height: 100vh; 
+            overflow: hidden; 
+            position: relative;
+        }
+        
+        .vignette {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle, transparent 25%, rgba(0, 0, 0, 0.85) 100%);
+            pointer-events: none; z-index: 999;
+        }
+
+        .stars-bg {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: radial-gradient(white 1px, transparent 1px);
+            background-size: 50px 50px; opacity: 0.12;
+            animation: starsFlicker 3s infinite alternate; pointer-events: none; z-index: 1;
+        }
+        
+        header { 
+            background: rgba(8, 5, 10, 0.85); 
+            padding: 15px 24px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            border-bottom: 2px dashed var(--border); 
+            z-index: 10;
+            backdrop-filter: blur(5px);
+        }
+        
+        .studio-status { display: flex; align-items: center; gap: 15px; font-size: 0.8rem; color: var(--text); }
+        .live-indicator { background: #200b0b; padding: 4px 10px; border: 1px dashed var(--red); border-radius: 4px; color: #ff5555; font-size: 0.8rem; font-weight: bold; }
+        header h1 { font-size: 1.2rem; letter-spacing: 2px; text-shadow: 2px 2px 4px #000; }
+        
+        header a { 
+            color: var(--orange); text-decoration: none; font-size: 0.8rem; 
+            border: 1px solid var(--border); padding: 6px 12px; border-radius: 4px; 
+            background: rgba(0,0,0,0.5); font-weight: bold; transition: all 0.3s;
+        }
+        header a:hover { color: #fff; border-color: #fff; text-shadow: 0 0 8px var(--orange); }
+        
+        .workspace { display: flex; flex: 1; height: calc(100vh - 170px); z-index: 5; }
+        
+        /* PAINEL LATERAL EM GLASSMORPHISM RECALIBRADO */
+        .painel-lateral { 
+            width: 320px; 
+            background: var(--panel); 
+            border-right: 3px dashed var(--border); 
+            padding: 15px; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 12px; 
+            overflow-y: auto; 
+            backdrop-filter: blur(6px);
+        }
+        
+        .secao-painel { background: rgba(10, 6, 13, 0.6); border: 1px solid var(--border); border-radius: 8px; padding: 12px; }
+        .secao-painel h3 { font-size: 0.75rem; color: var(--orange); margin-bottom: 8px; border-bottom: 1px dashed var(--border); padding-bottom: 4px; letter-spacing: 1px; }
+        .grupo-botoes { display: flex; gap: 8px; flex-wrap: wrap; }
+        
+        .btn-opt { background: #1c1224; color: #c9bfae; border: 1px solid var(--border); padding: 6px 10px; border-radius: 4px; cursor: pointer; font-size: 0.65rem; font-family: inherit; }
+        .btn-opt.ativo { background: var(--orange); color: #000; font-weight: bold; }
+        .btn-danger { background: #2b0c0c; border-color: var(--red); color: #ff9999; }
+        
+        .slider-control { display: flex; flex-direction: column; gap: 4px; margin-top: 8px; font-size: 0.7rem; color: var(--text); }
+        .slider-control input { width: 100%; accent-color: var(--orange); }
+        
+        /* CONTAINER DO PALCO AGORA OCUPA O VÃO LIVRE DA IMAGEM */
+        .palco-container { 
+            flex: 1; 
+            position: relative; 
+            overflow: hidden; 
+        }
+        
+        /* ==========================================================================
+           RECONSTRUÇÃO COMPLETA: CORALINE CSS ART (PROPORÇÕES DA FOTO)
+           ========================================================================== */
+        .boneco-articulado { 
+            top: 20%; left: 45%; 
+            width: 150px; height: 350px; 
+            position: absolute; cursor: move;
+            z-index: 40;
+        }
+
+        /* --- CABEÇA E CABELO ESTILIZADO --- */
+        .peca-cabeca { 
+            position: absolute; top: 0; left: 35px; width: 80px; height: 80px; 
+            background: #f1cfbc; border-radius: 50% 50% 45% 45%; z-index: 5; 
+            border: 2px solid #dfb19b;
+            box-shadow: inset -3px -3px 8px rgba(0,0,0,0.1);
+        }
+        
+        /* Olhos Reais Expressivos (Em vez de botões genéricos) */
+        .peca-cabeca::before, .peca-cabeca::after {
+            content: ''; position: absolute; top: 32px; width: 14px; height: 14px;
+            background: #ffffff; border-radius: 50%; border: 1px solid #73513f;
+        }
+        .peca-cabeca::before { left: 16px; background: radial-gradient(circle at center, #111 3px, #503121 3px, #ffffff 6px); }
+        .peca-cabeca::after { right: 16px; background: radial-gradient(circle at center, #111 3px, #503121 3px, #ffffff 6px); }
+
+        /* Cabelo Azul com textura e corte idêntico à imagem */
+        .cabelo-franja-esq, .cabelo-franja-dir {
+            position: absolute; top: -4px; width: 46px; height: 75px;
+            background: #1c2b54; border-radius: 40px 10px 40px 10px; z-index: 6;
+            box-shadow: inset 4px -4px 0 #283d73;
+        }
+        .cabelo-franja-esq { left: -4px; transform: rotate(-5deg); }
+        .cabelo-franja-dir { 
+            right: -6px; border-radius: 10px 40px 10px 40px; 
+            height: 85px; transform: rotate(8deg); /* Franja mais longa na direita igual à foto */
+            box-shadow: inset -4px -4px 0 #283d73;
+        }
+
+        /* Presilha de Libélula prateada/branca no cabelo esquerdo */
+        .presilha-libelula {
+            position: absolute; top: 22px; left: 2px; width: 12px; height: 6px;
+            background: #eef2f7; border-radius: 50%; z-index: 7; transform: rotate(-15deg);
+            box-shadow: 0 4px 0 #ccd5e0, 4px -2px 0 #eef2f7, 4px 2px 0 #ccd5e0;
+        }
+
+        /* Pescoço longo e muito fino característico do stop motion */
+        .pescoco-fino {
+            position: absolute; top: 74px; left: 70px; width: 10px; height: 20px;
+            background: #f1cfbc; border: 1px solid #dfb19b; z-index: 4;
+        }
+
+        /* --- CAPA DE CHUVA AMARELA E ACESSÓRIOS --- */
+        .peca-corpo { 
+            position: absolute; top: 88px; left: 35px; width: 80px; height: 130px; 
+            background: #ebd13b; border: 2px solid #caae1c; border-radius: 15px 15px 5px 5px; z-index: 3; 
+            box-shadow: inset -5px 0 10px rgba(0,0,0,0.08);
+        }
+
+        /* Gola alta dobrada da capa de chuva */
+        .gola-capa {
+            position: absolute; top: -4px; left: 15px; width: 50px; height: 18px;
+            background: #dcc22d; border: 2px solid #caae1c; border-radius: 6px; z-index: 4;
+        }
+
+        /* Costura/Zíper central da jaqueta */
+        .ziper-central {
+            position: absolute; top: 14px; left: 39px; width: 3px; height: 114px;
+            background: #b59b15;
+        }
+
+        /* Alça transversal marrom da bolsa */
+        .bolsa-alca {
+            position: absolute; top: -2px; left: 15px; width: 8px; height: 132px;
+            background: #522129; transform: rotate(-22deg); transform-origin: top left; z-index: 4;
+        }
+
+        /* A Bolsinha marrom-avermelhada pendurada na lateral direita */
+        .bolsa-lateral {
+            position: absolute; bottom: -10px; right: -14px; width: 32px; height: 40px;
+            background: #522129; border: 1px solid #36141a; border-radius: 4px 4px 10px 10px; z-index: 4;
+            box-shadow: 3px 5px 10px rgba(0,0,0,0.3);
+        }
+        /* Tampa dobrável da bolsa */
+        .bolsa-lateral::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 32px; height: 18px;
+            background: #40191f; border-radius: 4px 4px 0 0; border-bottom: 2px solid #280e12;
+        }
+
+        /* Saia vermelha texturizada aparecendo embaixo da capa */
+        .saia-bainha {
+            position: absolute; bottom: -12px; left: 8px; width: 64px; height: 14px;
+            background: #84303f; border: 1px solid #63212c; border-radius: 0 0 4px 4px; z-index: 2;
+            background-image: repeating-linear-gradient(90deg, transparent, transparent 4px, #4a141e 4px, #4a141e 6px);
+        }
+
+        /* --- BRAÇOS ARTICULADOS (MANGAS AMARELAS) --- */
+        .braco { 
+            position: absolute; width: 14px; height: 95px; 
+            background: #ebd13b; border: 2px solid #caae1c; border-radius: 8px; 
+            transform-origin: top center; z-index: 4; 
+        }
+        /* Mãozinha minúscula saindo do punho */
+        .braco::after {
+            content: ''; position: absolute; bottom: -6px; left: 1px; width: 8px; height: 10px;
+            background: #f1cfbc; border-radius: 4px; border: 1px solid #dfb19b;
+        }
+        .braco-esquerdo { top: 92px; left: 20px; transform: rotate(20deg); }
+        .braco-direito { top: 92px; right: 20px; transform: rotate(-15deg); }
+
+        /* --- PERNAS FINAS LISTRADAS (MEIAS) --- */
+        .perna { 
+            position: absolute; width: 10px; height: 100px; 
+            /* Padrão de listras horizontais pretas e cinzas idêntico ao figurino */
+            background: repeating-linear-gradient(to bottom, #191919, #191919 6px, #736c7a 6px, #736c7a 12px);
+            z-index: 1; transform-origin: top center;
+        }
+        .perna-esquerda { bottom: -70px; left: 46px; transform: rotate(3deg); }
+        .perna-direita { bottom: -70px; right: 46px; transform: rotate(-2deg); }
+
+        /* --- GALOCHAS AMARELAS DE CHUVA (BASE DAS PERNAS) --- */
+        .galocha-cano {
+            position: absolute; bottom: -20px; left: -5px; width: 20px; height: 45px;
+            background: #d8bc2d; border: 2px solid #b59b1e; border-radius: 4px 4px 0 0;
+            box-shadow: inset -2px 0 5px rgba(0,0,0,0.1);
+        }
+        .galocha-pe {
+            position: absolute; bottom: -24px; left: -5px; width: 34px; height: 12px;
+            background: #d8bc2d; border: 2px solid #b59b1e; border-radius: 0 10px 4px 2px;
+            border-bottom: 3px solid #917b12; /* Sola de borracha reforçada */
+        }
+        /* Ajuste de direção do pé direito para o lado oposto */
+        .perna-direita .galocha-pe {
+            left: -19px; width: 34px; border-radius: 10px 0 2px 4px;
+        }
+
+
+        
+        /* ADICIONAIS ADAPTADOS COMO ELEMENTOS DA PROPRIA MESA/CENÁRIO */
+        .obj-sol { top: 15%; left: 15%; width: 65px; height: 65px; background: #e6b119; border-radius: 50%; border: 2px dashed #9e770d; box-shadow: 0 0 15px rgba(230,177,25,0.3); }
+        .obj-nuvem { top: 12%; right: 20%; width: 110px; height: 40px; background: #383e4c; border-radius: 30px; border: 2px dashed #545d73; opacity: 0.7; }
+        .obj-casa { bottom: 25%; right: 15%; width: 110px; height: 110px; background: #261b30; border: 2px dashed var(--border); clip-path: polygon(50% 0%, 100% 35%, 100% 100%, 0% 100%, 0% 35%); }
+        
+        /* TIMELINE EM GLASSMORPHISM NO RODAPÉ */
+        .timeline { 
+            height: 120px; 
+            background: rgba(9, 6, 10, 0.85); 
+            border-top: 3px dashed var(--border); 
+            display: flex; align-items: center; 
+            padding: 0 24px; gap: 20px; 
+            z-index: 10;
+            backdrop-filter: blur(5px);
+        }
+        
+        .controles-globais { display: flex; gap: 12px; border-right: 2px dashed var(--border); padding-right: 20px; }
+        
+        .btn-master { 
+            background: #191121; color: #f5eedc; border: 1px solid var(--border); 
+            padding: 12px 20px; border-radius: 6px; font-weight: bold; 
+            cursor: pointer; font-size: 0.75rem; text-transform: uppercase; font-family: inherit;
+        }
+        .btn-master:hover { background: var(--border); color: #fff; }
+        .btn-master.btn-trigger { background: var(--orange); color: #000; }
+        .btn-master.btn-trigger:hover { background: #ffb642; box-shadow: 0 0 12px rgba(255,157,0,0.4); }
+        
+        .lista-frames { display: flex; gap: 15px; overflow-x: auto; flex: 1; height: 100%; align-items: center; }
+        
+        .mini-frame { 
+            width: 105px; height: 75px; background: #150f1c; border: 2px solid #332145; border-radius: 4px; 
+            display: flex; justify-content: center; align-items: center; font-size: 0.6rem; 
+            color: var(--text); font-weight: bold; position: relative; flex-shrink: 0; 
+            box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+        }
+        .mini-frame::before { content: '▫ ▫ ▫ ▫ ▫'; position: absolute; top: 2px; letter-spacing: 4px; color: #332145; font-size: 8px; }
+        .mini-frame::after { content: '▫ ▫ ▫ ▫ ▫'; position: absolute; bottom: 2px; letter-spacing: 4px; color: #332145; font-size: 8px; }
+        .mini-frame.playing-frame { border-color: var(--orange); color: #fff; box-shadow: 0 0 10px var(--orange); }
+        
+        .btn-del-frame { position: absolute; top: -6px; right: -6px; width: 18px; height: 18px; background: var(--red); color: white; border: 1px solid #000; border-radius: 50%; font-size: 11px; cursor: pointer; display: flex; justify-content: center; align-items: center; }
+        
+        .flash { animation: shutter 0.15s ease-out; }
+        @keyframes shutter { 0% { opacity: 0.1; background: #fff; } 100% { opacity: 1; } }
+        @keyframes starsFlicker { 0% { opacity: 0.08; } 100% { opacity: 0.25; } }
+    </style>
+
+    <script>
+        let f = [], idx = 0, playOn = false, loop = null;
+        const marionete = document.getElementById('marionete');
+
+        // Lógica de arrastar os bonecos e formas com o mouse
+        function drag(e, el) {
+            e.preventDefault();
+            document.querySelectorAll('.objeto-cenario, .boneco-articulado').forEach(item => item.classList.remove('selecionado'));
+            el.classList.add('selecionado');
+            
+            let px = e.clientX, py = e.clientY;
+            function move(ev) {
+                let dx = px - ev.clientX, dy = py - ev.clientY;
+                px = ev.clientX; py = ev.clientY;
+                el.style.top = (el.offsetTop - dy) + "px"; el.style.left = (el.offsetLeft - dx) + "px";
+            }
+            function stop() { document.removeEventListener('mousemove', move); document.removeEventListener('mouseup', stop); }
+            document.addEventListener('mousemove', move); document.addEventListener('mouseup', stop);
+        }
+
+        // Lógica dos sliders de articulação
+        function rodar(c, a) { 
+            const m = document.querySelector('.' + c); 
+            if(m) m.style.transform = `rotate(${a}deg)`; 
+        }
+
+        // Mostrar ou ocultar abóboras e molduras do set
+        function toggleObj(id, ev) { 
+            const o = document.getElementById('obj-' + id); 
+            if(o.style.display === "none"){ o.style.display = "block"; ev.target.classList.add('active'); } 
+            else { o.style.display = "none"; ev.target.classList.remove('active'); }
+        }
+
+        // Resetar o laboratório
+        function limpar() { 
+            marionete.style.top = "20%"; marionete.style.left = "35%"; f = []; 
+            document.getElementById('lista-frames').innerHTML = ''; if(playOn) play(); 
+        }
+
+        // Capturar fotograma (Stop Motion Engine)
+        function capturar() {
+            const cb = document.getElementById('camera-box'); cb.classList.add('flash'); setTimeout(() => cb.classList.remove('flash'), 150);
+            f.push({
+                m: { top: marionete.style.top, left: marionete.style.left, bE: document.querySelector('.braco-esquerdo').style.transform, bD: document.querySelector('.braco-direito').style.transform, c: document.querySelector('.peca-cabeca').style.transform },
+                s: { top: document.getElementById('obj-sol').style.top, left: document.getElementById('obj-sol').style.left },
+                n: { top: document.getElementById('obj-nuvem').style.top, left: document.getElementById('obj-nuvem').style.left },
+                c: { top: document.getElementById('obj-casa').style.top, left: document.getElementById('obj-casa').style.left }
+            });
+            drawTimeline();
+        }
+
+        // Desenhar a fita de filme de 35mm
+        function drawTimeline() {
+            const container = document.getElementById('lista-frames'); container.innerHTML = '';
+            f.forEach((fr, i) => { container.innerHTML += `<div class="mini-frame">FRAME ${i+1}<button class="btn-del-frame" onclick="delFrame(${i},event)">×</button></div>`; });
+            container.scrollLeft = container.scrollWidth;
+        }
+
+        function delFrame(i, e) { e.stopPropagation(); f.splice(i, 1); drawTimeline(); }
+
+        // Módulo de reprodução quadro a quadro (Playback)
+        function play() {
+            const btn = document.getElementById('btn-play'); if(f.length === 0){ alert("Capture frames primeiro!"); return; }
+            if (playOn) { clearInterval(loop); playOn = false; btn.innerText = "▶ PLAY"; btn.style.background = "#191121"; btn.style.color = "#f5eedc"; }
+            else { playOn = true; btn.innerText = "|| PAUSE"; btn.style.background = "var(--orange)"; btn.style.color = "#000";
+                loop = setInterval(() => {
+                    const d = f[idx]; marionete.style.top = d.m.top; marionete.style.left = d.m.left;
+                    document.querySelector('.braco-esquerdo').style.transform = d.m.bE; document.querySelector('.braco-direito').style.transform = d.m.bD; document.querySelector('.peca-cabeca').style.transform = d.m.c;
+                    document.getElementById('obj-sol').style.top = d.s.top; document.getElementById('obj-sol').style.left = d.s.left;
+                    document.getElementById('obj-nuvem').style.top = d.n.top; document.getElementById('obj-nuvem').style.left = d.n.left;
+                    document.getElementById('obj-casa').style.top = d.c.top; document.getElementById('obj-casa').style.left = d.c.left;
+                    document.querySelectorAll('.mini-frame').forEach((m, i) => { if(i === idx) m.classList.add('playing-frame'); else m.classList.remove('playing-frame'); });
+                    idx = (idx + 1) % f.length;
+                }, 250);
+            }
+        }
+    </script>
+</body>
+</html>

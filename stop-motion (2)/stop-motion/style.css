@@ -1,0 +1,277 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #111;
+    font-family: 'Special Elite', monospace;
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+}
+
+/* ==========================================================================
+   TELA DE CONTAGEM REGRESSIVA (MAIOR E MAIS LENTA)
+   ========================================================================== */
+#countdown-screen {
+    position: fixed;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    background-color: #444;
+    display: flex; justify-content: center; align-items: center;
+    z-index: 9999; overflow: hidden;
+    animation: fadeOutScreen 7.5s forwards;
+}
+
+/* Textura de filme antigo */
+.film-grain {
+    position: absolute; width: 100%; height: 100%;
+    background: radial-gradient(circle, rgba(255,255,255,0.15) 10%, transparent 11%);
+    background-size: 10px 10px; opacity: 0.25;
+    animation: grainMove 0.15s infinite steps(2);
+}
+
+/* Linhas de projetor arranhado */
+.projector-lines {
+    position: absolute; width: 100%; height: 100%;
+    border-left: 2px solid rgba(0, 0, 0, 0.25);
+    border-right: 1px solid rgba(0, 0, 0, 0.3); opacity: 0.4;
+    animation: lineScratch 0.3s infinite linear;
+}
+
+/* ALVO CINEMATOGRÁFICO ATUALIZADO */
+.countdown-circle {
+    position: relative; 
+    width: 500px; 
+    height: 500px;
+    border: 6px solid #222; border-radius: 50%;
+    display: flex; justify-content: center; align-items: center;
+    box-shadow: 0 0 0 25px rgba(0,0,0,0.05), inset 0 0 0 25px rgba(0,0,0,0.05);
+}
+
+/* Linhas em cruz cortando o alvo */
+.countdown-circle::before, .countdown-circle::after {
+    content: ''; position: absolute; background: #222;
+}
+.countdown-circle::before { width: 150vw; height: 3px; left: -75vw; }
+.countdown-circle::after { height: 150vh; width: 3px; top: -75vh; }
+
+/* Ponteiro de radar girando no alvo gigante */
+.radar-sweep {
+    position: absolute; width: 100%; height: 100%; border-radius: 50%;
+    background: conic-gradient(from 0deg, rgba(0,0,0,0.2) 0deg, transparent 90deg);
+    animation: radarSpin 1.2s linear infinite;
+}
+
+/* ESCRITA DA CONTAGEM */
+#countdown-text::after {
+    content: "LUZ...";
+    font-size: 4.5rem; 
+    color: #111; z-index: 10; letter-spacing: 4px;
+    text-shadow: 2px 2px 4px rgba(255,255,255,0.2);
+    animation: changeText 7.5s forwards, textFlicker 0.15s infinite alternate;
+}
+
+/* ==========================================================================
+   PÔSTER DE INTRODUÇÃO (AGORA COM FUNDO PANORÂMICO EM MOVIMENTO)
+   ========================================================================== */
+#main-site {
+    background-image: url('assets/fundo2.jpg');
+    background-size: auto 100vh; /* Mantém a altura e deixa a largura livre para rodar */
+    background-position: 0px center;
+    background-repeat: repeat-x; /* Repete a imagem horizontalmente sem fim */
+    height: 100vh;
+    width: 100vw;
+    position: relative;
+    opacity: 0;
+    /* Adicionada a animação 'panoramicaFilme' rodando continuamente */
+    animation: fadeInSite 1.2s ease-in forwards 7.2s, panoramicaFilme 45s linear infinite 7.2s;
+}
+
+.vignette {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: radial-gradient(circle, transparent 10%, rgba(0, 0, 0, 0.85) 100%);
+    pointer-events: none; z-index: 1;
+}
+
+.hero-section {
+    height: 100vh; 
+    width: 100vw;
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+    position: relative; 
+    z-index: 5; 
+    padding: 0 50px;
+}
+
+/* CAIXA DE LOGIN: Expandida para preencher o espaço da tela */
+.intro-container.extended-login-card {
+    width: 100%;
+    max-width: 580px; /* Alargado para ocupar melhor as telas */
+    text-align: center;
+    background-image: url('assets/fundo-card.jpg');
+    background-size: cover;
+    background-position: center;
+    background-color: rgba(15, 15, 15, 0.92); /* Tom escuro para leitura perfeita */
+    padding: 50px 45px; 
+    border-radius: 12px;
+    border: 3px solid #000000;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.9), 6px 6px 0px #5a3d75;
+    animation: floatAnimation 4s ease-in-out infinite;
+    z-index: 10;
+}
+
+.welcome-text {
+    font-size: 2.6rem; 
+    line-height: 1.2; 
+    color: #ffffff; 
+    letter-spacing: 3px;
+    text-shadow: 0 0 15px rgba(0, 0, 0, 0.9), 3px 3px 0px #5a3d75, 5px 5px 10px rgba(0,0,0,1);
+    margin-bottom: 35px;
+}
+
+/* FORMULÁRIO E INPUTS GRANDES */
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 22px; 
+    margin-bottom: 30px;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 18px 22px; 
+    background-color: rgba(10, 10, 10, 0.9);
+    border: 2px solid #222222;
+    color: #ffffff;
+    font-family: 'Special Elite', monospace;
+    font-size: 1.1rem;
+    border-radius: 6px;
+    letter-spacing: 1px;
+    box-sizing: border-box;
+    box-shadow: inset 0 3px 6px rgba(0,0,0,0.8);
+    transition: all 0.3s ease;
+}
+
+/* Efeito de brilho amarelo ao clicar no input */
+.input-group input:focus {
+    outline: none;
+    border-color: #ff9d00;
+    background-color: #151515;
+    box-shadow: inset 0 2px 5px rgba(0,0,0,0.5), 0 0 15px rgba(255, 157, 0, 0.6);
+}
+
+.input-group input::placeholder {
+    color: #555555;
+    font-size: 0.95rem;
+}
+
+/* LINKS DO RODAPÉ DO LOGIN */
+.login-links {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 5px;
+}
+
+.login-links a {
+    color: #aaaaaa;
+    font-size: 0.95rem;
+    text-decoration: none;
+    letter-spacing: 1px;
+    transition: color 0.2s ease;
+}
+
+.login-links a:hover {
+    color: #ff9d00;
+    text-decoration: underline;
+}
+
+/* BOTÃO CUSTOMIZADO PROPORCIONAL */
+.cta-button {
+    width: 100%;
+    font-family: 'Special Elite', monospace;
+    font-size: 1.4rem; 
+    font-weight: bold; 
+    color: #000000;
+    background-color: #ff9d00; 
+    border: 3px dashed #000000;
+    padding: 18px 20px; 
+    border-radius: 8px; 
+    cursor: pointer;
+    letter-spacing: 2px; 
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.6);
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.cta-button:hover {
+    background-color: #ffffff; color: #5a3d75; border-color: #5a3d75;
+    transform: scale(1.02); box-shadow: 0 0 30px rgba(255, 157, 0, 0.9);
+}
+
+/* ==========================================================================
+   ESTILIZAÇÃO DOS BADGES EXPLICATIVOS FLUTUANTES (INTRO)
+   ========================================================================== */
+.intro-badge {
+    position: absolute;
+    width: 260px;
+    background: rgba(15, 15, 15, 0.85);
+    border: 2px solid #333333;
+    padding: 15px 20px;
+    border-radius: 8px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    backdrop-filter: blur(4px); /* Desfoque sutil no fundo do balão */
+    z-index: 4;
+    transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.intro-badge:hover {
+    border-color: #5a3d75;
+    transform: scale(1.05);
+}
+
+.intro-badge h3 {
+    font-size: 1rem;
+    color: #ff9d00;
+    margin-bottom: 8px;
+    letter-spacing: 1px;
+}
+
+.intro-badge p {
+    font-size: 0.8rem;
+    color: #cccccc;
+    line-height: 1.4;
+}
+
+/* Posicionamento estratégico nas quinas da janela */
+.badge-left-top     { top: 12%; left: 5%; animation: floatAnimation 4.5s ease-in-out infinite alternate; }
+.badge-left-bottom  { bottom: 12%; left: 5%; animation: floatAnimation 5.2s ease-in-out infinite alternate-reverse; }
+.badge-right-top    { top: 12%; right: 5%; animation: floatAnimation 4.8s ease-in-out infinite alternate; }
+.badge-right-bottom { bottom: 12%; right: 5%; animation: floatAnimation 4.2s ease-in-out infinite alternate-reverse; }
+
+/* ==========================================================================
+   LÓGICA DAS ANIMAÇÕES CRONOMETRADAS
+   ========================================================================== */
+@keyframes panoramicaFilme {
+    0% { background-position: 0px center; }
+    100% { background-position: -2000px center; } /* Faz o plano de fundo andar continuamente */
+}
+
+@keyframes changeText {
+    0%, 35% { content: "LUZ..."; }
+    38%, 70% { content: "CÂMERA..."; }
+    73%, 99% { content: "ANIMAÇÃO!"; color: #ff9d00; }
+}
+
+@keyframes fadeOutScreen {
+    0%, 92% { opacity: 1; visibility: visible; }
+    100% { opacity: 0; visibility: hidden; }
+}
+
+@keyframes fadeInSite { 100% { opacity: 1; } }
+@keyframes radarSpin { 100% { transform: rotate(360deg); } }
+@keyframes textFlicker { 0% { opacity: 0.85; } 100% { opacity: 1; } }
+@keyframes grainMove { 0% { background-position: 0 0; } 100% { background-position: 10px 20px; } }
+@keyframes lineScratch { 0% { transform: translateX(0); opacity: 0.2; } 50% { transform: translateX(30vw); opacity: 0.4; } 100% { transform: translateX(80vw); opacity: 0.1; } }
+@keyframes floatAnimation { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
