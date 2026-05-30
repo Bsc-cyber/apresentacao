@@ -9,7 +9,7 @@
 
 :root {
     --bg-dark: #070707;
-    --bg-card: #120e0c;
+    --bg-card: rgba(18, 14, 12, 0.4); 
     --orange-primary: #f26419;
     --orange-hover: #dd4b00;
     --yellow-accent: #f6ae2d;
@@ -54,7 +54,6 @@ a {
     animation: fadeOutScreen 7.5s forwards;
 }
 
-/* Textura de filme antigo */
 .film-grain {
     position: absolute; 
     width: 100%; 
@@ -65,7 +64,6 @@ a {
     animation: grainMove 0.15s infinite steps(2);
 }
 
-/* Linhas de projetor arranhado */
 .projector-lines {
     position: absolute; 
     width: 100%; 
@@ -76,7 +74,6 @@ a {
     animation: lineScratch 0.3s infinite linear;
 }
 
-/* Alvo cinematográfico */
 .countdown-circle {
     position: relative; 
     width: 500px; 
@@ -89,7 +86,6 @@ a {
     box-shadow: 0 0 0 25px rgba(0,0,0,0.05), inset 0 0 0 25px rgba(0,0,0,0.05);
 }
 
-/* Linhas em cruz cortando o alvo */
 .countdown-circle::before, .countdown-circle::after {
     content: ''; 
     position: absolute; 
@@ -98,7 +94,6 @@ a {
 .countdown-circle::before { width: 150vw; height: 3px; left: -75vw; }
 .countdown-circle::after { height: 150vh; width: 3px; top: -75vh; }
 
-/* Ponteiro de radar girando no alvo gigante */
 .radar-sweep {
     position: absolute; 
     width: 100%; 
@@ -108,7 +103,6 @@ a {
     animation: radarSpin 1.2s linear infinite;
 }
 
-/* Escrita da contagem animada */
 #countdown-text::after {
     content: "LUZ...";
     font-size: 4.5rem; 
@@ -119,18 +113,23 @@ a {
     animation: changeText 7.5s forwards, textFlicker 0.15s infinite alternate;
 }
 
+
 /* ==========================================================================
-   3. CONFIGURAÇÃO DO SITE PRINCIPAL (TRANSIÇÃO APÓS CONTAGEM)
+   3. CONFIGURAÇÃO DO SITE PRINCIPAL (COM IMAGEM DE FUNDO GLOBAL)
    ========================================================================== */
 #main-site {
     opacity: 0;
     min-height: 100vh;
     width: 100%;
     position: relative;
+    background-image: url('assets/fundo_principal.png'); 
+    background-size: cover; 
+    background-position: center; 
+    background-repeat: no-repeat; 
+    background-attachment: fixed; 
     animation: fadeInSite 1.2s ease-in forwards 7.2s;
 }
 
-/* Divisores de seção em linha com degradê laranja */
 .section-divider {
     font-size: 1.1rem;
     color: var(--orange-primary);
@@ -156,7 +155,7 @@ a {
 
 /* ==========================================================================
    4. CABEÇALHO (NAVBAR)
-   ========================================================================== */
+   ========================================================================= */
 .main-header {
     display: flex;
     justify-content: space-between;
@@ -207,21 +206,28 @@ a {
 }
 
 /* ==========================================================================
-   5. SEÇÃO HERO (BOAS-VINDAS & PAINÉIS DE LOGIN)
+   5. SEÇÃO HERO (CORALINE E BONECOS GRUDADOS NA BASE)
    ========================================================================== */
 .hero-section {
-    padding: 60px 20px;
+    padding: 140px 40px 60px 40px; /* Aumentamos o espaçamento nas laterais */
     text-align: center;
     position: relative;
-    min-height: 85vh;
+    min-height: 95vh;
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-image: url('personagem_esquerda.png'), url('personagem_direita.png');
-    background-position: left center, right center;
+    
+    background-image: url('assets/personagem_esquerda.png'), url('assets/personagem_direita.png');
+    
+    /* Alinha os bonecos respeitando o limite interno (padding) do bloco */
+    background-origin: content-box; 
+    bottom, right bottom;
     background-repeat: no-repeat, no-repeat;
-    background-size: contain, contain;
+    
+    /* Reduzimos um tiquinho o tamanho (de 380px para 340px) para ela caber inteira sem sufocar */
+    background-size: 340px auto, 340px auto; 
 }
+
 
 .subtitle-welcome {
     color: var(--orange-primary);
@@ -255,15 +261,17 @@ a {
     margin-top: 20px;
 }
 
-/* Configuração dos Cards Góticos do Topo */
+/* Vidro Fumê Transparente com Desfoque */
 .login-card, .info-card {
-    background-color: var(--bg-card);
+    background-color: rgba(7, 7, 7, 0.5); 
     border: 1px solid var(--border-color);
     padding: 40px;
     width: 50%;
     text-align: left;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
     animation: floatAnimation 5s ease-in-out infinite;
+    backdrop-filter: blur(8px); 
+    -webkit-backdrop-filter: blur(8px);
 }
 
 .info-card {
@@ -278,7 +286,6 @@ a {
     padding-left: 10px;
 }
 
-/* Customização fina do formulário */
 .login-card .input-group {
     margin-bottom: 20px;
 }
@@ -293,11 +300,12 @@ a {
 .login-card input {
     width: 100%;
     padding: 14px 18px;
-    background-color: rgba(0, 0, 0, 0.4);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background-color: rgba(0, 0, 0, 0.6); 
+    border: 1px solid rgba(255, 255, 255, 0.2); 
     color: var(--text-light);
     font-family: 'Montserrat', sans-serif;
     font-size: 1rem;
+    margin-top: 5px;
 }
 
 .login-card input:focus {
@@ -318,7 +326,6 @@ a {
     text-decoration: underline;
 }
 
-/* Seu Botão Customizado com bordas pontilhadas */
 .btn-primary {
     width: 100%;
     font-family: 'Cinzel', serif;
@@ -365,28 +372,32 @@ a {
     margin-bottom: 0;
 }
 
+
 /* ==========================================================================
-   6. SEÇÃO ASSISTA E SE INSPIRE (VÍDEO DESTAQUE)
+   6. SEÇÃO VÍDEO E SEÇÕES INFERIORES COM TRANSPARÊNCIA
    ========================================================================== */
-.video-section {
+.video-section, .why-section, .essence-section, .faq-section {
     padding: 60px 20px;
-    background-color: var(--bg-dark);
+    position: relative;
+    z-index: 2;
 }
 
 .video-container {
     display: flex;
     max-width: 1000px;
     margin: 0 auto;
-    background-color: var(--bg-card);
+    background-color: rgba(18, 14, 12, 0.4); 
     border: 1px solid var(--border-color);
     align-items: center;
     box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    backdrop-filter: blur(8px); 
+    -webkit-backdrop-filter: blur(8px);
 }
 
 .video-placeholder {
     width: 55%;
     height: 300px;
-    background-image: url('thumbnail_video.jpg');
+    background-image: url('assets/thumbnail_video.png'); 
     background-size: cover;
     background-position: center;
     display: flex;
@@ -428,10 +439,8 @@ a {
 }
 
 .video-text h3 {
-    font-family: 'Cinzel', serif;
     font-size: 1.5rem;
     margin-bottom: 10px;
-    color: var(--text-light);
 }
 
 .video-text p {
@@ -459,14 +468,8 @@ a {
 }
 
 /* ==========================================================================
-   7. SEÇÃO POR QUE APRENDER (CARROSSEL DE CARDS)
+   7. CARROSSEL, ESSÊNCIA E FAQ COM BACKDROP BLUR
    ========================================================================== */
-.why-section {
-    padding: 60px 20px;
-    background-color: var(--bg-dark);
-    text-align: center;
-}
-
 .carousel-container {
     display: flex;
     align-items: center;
@@ -483,19 +486,17 @@ a {
     width: 100%;
 }
 
-.feature-card {
+.feature-card, .essence-card, .cta-block {
     background-color: var(--bg-card);
     border: 1px solid var(--border-color);
-    width: 300px;
-    text-align: left;
     box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     transition: 0.3s;
 }
 
-.feature-card:hover {
-    transform: translateY(-5px);
-    border-color: var(--orange-primary);
-}
+.feature-card { width: 300px; text-align: left; }
+.feature-card:hover { transform: translateY(-5px); border-color: var(--orange-primary); }
 
 .card-img {
     height: 180px;
@@ -504,230 +505,40 @@ a {
     border-bottom: 1px solid rgba(242, 100, 25, 0.15);
 }
 
-.feature-card h3 {
-    font-size: 1.1rem;
-    padding: 20px 20px 5px 20px;
-    color: var(--text-light);
-}
+.feature-card h3 { font-size: 1.1rem; padding: 20px 20px 5px 20px; }
+.feature-card p { font-size: 0.85rem; color: var(--text-muted); padding: 0 20px 25px 20px; }
 
-.feature-card p {
-    font-size: 0.85rem;
-    color: var(--text-muted);
-    padding: 0 20px 25px 20px;
-    line-height: 1.5;
-}
+.arrow-btn { background: transparent; border: none; color: var(--text-muted); font-size: 2rem; cursor: pointer; padding: 10px; }
+.arrow-btn:hover { color: var(--orange-primary); }
 
-.arrow-btn {
-    background: transparent;
-    border: none;
-    color: var(--text-muted);
-    font-size: 2rem;
-    cursor: pointer;
-    padding: 10px;
-    transition: 0.3s;
-}
+.carousel-dots { display: flex; justify-content: center; gap: 10px; margin-top: 30px; }
+.dot { width: 8px; height: 8px; background-color: #333; border-radius: 50%; cursor: pointer; }
+.dot.active, .dot:hover { background-color: var(--orange-primary); }
 
-.arrow-btn:hover {
-    color: var(--orange-primary);
-}
+.essence-grid { display: flex; justify-content: center; gap: 30px; max-width: 1100px; margin: 0 auto; }
+.essence-card { width: 32%; padding: 35px 25px; text-align: center; }
+.essence-card:hover { border-color: var(--orange-primary); transform: scale(1.02); }
+.essence-card .icon { font-size: 2rem; display: block; margin-bottom: 15px; }
+.essence-card h3 { font-size: 1.2rem; color: var(--orange-primary); margin-bottom: 20px; }
+.essence-card ul { list-style: none; text-align: left; display: inline-block; }
+.essence-card ul li { font-size: 0.9rem; margin-bottom: 10px; position: relative; padding-left: 20px; }
+.essence-card ul li::before { content: '•'; position: absolute; left: 0; color: var(--orange-primary); }
 
-.carousel-dots {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-top: 30px;
-}
+.faq-cta-container { display: flex; max-width: 1000px; margin: 0 auto; gap: 50px; align-items: flex-start; }
+.faq-accordion { width: 55%; display: flex; flex-direction: column; gap: 12px; }
+.faq-item { border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
+.faq-question { width: 100%; background: transparent; border: none; color: var(--text-light); padding: 18px 5px; text-align: left; font-weight: 600; cursor: pointer; display: flex; justify-content: space-between; }
+.faq-question:hover { color: var(--orange-primary); }
 
-.dot {
-    width: 8px;
-    height: 8px;
-    background-color: #333;
-    border-radius: 50%;
-    cursor: pointer;
-    transition: 0.3s;
-}
+.cta-block { width: 45%; padding: 40px; text-align: center; border-color: rgba(246, 174, 45, 0.3); animation: floatAnimation 5s ease-in-out infinite; animation-delay: 0.2s; }
+.cta-block h3 { color: var(--yellow-accent); margin-bottom: 15px; }
+.cta-block p { color: var(--text-muted); margin-bottom: 30px; font-size: 0.9rem; }
 
-.dot.active, .dot:hover {
-    background-color: var(--orange-primary);
-    transform: scale(1.2);
-}
-
+.btn-yellow { width: 100%; padding: 16px; background-color: var(--yellow-accent); border: none; color: #000; font-weight: bold; cursor: pointer; transition: 0.3s; }
+.btn-yellow:hover { background-color: #e0961b; transform: translateY(-2px); }
 
 /* ==========================================================================
-   8. SEÇÃO NOSSA ESSÊNCIA (MISSÃO, VISÃO, VALORES)
-   ========================================================================== */
-.essence-section {
-    padding: 60px 20px;
-    background-color: var(--bg-dark);
-}
-
-.essence-grid {
-    display: flex;
-    justify-content: center;
-    gap: 30px;
-    max-width: 1100px;
-    margin: 0 auto;
-}
-
-.essence-card {
-    background-color: var(--bg-card);
-    border: 1px solid var(--border-color);
-    width: 32%;
-    padding: 35px 25px;
-    text-align: center;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-    transition: 0.3s;
-}
-
-.essence-card:hover {
-    border-color: var(--orange-primary);
-    transform: scale(1.02);
-}
-
-.essence-card .icon {
-    font-size: 2rem;
-    display: block;
-    margin-bottom: 15px;
-}
-
-.essence-card h3 {
-    font-size: 1.2rem;
-    color: var(--orange-primary);
-    margin-bottom: 20px;
-    letter-spacing: 2px;
-}
-
-.essence-card p {
-    font-size: 0.9rem;
-    color: var(--text-light);
-    line-height: 1.6;
-    opacity: 0.9;
-}
-
-.essence-card ul {
-    list-style: none;
-    text-align: left;
-    display: inline-block;
-}
-
-.essence-card ul li {
-    font-size: 0.9rem;
-    color: var(--text-light);
-    margin-bottom: 10px;
-    position: relative;
-    padding-left: 20px;
-}
-
-.essence-card ul li::before {
-    content: '•';
-    position: absolute;
-    left: 0;
-    color: var(--orange-primary);
-    font-size: 1.2rem;
-    line-height: 1;
-}
-
-/* ==========================================================================
-   9. SEÇÃO PERGUNTAS FREQUENTES & CALL TO ACTION (CTA)
-   ========================================================================== */
-.faq-section {
-    padding: 60px 20px 100px 20px;
-    background-color: var(--bg-dark);
-}
-
-.faq-cta-container {
-    display: flex;
-    max-width: 1000px;
-    margin: 0 auto;
-    gap: 50px;
-    align-items: flex-start;
-}
-
-.faq-accordion {
-    width: 55%;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.faq-item {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.faq-question {
-    width: 100%;
-    background: transparent;
-    border: none;
-    color: var(--text-light);
-    padding: 18px 5px;
-    text-align: left;
-    font-family: 'Montserrat', sans-serif;
-    font-size: 0.95rem;
-    font-weight: 600;
-    cursor: pointer;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    transition: 0.2s;
-}
-
-.faq-question:hover {
-    color: var(--orange-primary);
-}
-
-.faq-question span {
-    color: var(--orange-primary);
-    font-size: 1.2rem;
-}
-
-
-/* Bloco Amarelo de Cadastro */
-.cta-block {
-    width: 45%;
-    background-color: var(--bg-card);
-    border: 1px solid rgba(246, 174, 45, 0.3);
-    padding: 40px;
-    text-align: center;
-    box-shadow: 0 12px 30px rgba(0,0,0,0.6);
-    animation: floatAnimation 5s ease-in-out infinite;
-    animation-delay: 0.2s;
-}
-
-.cta-block h3 {
-    font-size: 1.3rem;
-    color: var(--yellow-accent);
-    margin-bottom: 15px;
-    line-height: 1.4;
-}
-
-.cta-block p {
-    color: var(--text-muted);
-    font-size: 0.9rem;
-    margin-bottom: 30px;
-}
-
-.btn-yellow {
-    width: 100%;
-    padding: 16px;
-    background-color: var(--yellow-accent);
-    border: none;
-    color: #000000;
-    font-family: 'Montserrat', sans-serif;
-    font-weight: bold;
-    font-size: 0.9rem;
-    letter-spacing: 1px;
-    cursor: pointer;
-    transition: 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-}
-
-.btn-yellow:hover {
-    background-color: #e0961b;
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(246, 174, 45, 0.4);
-}
-
-/* ==========================================================================
-   10. RODAPÉ (FOOTER)
+   8. RODAPÉ E ANIMAÇÕES CRONOMETRADAS
    ========================================================================== */
 .main-footer {
     background-color: #030303;
@@ -738,131 +549,30 @@ a {
     align-items: center;
     font-size: 0.85rem;
     color: var(--text-muted);
+    position: relative;
+    z-index: 10;
 }
+.footer-left .logo { font-size: 1.2rem; margin-bottom: 10px; display: block; }
+.social-icons { display: flex; gap: 15px; }
+.footer-right a { color: var(--orange-primary); font-weight: 600; }
 
-.footer-left .logo {
-    font-size: 1.2rem;
-    margin-bottom: 10px;
-    display: block;
-    color: var(--text-light);
-}
+@keyframes changeText { 0%, 35% { content: "LUZ..."; } 38%, 70% { content: "CÂMERA..."; } 73%, 99% { content: "ANIMAÇÃO!"; color: #ff9d00; } }
+@keyframes fadeOutScreen { 0%, 92% { opacity: 1; visibility: visible; } 100% { opacity: 0; visibility: hidden; } }
+@keyframes fadeInSite { 100% { opacity: 1; } }
+@keyframes radarSpin { 100% { transform: rotate(360deg); } }
+@keyframes textFlicker { 0% { opacity: 0.85; } 100% { opacity: 1; } }
+@keyframes grainMove { 0% { background-position: 0 0; } 100% { background-position: 10px 20px; } }
+@keyframes lineScratch { 0% { transform: translateX(0); opacity: 0.2; } 50% { transform: translateX(30vw); opacity: 0.4; } 100% { transform: translateX(80vw); opacity: 0.1; } }
+@keyframes floatAnimation { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
 
-.footer-center {
-    text-align: center;
-}
-
-.footer-center h4, .footer-right h4 {
-    font-size: 0.8rem;
-    color: var(--text-light);
-    letter-spacing: 2px;
-    margin-bottom: 15px;
-}
-
-.social-icons {
-    display: flex;
-    gap: 15px;
-    justify-content: center;
-}
-
-.social-icons a {
-    font-size: 1.2rem;
-    opacity: 0.6;
-    transition: 0.2s;
-}
-
-.social-icons a:hover {
-    opacity: 1;
-    transform: scale(1.1);
-}
-
-.footer-right {
-    text-align: right;
-}
-
-.footer-right a {
-    color: var(--orange-primary);
-    font-weight: 600;
-}
-
-.footer-right a:hover {
-    color: var(--text-light);
-    text-decoration: underline;
-}
-
-/* ==========================================================================
-   11. REGRAS DAS ANIMAÇÕES CRONOMETRADAS (DA SUA INTRO)
-   ========================================================================== */
-@keyframes changeText {
-    0%, 35% { content: "LUZ..."; }
-    38%, 70% { content: "CÂMERA..."; }
-    73%, 99% { content: "ANIMAÇÃO!"; color: #ff9d00; }
-}
-
-@keyframes fadeOutScreen {
-    0%, 92% { opacity: 1; visibility: visible; }
-    100% { opacity: 0; visibility: hidden; }
-}
-
-@keyframes fadeInSite { 
-    100% { opacity: 1; } 
-}
-
-@keyframes radarSpin { 
-    100% { transform: rotate(360deg); } 
-}
-
-@keyframes textFlicker { 
-    0% { opacity: 0.85; } 
-    100% { opacity: 1; } 
-}
-
-@keyframes grainMove { 
-    0% { background-position: 0 0; } 
-    100% { background-position: 10px 20px; } 
-}
-
-@keyframes lineScratch { 
-    0% { transform: translateX(0); opacity: 0.2; } 
-    50% { transform: translateX(30vw); opacity: 0.4; } 
-    100% { transform: translateX(80vw); opacity: 0.1; } 
-}
-
-@keyframes floatAnimation { 
-    0%, 100% { transform: translateY(0px); } 
-    50% { transform: translateY(-10px); } 
-}
-
-/* ==========================================================================
-   12. RESPONSIVIDADE (GARANTE O LAYOUT AJUSTADO EM TELAS MENORES)
-   ========================================================================== */
+/* RESPONSIVIDADE */
 @media (max-width: 900px) {
-    .hero-container {
-        flex-direction: column;
-    }
-    .login-card, .info-card {
-        width: 100%;
-    }
-    .hero-section {
-        background-image: none; /* Esconde os bonecos das pontas para não esmagar no celular */
-    }
+    .hero-container { flex-direction: column; }
+    .login-card, .info-card { width: 100%; }
+    .hero-section { background-image: none; }
 }
-
 @media (max-width: 768px) {
-    .essence-grid, .faq-cta-container, .video-container {
-        flex-direction: column;
-    }
-    .essence-card, .faq-accordion, .cta-block, .video-placeholder, .video-text {
-        width: 100%;
-    }
-    .main-footer {
-        flex-direction: column;
-        gap: 30px;
-        text-align: center;
-    }
-    .footer-right {
-        text-align: center;
-    }
-    .nav-menu {
-        display: none;
-    }
+    .essence-grid, .faq-cta-container, .video-container { flex-direction: column; }
+    .essence-card, .faq-accordion, .cta-block, .video-placeholder, .video-text { width: 100%; }
+    .main-footer { flex-direction: column; gap: 30px; text-align: center; }
 }
