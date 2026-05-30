@@ -3,14 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mundo Stop Motion - Login e Introdução</title>
+    <title>Mundo da Animação - Stop Motion</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Garantindo o carregamento da fonte Special Elite -->
-    <link href="https://googleapis.com" rel="stylesheet">
+    <!-- Fontes do Google (Cinzel para títulos góticos e Montserrat para textos limpos) -->
+    <link rel="preconnect" href="https://googleapis.com">
+    <link rel="preconnect" href="https://gstatic.com" crossorigin>
+    <link href="https://googleapis.com/css2?family=Cinzel:wght@400;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <!-- CONTAGEM REGRESSIVA -->
+    <!-- ==========================================================================
+       1. TELA DE CONTAGEM REGRESSIVA (REAPROVEITADA DO SEU CÓDIGO)
+       ========================================================================== */ -->
     <div id="countdown-screen">
         <div class="film-grain"></div>
         <div class="projector-lines"></div>
@@ -20,63 +24,215 @@
         </div>
     </div>
 
-    <!-- TELA DE LOGIN E INTRODUÇÃO PANORÂMICA -->
+    <!-- ==========================================================================
+       2. CONTEÚDO PRINCIPAL DO SITE (AQUÉM DA CONTAGEM)
+       ========================================================================== */ -->
     <div id="main-site">
-        <div class="vignette"></div>
 
+        <!-- CABEÇALHO (NAVBAR FIXA NO TOPO) -->
+        <header class="main-header">
+            <div class="logo">STOP_MOTION</div>
+            <nav class="nav-menu">
+                <a href="#" class="active">INÍCIO</a>
+                <a href="#">AULAS</a>
+                <a href="#">ESTÚDIO</a>
+                <a href="#">GALERIA</a>
+                <a href="#">COMUNIDADE</a>
+                <a href="#">SOBRE</a>
+            </nav>
+            <button class="btn-login-nav">LOGIN</button>
+        </header>
+
+        <!-- SEÇÃO HERO (BOAS-VINDAS, LOGIN E INTRODUÇÃO) -->
         <main class="hero-section">
-            <!-- Balões informativos flutuantes sobre o site -->
-            <div class="intro-badge badge-left-top">
-                <h3>🎬 O QUE É?</h3>
-                <p>Um portal dedicado à arte do Stop Motion, onde o imaginário ganha vida quadro a quadro.</p>
-            </div>
+            <span class="subtitle-welcome">BEM-VINDO AO</span>
+            <h1 class="main-title">MUNDO DA ANIMAÇÃO</h1>
+            <p class="tagline">Aprenda, crie e dê vida às suas histórias quadro a quadro.</p>
 
-            <div class="intro-badge badge-left-bottom">
-                <h3>🛠️ APRENDA</h3>
-                <p>Descubra técnicas de animação, iluminação, cenografia e dê movimento aos seus bonecos.</p>
-            </div>
+            <div class="hero-container">
+                <!-- Formulário de Login (Card da Esquerda) -->
+                <div class="login-card">
+                    <h2>ENTRAR</h2>
+                    <form onsubmit="event.preventDefault(); irParaMenu();">
+                        <div class="input-group">
+                            <label>E-mail</label>
+                            <input type="email" placeholder="seuemail@email.com" required>
+                        </div>
+                        
+                        <div class="input-group">
+                            <label>Senha</label>
+                            <input type="password" placeholder="••••••••" required>
+                        </div>
 
-            <!-- CONTAINER CENTRAL: O login maior e esticado -->
-            <div class="intro-container extended-login-card">
-                <h1 class="welcome-text">MUNDO DA ANIMAÇÃO</h1>
+                        <a href="#" class="forgot-password">Esqueceu sua senha?</a>
+                        
+                        <!-- Botão com o estilo pontilhado que criamos -->
+                        <button type="submit" class="btn-primary">ENTRAR</button>
+                    </form>
+                    <p class="signup-text">Ainda não tem uma conta? <a href="#">CADASTRE-SE</a></p>
+                </div>
 
-                <!-- Formulário de Acesso -->
-                <form class="login-form" onsubmit="event.preventDefault(); irParaMenu();">
-                    <div class="input-group">
-                        <input type="email" placeholder="DIGITE SEU E-MAIL OU USUÁRIO" required autocomplete="off">
-                    </div>
-                    
-                    <div class="input-group">
-                        <input type="password" placeholder="DIGITE SUA SENHA DE ACESSO" required>
-                    </div>
-
-                    <button type="submit" class="cta-button">BORA ANIMAR!!!</button>
-                </form>
-
-                <!-- Links de ajuda para o usuário -->
-                <div class="login-links">
-                    <a href="#">Esqueceu a senha?</a>
-                    <a href="#">Criar uma conta</a>
+                <!-- Texto Explicativo (Card da Direita) -->
+                <div class="info-card">
+                    <h2>O QUE É O STOP_MOTION?</h2>
+                    <p>O Stop Motion é uma técnica de animação quadro a quadro que dá vida a objetos, personagens e cenários reais.</p>
+                    <p>Aqui no Mundo da Animação, você vai aprender tudo sobre essa arte incrível que encanta gerações – mas que infelizmente vem perdendo espaço no mercado.</p>
+                    <p>Nosso objetivo é resgatar, valorizar e fortalecer essa forma única de contar histórias!</p>
                 </div>
             </div>
-
-            <!-- Mais balões informativos na direita -->
-            <div class="intro-badge badge-right-top">
-                <h3>💡 INSPIRAÇÃO</h3>
-                <p>Explore carrosséis de referências, grandes obras e estúdios que moldaram o cinema.</p>
-            </div>
-
-            <div class="intro-badge badge-right-bottom">
-                <h3>🚀 COMUNIDADE</h3>
-                <p>Faça seu login para liberar o menu completo e fazer parte do nosso ecossistema criativo.</p>
-            </div>
         </main>
-    </div>
 
+
+        <!-- 3. SEÇÃO ASSISTA E SE INSPIRE -->
+        <section class="video-section">
+            <h2 class="section-divider">ASSISTA E SE INSPIRE</h2>
+            <div class="video-container">
+                <div class="video-placeholder">
+                    <button class="play-button">▶</button> 
+                </div>
+                <div class="video-text">
+                    <h3>O que é Stop Motion?</h3>
+                    <p>Descubra a magia por trás de cada movimento.</p>
+                    <button class="btn-outline">ASSISTIR VÍDEO</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. SEÇÃO POR QUE APRENDER -->
+        <section class="why-section">
+            <h2 class="section-divider">POR QUE APRENDER STOP MOTION?</h2>
+            <div class="carousel-container">
+                <button class="arrow-btn btn-left">&lt;</button>
+                
+                <div class="cards-grid">
+                    <div class="feature-card">
+                        <div class="card-img" style="background-image: url('placeholder1.jpg');"></div>
+                        <h3>Crie mundos reais</h3>
+                        <p>Transforme ideias em cenários e personagens únicos.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="card-img" style="background-image: url('placeholder2.jpg');"></div>
+                        <h3>Dê vida ao invisível</h3>
+                        <p>Cada pequeno movimento cria emoções inesquecíveis.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="card-img" style="background-image: url('placeholder3.jpg');"></div>
+                        <h3>Faça parte da mudança</h3>
+                        <p>O Stop Motion é arte, é cultura, é resistência.</p>
+                    </div>
+                </div>
+
+                <button class="arrow-btn btn-right">&gt;</button>
+            </div>
+            <div class="carousel-dots">
+                <span class="dot active"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+            </div>
+        </section>
+
+        <!-- 5. SEÇÃO NOSSA ESSÊNCIA (MISSÃO, VISÃO, VALORES) -->
+        <section class="essence-section">
+            <h2 class="section-divider">NOSSA ESSÊNCIA</h2>
+            <div class="essence-grid">
+                <div class="essence-card">
+                    <span class="icon">⭐</span>
+                    <h3>MISSÃO</h3>
+                    <p>Ensinar e inspirar pessoas a explorarem o Stop Motion, promovendo conhecimento, criatividade e colaboração.</p>
+                </div>
+                <div class="essence-card">
+                    <span class="icon">👁️</span>
+                    <h3>VISÃO</h3>
+                    <p>Ser referência no ensino de Stop Motion no Brasil, formando criadores conscientes do valor dessa arte.</p>
+                </div>
+                <div class="essence-card">
+                    <span class="icon">❤️</span>
+                    <h3>VALORES</h3>
+                    <ul>
+                        <li>Criatividade</li>
+                        <li>Colaboração</li>
+                        <li>Respeito à arte</li>
+                        <li>Inclusão</li>
+                        <li>Paixão pelo que fazemos</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. SEÇÃO PERGUNTAS FREQUENTES & CALL TO ACTION -->
+        <section class="faq-section">
+            <h2 class="section-divider">DÚVIDAS FREQUENTES</h2>
+            <div class="faq-cta-container">
+                <!-- Accordion FAQ -->
+                <div class="faq-accordion">
+                    <div class="faq-item">
+                        <button class="faq-question">Preciso ter experiência para começar? <span>+</span></button>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question">Quais materiais eu preciso? <span>+</span></button>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question">As aulas têm certificado? <span>+</span></button>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question">Posso acessar pelo celular? <span>+</span></button>
+                    </div>
+                </div>
+
+                <!-- Bloco de Chamada para Ação -->
+                <div class="cta-block">
+                    <h3>PRONTO PARA COMEÇAR SUA JORNADA?</h3>
+                    <p>Junte-se à nossa comunidade e ajude a manter essa arte viva!</p>
+                    <button class="btn-yellow">CRIAR CONTA GRATUITA ⚡</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. RODAPÉ (FOOTER) -->
+        <footer class="main-footer">
+            <div class="footer-left">
+                <span class="logo">STOP_MOTION</span>
+                <p>© 2026 Mundo da Animação - Stop Motion. Todos os direitos reservados.</p>
+            </div>
+            <div class="footer-center">
+                <h4>REDES SOCIAIS</h4>
+                <div class="social-icons">
+                    <a href="#">📸</a>
+                    <a href="#">🎥</a>
+                    <a href="#">🎵</a>
+                    <a href="#">👤</a>
+                </div>
+            </div>
+            <div class="footer-right">
+                <h4>FALE CONOSCO</h4>
+                <a href="mailto:contato@stopmotion.com.br">contato@stopmotion.com.br</a>
+            </div>
+        </footer>
+
+    </div> <!-- FIM DO #main-site -->
+
+    <!-- LOGICA SCRIPT -->
     <script>
+        // Redirecionamento ao enviar formulário
         function irParaMenu() {
             window.location.href = "home.html";
         }
+
+        // Lógica básica para abrir/fechar as dúvidas do FAQ
+        document.querySelectorAll('.faq-question').forEach(button => {
+            button.addEventListener('click', () => {
+                const span = button.querySelector('span');
+                if (span.innerText === '+') {
+                    span.innerText = '-';
+                    button.style.color = 'var(--orange-primary)';
+                } else {
+                    span.innerText = '+';
+                    button.style.color = 'var(--text-light)';
+                }
+            });
+        });
     </script>
 </body>
 </html>

@@ -1,263 +1,797 @@
+/* ==========================================================================
+   1. CONFIGURAÇÕES GLOBAIS E VARIÁVEIS
+   ========================================================================== */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+:root {
+    --bg-dark: #070707;
+    --bg-card: #120e0c;
+    --orange-primary: #f26419;
+    --orange-hover: #dd4b00;
+    --yellow-accent: #f6ae2d;
+    --text-light: #e5e5e5;
+    --text-muted: #a0a0a0;
+    --border-color: rgba(242, 100, 25, 0.3);
+}
+
 body {
-    background-color: #111;
-    font-family: 'Special Elite', monospace;
-    overflow: hidden;
-    height: 100vh;
-    width: 100vw;
+    background-color: var(--bg-dark);
+    color: var(--text-light);
+    font-family: 'Montserrat', sans-serif;
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+h1, h2, h3, .logo {
+    font-family: 'Cinzel', serif;
+    letter-spacing: 1px;
+}
+
+a {
+    text-decoration: none;
+    transition: 0.3s;
 }
 
 /* ==========================================================================
-   TELA DE CONTAGEM REGRESSIVA (MAIOR E MAIS LENTA)
+   2. TELA DE CONTAGEM REGRESSIVA (CINEMATOGRÁFICA)
    ========================================================================== */
 #countdown-screen {
     position: fixed;
-    top: 0; left: 0; width: 100vw; height: 100vh;
-    background-color: #444;
-    display: flex; justify-content: center; align-items: center;
-    z-index: 9999; overflow: hidden;
+    top: 0; 
+    left: 0; 
+    width: 100vw; 
+    height: 100vh;
+    background-color: #1a1a1a;
+    display: flex; 
+    justify-content: center; 
+    align-items: center;
+    z-index: 9999; 
+    overflow: hidden;
     animation: fadeOutScreen 7.5s forwards;
 }
 
 /* Textura de filme antigo */
 .film-grain {
-    position: absolute; width: 100%; height: 100%;
+    position: absolute; 
+    width: 100%; 
+    height: 100%;
     background: radial-gradient(circle, rgba(255,255,255,0.15) 10%, transparent 11%);
-    background-size: 10px 10px; opacity: 0.25;
+    background-size: 10px 10px; 
+    opacity: 0.25;
     animation: grainMove 0.15s infinite steps(2);
 }
 
 /* Linhas de projetor arranhado */
 .projector-lines {
-    position: absolute; width: 100%; height: 100%;
+    position: absolute; 
+    width: 100%; 
+    height: 100%;
     border-left: 2px solid rgba(0, 0, 0, 0.25);
-    border-right: 1px solid rgba(0, 0, 0, 0.3); opacity: 0.4;
+    border-right: 1px solid rgba(0, 0, 0, 0.3); 
+    opacity: 0.4;
     animation: lineScratch 0.3s infinite linear;
 }
 
-/* ALVO CINEMATOGRÁFICO ATUALIZADO */
+/* Alvo cinematográfico */
 .countdown-circle {
     position: relative; 
     width: 500px; 
     height: 500px;
-    border: 6px solid #222; border-radius: 50%;
-    display: flex; justify-content: center; align-items: center;
+    border: 6px solid #222; 
+    border-radius: 50%;
+    display: flex; 
+    justify-content: center; 
+    align-items: center;
     box-shadow: 0 0 0 25px rgba(0,0,0,0.05), inset 0 0 0 25px rgba(0,0,0,0.05);
 }
 
 /* Linhas em cruz cortando o alvo */
 .countdown-circle::before, .countdown-circle::after {
-    content: ''; position: absolute; background: #222;
+    content: ''; 
+    position: absolute; 
+    background: #222;
 }
 .countdown-circle::before { width: 150vw; height: 3px; left: -75vw; }
 .countdown-circle::after { height: 150vh; width: 3px; top: -75vh; }
 
 /* Ponteiro de radar girando no alvo gigante */
 .radar-sweep {
-    position: absolute; width: 100%; height: 100%; border-radius: 50%;
+    position: absolute; 
+    width: 100%; 
+    height: 100%; 
+    border-radius: 50%;
     background: conic-gradient(from 0deg, rgba(0,0,0,0.2) 0deg, transparent 90deg);
     animation: radarSpin 1.2s linear infinite;
 }
 
-/* ESCRITA DA CONTAGEM */
+/* Escrita da contagem animada */
 #countdown-text::after {
     content: "LUZ...";
     font-size: 4.5rem; 
-    color: #111; z-index: 10; letter-spacing: 4px;
+    color: #111; 
+    z-index: 10; 
+    letter-spacing: 4px;
     text-shadow: 2px 2px 4px rgba(255,255,255,0.2);
     animation: changeText 7.5s forwards, textFlicker 0.15s infinite alternate;
 }
 
 /* ==========================================================================
-   PÔSTER DE INTRODUÇÃO (AGORA COM FUNDO PANORÂMICO EM MOVIMENTO)
+   3. CONFIGURAÇÃO DO SITE PRINCIPAL (TRANSIÇÃO APÓS CONTAGEM)
    ========================================================================== */
 #main-site {
-    background-image: url('assets/fundo2.jpg');
-    background-size: auto 100vh; /* Mantém a altura e deixa a largura livre para rodar */
-    background-position: 0px center;
-    background-repeat: repeat-x; /* Repete a imagem horizontalmente sem fim */
-    height: 100vh;
-    width: 100vw;
-    position: relative;
     opacity: 0;
-    /* Adicionada a animação 'panoramicaFilme' rodando continuamente */
-    animation: fadeInSite 1.2s ease-in forwards 7.2s, panoramicaFilme 45s linear infinite 7.2s;
-}
-
-.vignette {
-    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-    background: radial-gradient(circle, transparent 10%, rgba(0, 0, 0, 0.85) 100%);
-    pointer-events: none; z-index: 1;
-}
-
-.hero-section {
-    height: 100vh; 
-    width: 100vw;
-    display: flex; 
-    align-items: center; 
-    justify-content: center;
-    position: relative; 
-    z-index: 5; 
-    padding: 0 50px;
-}
-
-/* CAIXA DE LOGIN: Expandida para preencher o espaço da tela */
-.intro-container.extended-login-card {
+    min-height: 100vh;
     width: 100%;
-    max-width: 580px; /* Alargado para ocupar melhor as telas */
-    text-align: center;
-    background-image: url('assets/fundo-card.jpg');
-    background-size: cover;
-    background-position: center;
-    background-color: rgba(15, 15, 15, 0.92); /* Tom escuro para leitura perfeita */
-    padding: 50px 45px; 
-    border-radius: 12px;
-    border: 3px solid #000000;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.9), 6px 6px 0px #5a3d75;
-    animation: floatAnimation 4s ease-in-out infinite;
-    z-index: 10;
+    position: relative;
+    animation: fadeInSite 1.2s ease-in forwards 7.2s;
 }
 
-.welcome-text {
-    font-size: 2.6rem; 
-    line-height: 1.2; 
-    color: #ffffff; 
-    letter-spacing: 3px;
-    text-shadow: 0 0 15px rgba(0, 0, 0, 0.9), 3px 3px 0px #5a3d75, 5px 5px 10px rgba(0,0,0,1);
-    margin-bottom: 35px;
-}
-
-/* FORMULÁRIO E INPUTS GRANDES */
-.login-form {
-    display: flex;
-    flex-direction: column;
-    gap: 22px; 
-    margin-bottom: 30px;
-}
-
-.input-group input {
-    width: 100%;
-    padding: 18px 22px; 
-    background-color: rgba(10, 10, 10, 0.9);
-    border: 2px solid #222222;
-    color: #ffffff;
-    font-family: 'Special Elite', monospace;
+/* Divisores de seção em linha com degradê laranja */
+.section-divider {
     font-size: 1.1rem;
-    border-radius: 6px;
-    letter-spacing: 1px;
-    box-sizing: border-box;
-    box-shadow: inset 0 3px 6px rgba(0,0,0,0.8);
-    transition: all 0.3s ease;
+    color: var(--orange-primary);
+    text-align: center;
+    margin-bottom: 40px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
 }
 
-/* Efeito de brilho amarelo ao clicar no input */
-.input-group input:focus {
-    outline: none;
-    border-color: #ff9d00;
-    background-color: #151515;
-    box-shadow: inset 0 2px 5px rgba(0,0,0,0.5), 0 0 15px rgba(255, 157, 0, 0.6);
+.section-divider::before, .section-divider::after {
+    content: '';
+    height: 1px;
+    width: 100px;
+    background: linear-gradient(to right, transparent, var(--orange-primary));
 }
 
-.input-group input::placeholder {
-    color: #555555;
-    font-size: 0.95rem;
+.section-divider::after {
+    background: linear-gradient(to left, transparent, var(--orange-primary));
 }
 
-/* LINKS DO RODAPÉ DO LOGIN */
-.login-links {
+/* ==========================================================================
+   4. CABEÇALHO (NAVBAR)
+   ========================================================================== */
+.main-header {
     display: flex;
     justify-content: space-between;
-    padding: 0 5px;
+    align-items: center;
+    padding: 20px 50px;
+    background-color: rgba(7, 7, 7, 0.95);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
 }
 
-.login-links a {
-    color: #aaaaaa;
-    font-size: 0.95rem;
-    text-decoration: none;
-    letter-spacing: 1px;
-    transition: color 0.2s ease;
+.logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--text-light);
 }
 
-.login-links a:hover {
-    color: #ff9d00;
+.nav-menu {
+    display: flex;
+    gap: 30px;
+}
+
+.nav-menu a {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.nav-menu a:hover, .nav-menu a.active {
+    color: var(--orange-primary);
+}
+
+.btn-login-nav {
+    background: transparent;
+    border: 1px solid var(--text-muted);
+    color: var(--text-light);
+    padding: 8px 20px;
+    cursor: pointer;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.btn-login-nav:hover {
+    background-color: var(--text-light);
+    color: var(--bg-dark);
+}
+
+/* ==========================================================================
+   5. SEÇÃO HERO (BOAS-VINDAS & PAINÉIS DE LOGIN)
+   ========================================================================== */
+.hero-section {
+    padding: 60px 20px;
+    text-align: center;
+    position: relative;
+    min-height: 85vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-image: url('personagem_esquerda.png'), url('personagem_direita.png');
+    background-position: left center, right center;
+    background-repeat: no-repeat, no-repeat;
+    background-size: contain, contain;
+}
+
+.subtitle-welcome {
+    color: var(--orange-primary);
+    font-size: 0.9rem;
+    font-weight: bold;
+    letter-spacing: 3px;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.main-title {
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+    color: var(--text-light);
+}
+
+.tagline {
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    margin-bottom: 50px;
+}
+
+.hero-container {
+    display: flex;
+    gap: 40px;
+    max-width: 1000px;
+    width: 100%;
+    justify-content: center;
+    align-items: stretch;
+    margin-top: 20px;
+}
+
+/* Configuração dos Cards Góticos do Topo */
+.login-card, .info-card {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    padding: 40px;
+    width: 50%;
+    text-align: left;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+    animation: floatAnimation 5s ease-in-out infinite;
+}
+
+.info-card {
+    animation-delay: 0.5s;
+}
+
+.login-card h2, .info-card h2 {
+    font-size: 1.4rem;
+    color: var(--orange-primary);
+    margin-bottom: 25px;
+    border-left: 3px solid var(--orange-primary);
+    padding-left: 10px;
+}
+
+/* Customização fina do formulário */
+.login-card .input-group {
+    margin-bottom: 20px;
+}
+
+.login-card label {
+    display: block;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    margin-bottom: 8px;
+}
+
+.login-card input {
+    width: 100%;
+    padding: 14px 18px;
+    background-color: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-light);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1rem;
+}
+
+.login-card input:focus {
+    outline: none;
+    border-color: var(--yellow-accent);
+    box-shadow: 0 0 15px rgba(246, 174, 45, 0.3);
+}
+
+.forgot-password {
+    display: inline-block;
+    color: var(--orange-primary);
+    font-size: 0.85rem;
+    margin-bottom: 25px;
+}
+
+.forgot-password:hover {
+    color: var(--text-light);
     text-decoration: underline;
 }
 
-/* BOTÃO CUSTOMIZADO PROPORCIONAL */
-.cta-button {
+/* Seu Botão Customizado com bordas pontilhadas */
+.btn-primary {
     width: 100%;
-    font-family: 'Special Elite', monospace;
-    font-size: 1.4rem; 
+    font-family: 'Cinzel', serif;
+    font-size: 1.1rem; 
     font-weight: bold; 
     color: #000000;
-    background-color: #ff9d00; 
-    border: 3px dashed #000000;
-    padding: 18px 20px; 
-    border-radius: 8px; 
+    background-color: var(--orange-primary); 
+    border: 2px dashed #000000;
+    padding: 14px 20px; 
     cursor: pointer;
     letter-spacing: 2px; 
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.6);
     transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
-.cta-button:hover {
-    background-color: #ffffff; color: #5a3d75; border-color: #5a3d75;
-    transform: scale(1.02); box-shadow: 0 0 30px rgba(255, 157, 0, 0.9);
+.btn-primary:hover {
+    background-color: var(--text-light); 
+    color: var(--bg-dark); 
+    border-color: var(--orange-primary);
+    transform: scale(1.02); 
+    box-shadow: 0 0 20px rgba(242, 100, 25, 0.6);
+}
+
+.signup-text {
+    margin-top: 20px;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    text-align: center;
+}
+
+.signup-text a {
+    color: var(--orange-primary);
+    font-weight: bold;
+}
+
+.info-card p {
+    color: var(--text-light);
+    font-size: 0.95rem;
+    margin-bottom: 20px;
+    opacity: 0.9;
+}
+
+.info-card p:last-child {
+    margin-bottom: 0;
 }
 
 /* ==========================================================================
-   ESTILIZAÇÃO DOS BADGES EXPLICATIVOS FLUTUANTES (INTRO)
+   6. SEÇÃO ASSISTA E SE INSPIRE (VÍDEO DESTAQUE)
    ========================================================================== */
-.intro-badge {
+.video-section {
+    padding: 60px 20px;
+    background-color: var(--bg-dark);
+}
+
+.video-container {
+    display: flex;
+    max-width: 1000px;
+    margin: 0 auto;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    align-items: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.video-placeholder {
+    width: 55%;
+    height: 300px;
+    background-image: url('thumbnail_video.jpg');
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.video-placeholder::before {
+    content: '';
     position: absolute;
-    width: 260px;
-    background: rgba(15, 15, 15, 0.85);
-    border: 2px solid #333333;
-    padding: 15px 20px;
-    border-radius: 8px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-    backdrop-filter: blur(4px); /* Desfoque sutil no fundo do balão */
-    z-index: 4;
-    transition: transform 0.3s ease, border-color 0.3s ease;
+    top:0; left:0; width:100%; height:100%;
+    background: rgba(0, 0, 0, 0.4);
 }
 
-.intro-badge:hover {
-    border-color: #5a3d75;
-    transform: scale(1.05);
+.play-button {
+    position: relative;
+    z-index: 2;
+    background: transparent;
+    border: 2px solid var(--text-light);
+    color: var(--text-light);
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: 0.3s;
 }
 
-.intro-badge h3 {
-    font-size: 1rem;
-    color: #ff9d00;
-    margin-bottom: 8px;
+.play-button:hover {
+    transform: scale(1.1);
+    border-color: var(--orange-primary);
+    color: var(--orange-primary);
+}
+
+.video-text {
+    width: 45%;
+    padding: 40px;
+}
+
+.video-text h3 {
+    font-family: 'Cinzel', serif;
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    color: var(--text-light);
+}
+
+.video-text p {
+    color: var(--text-muted);
+    margin-bottom: 25px;
+    font-size: 0.95rem;
+}
+
+.btn-outline {
+    background: transparent;
+    border: 1px solid var(--text-light);
+    color: var(--text-light);
+    padding: 10px 25px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: 0.3s;
     letter-spacing: 1px;
 }
 
-.intro-badge p {
-    font-size: 0.8rem;
-    color: #cccccc;
+.btn-outline:hover {
+    border-color: var(--orange-primary);
+    color: var(--orange-primary);
+}
+
+/* ==========================================================================
+   7. SEÇÃO POR QUE APRENDER (CARROSSEL DE CARDS)
+   ========================================================================== */
+.why-section {
+    padding: 60px 20px;
+    background-color: var(--bg-dark);
+    text-align: center;
+}
+
+.carousel-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-width: 1100px;
+    margin: 0 auto;
+    gap: 20px;
+}
+
+.cards-grid {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    width: 100%;
+}
+
+.feature-card {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    width: 300px;
+    text-align: left;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    transition: 0.3s;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--orange-primary);
+}
+
+.card-img {
+    height: 180px;
+    background-size: cover;
+    background-position: center;
+    border-bottom: 1px solid rgba(242, 100, 25, 0.15);
+}
+
+.feature-card h3 {
+    font-size: 1.1rem;
+    padding: 20px 20px 5px 20px;
+    color: var(--text-light);
+}
+
+.feature-card p {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    padding: 0 20px 25px 20px;
+    line-height: 1.5;
+}
+
+.arrow-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    font-size: 2rem;
+    cursor: pointer;
+    padding: 10px;
+    transition: 0.3s;
+}
+
+.arrow-btn:hover {
+    color: var(--orange-primary);
+}
+
+.carousel-dots {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 30px;
+}
+
+.dot {
+    width: 8px;
+    height: 8px;
+    background-color: #333;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.dot.active, .dot:hover {
+    background-color: var(--orange-primary);
+    transform: scale(1.2);
+}
+
+
+/* ==========================================================================
+   8. SEÇÃO NOSSA ESSÊNCIA (MISSÃO, VISÃO, VALORES)
+   ========================================================================== */
+.essence-section {
+    padding: 60px 20px;
+    background-color: var(--bg-dark);
+}
+
+.essence-grid {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.essence-card {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    width: 32%;
+    padding: 35px 25px;
+    text-align: center;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    transition: 0.3s;
+}
+
+.essence-card:hover {
+    border-color: var(--orange-primary);
+    transform: scale(1.02);
+}
+
+.essence-card .icon {
+    font-size: 2rem;
+    display: block;
+    margin-bottom: 15px;
+}
+
+.essence-card h3 {
+    font-size: 1.2rem;
+    color: var(--orange-primary);
+    margin-bottom: 20px;
+    letter-spacing: 2px;
+}
+
+.essence-card p {
+    font-size: 0.9rem;
+    color: var(--text-light);
+    line-height: 1.6;
+    opacity: 0.9;
+}
+
+.essence-card ul {
+    list-style: none;
+    text-align: left;
+    display: inline-block;
+}
+
+.essence-card ul li {
+    font-size: 0.9rem;
+    color: var(--text-light);
+    margin-bottom: 10px;
+    position: relative;
+    padding-left: 20px;
+}
+
+.essence-card ul li::before {
+    content: '•';
+    position: absolute;
+    left: 0;
+    color: var(--orange-primary);
+    font-size: 1.2rem;
+    line-height: 1;
+}
+
+/* ==========================================================================
+   9. SEÇÃO PERGUNTAS FREQUENTES & CALL TO ACTION (CTA)
+   ========================================================================== */
+.faq-section {
+    padding: 60px 20px 100px 20px;
+    background-color: var(--bg-dark);
+}
+
+.faq-cta-container {
+    display: flex;
+    max-width: 1000px;
+    margin: 0 auto;
+    gap: 50px;
+    align-items: flex-start;
+}
+
+.faq-accordion {
+    width: 55%;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.faq-item {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.faq-question {
+    width: 100%;
+    background: transparent;
+    border: none;
+    color: var(--text-light);
+    padding: 18px 5px;
+    text-align: left;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: 0.2s;
+}
+
+.faq-question:hover {
+    color: var(--orange-primary);
+}
+
+.faq-question span {
+    color: var(--orange-primary);
+    font-size: 1.2rem;
+}
+
+
+/* Bloco Amarelo de Cadastro */
+.cta-block {
+    width: 45%;
+    background-color: var(--bg-card);
+    border: 1px solid rgba(246, 174, 45, 0.3);
+    padding: 40px;
+    text-align: center;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.6);
+    animation: floatAnimation 5s ease-in-out infinite;
+    animation-delay: 0.2s;
+}
+
+.cta-block h3 {
+    font-size: 1.3rem;
+    color: var(--yellow-accent);
+    margin-bottom: 15px;
     line-height: 1.4;
 }
 
-/* Posicionamento estratégico nas quinas da janela */
-.badge-left-top     { top: 12%; left: 5%; animation: floatAnimation 4.5s ease-in-out infinite alternate; }
-.badge-left-bottom  { bottom: 12%; left: 5%; animation: floatAnimation 5.2s ease-in-out infinite alternate-reverse; }
-.badge-right-top    { top: 12%; right: 5%; animation: floatAnimation 4.8s ease-in-out infinite alternate; }
-.badge-right-bottom { bottom: 12%; right: 5%; animation: floatAnimation 4.2s ease-in-out infinite alternate-reverse; }
-
-/* ==========================================================================
-   LÓGICA DAS ANIMAÇÕES CRONOMETRADAS
-   ========================================================================== */
-@keyframes panoramicaFilme {
-    0% { background-position: 0px center; }
-    100% { background-position: -2000px center; } /* Faz o plano de fundo andar continuamente */
+.cta-block p {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-bottom: 30px;
 }
 
+.btn-yellow {
+    width: 100%;
+    padding: 16px;
+    background-color: var(--yellow-accent);
+    border: none;
+    color: #000000;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: bold;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.btn-yellow:hover {
+    background-color: #e0961b;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(246, 174, 45, 0.4);
+}
+
+/* ==========================================================================
+   10. RODAPÉ (FOOTER)
+   ========================================================================== */
+.main-footer {
+    background-color: #030303;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 40px 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.footer-left .logo {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    display: block;
+    color: var(--text-light);
+}
+
+.footer-center {
+    text-align: center;
+}
+
+.footer-center h4, .footer-right h4 {
+    font-size: 0.8rem;
+    color: var(--text-light);
+    letter-spacing: 2px;
+    margin-bottom: 15px;
+}
+
+.social-icons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+.social-icons a {
+    font-size: 1.2rem;
+    opacity: 0.6;
+    transition: 0.2s;
+}
+
+.social-icons a:hover {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+.footer-right {
+    text-align: right;
+}
+
+.footer-right a {
+    color: var(--orange-primary);
+    font-weight: 600;
+}
+
+.footer-right a:hover {
+    color: var(--text-light);
+    text-decoration: underline;
+}
+
+/* ==========================================================================
+   11. REGRAS DAS ANIMAÇÕES CRONOMETRADAS (DA SUA INTRO)
+   ========================================================================== */
 @keyframes changeText {
     0%, 35% { content: "LUZ..."; }
     38%, 70% { content: "CÂMERA..."; }
@@ -269,9 +803,66 @@ body {
     100% { opacity: 0; visibility: hidden; }
 }
 
-@keyframes fadeInSite { 100% { opacity: 1; } }
-@keyframes radarSpin { 100% { transform: rotate(360deg); } }
-@keyframes textFlicker { 0% { opacity: 0.85; } 100% { opacity: 1; } }
-@keyframes grainMove { 0% { background-position: 0 0; } 100% { background-position: 10px 20px; } }
-@keyframes lineScratch { 0% { transform: translateX(0); opacity: 0.2; } 50% { transform: translateX(30vw); opacity: 0.4; } 100% { transform: translateX(80vw); opacity: 0.1; } }
-@keyframes floatAnimation { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
+@keyframes fadeInSite { 
+    100% { opacity: 1; } 
+}
+
+@keyframes radarSpin { 
+    100% { transform: rotate(360deg); } 
+}
+
+@keyframes textFlicker { 
+    0% { opacity: 0.85; } 
+    100% { opacity: 1; } 
+}
+
+@keyframes grainMove { 
+    0% { background-position: 0 0; } 
+    100% { background-position: 10px 20px; } 
+}
+
+@keyframes lineScratch { 
+    0% { transform: translateX(0); opacity: 0.2; } 
+    50% { transform: translateX(30vw); opacity: 0.4; } 
+    100% { transform: translateX(80vw); opacity: 0.1; } 
+}
+
+@keyframes floatAnimation { 
+    0%, 100% { transform: translateY(0px); } 
+    50% { transform: translateY(-10px); } 
+}
+
+/* ==========================================================================
+   12. RESPONSIVIDADE (GARANTE O LAYOUT AJUSTADO EM TELAS MENORES)
+   ========================================================================== */
+@media (max-width: 900px) {
+    .hero-container {
+        flex-direction: column;
+    }
+    .login-card, .info-card {
+        width: 100%;
+    }
+    .hero-section {
+        background-image: none; /* Esconde os bonecos das pontas para não esmagar no celular */
+    }
+}
+
+@media (max-width: 768px) {
+    .essence-grid, .faq-cta-container, .video-container {
+        flex-direction: column;
+    }
+    .essence-card, .faq-accordion, .cta-block, .video-placeholder, .video-text {
+        width: 100%;
+    }
+    .main-footer {
+        flex-direction: column;
+        gap: 30px;
+        text-align: center;
+    }
+    .footer-right {
+        text-align: center;
+    }
+    .nav-menu {
+        display: none;
+    }
+}
