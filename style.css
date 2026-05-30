@@ -209,7 +209,7 @@ a {
    5. SEÇÃO HERO (CORALINE E BONECOS GRUDADOS NA BASE)
    ========================================================================== */
 .hero-section {
-    padding: 140px 40px 60px 40px; /* Aumentamos o espaçamento nas laterais */
+    padding: 160px 40px 60px 40px; /* Aumentado o topo para centralizar melhor os textos no céu da imagem */
     text-align: center;
     position: relative;
     min-height: 95vh;
@@ -217,16 +217,10 @@ a {
     flex-direction: column;
     align-items: center;
     
-    background-image: url('assets/personagem_esquerda.png'), url('assets/personagem_direita.png');
-    
-    /* Alinha os bonecos respeitando o limite interno (padding) do bloco */
-    background-origin: content-box; 
-    bottom, right bottom;
-    background-repeat: no-repeat, no-repeat;
-    
-    /* Reduzimos um tiquinho o tamanho (de 380px para 340px) para ela caber inteira sem sufocar */
-    background-size: 340px auto, 340px auto; 
+    /* Removemos as imagens das laterais para não duplicar com o seu novo fundo */
+    background: transparent; 
 }
+
 
 
 .subtitle-welcome {
@@ -576,3 +570,5 @@ a {
     .essence-card, .faq-accordion, .cta-block, .video-placeholder, .video-text { width: 100%; }
     .main-footer { flex-direction: column; gap: 30px; text-align: center; }
 }
+
+

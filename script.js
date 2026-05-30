@@ -30,3 +30,4 @@ function scrollToContent() {
     const contentSection = document.getElementById("content-section");
     contentSection.scrollIntoView({ behavior: "smooth" });
 }
+
