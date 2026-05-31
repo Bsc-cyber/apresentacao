@@ -1,0 +1,372 @@
+/* ==========================================================================
+   1. RESET, PALETA GÓTICA E RECALIBRAÇÃO DA NAVBAR TOP PREMIUM
+   ========================================================================== */
+* { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+}
+
+:root {
+    --bg-deep: #050307;
+    --panel-glass: rgba(14, 8, 22, 0.65);
+    --border-purple: rgba(166, 93, 242, 0.25);
+    --neon-purple: #a65df2;
+    --neon-hover: #c18fff;
+    --accent-yellow: #ff9d00;
+    --text-main: #ffffff;
+    --text-muted: #958d9c;
+}
+
+body {
+    background-color: var(--bg-deep);
+    color: var(--text-main);
+    font-family: 'Montserrat', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+    background-image: radial-gradient(circle at 50% 30%, rgba(166, 93, 242, 0.04) 0%, transparent 60%), url('assets/fundo_principal.png');
+    background-size: cover; 
+    background-position: center top; 
+    background-attachment: fixed;
+}
+
+h1, h2, h3, h4, .logo { 
+    font-family: 'Cinzel', serif; 
+    letter-spacing: 1px; 
+}
+
+/* NAVBAR SUPERIOR ESTILIZADA DE FLIPERAMA/STREAMING PREMIUM */
+.dash-header {
+    background: rgba(7, 4, 10, 0.95); 
+    padding: 0 40px; 
+    display: flex;
+    justify-content: space-between; 
+    align-items: center;
+    border-bottom: 1px solid var(--border-purple); 
+    position: fixed;
+    top: 0; left: 0; width: 100%; 
+    z-index: 100; 
+    height: 75px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.logo { font-size: 1.35rem; font-weight: 700; color: #fff; text-shadow: 0 0 10px rgba(166, 93, 242, 0.4); }
+.logo span { font-size: 0.6rem; background: rgba(166, 93, 242, 0.2); border: 1px solid var(--border-purple); padding: 2px 6px; border-radius: 4px; margin-left: 6px; color: var(--neon-hover); font-weight: bold; letter-spacing: 0.5px; }
+
+/* RECALIBRAÇÃO PROPORCIONAL: Links horizontais com mais espaçamento, respiro e hover neon */
+.header-center-nav { 
+    display: flex; 
+    gap: 8px; 
+    align-items: center; 
+}
+.header-center-nav a { 
+    color: var(--text-muted); 
+    font-size: 0.75rem; 
+    font-weight: 700; 
+    text-decoration: none; 
+    padding: 10px 14px; 
+    border-radius: 6px; 
+    border: 1px solid transparent;
+    transition: all 0.2s ease-in-out; 
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.header-center-nav a:hover, .header-center-nav a.active { 
+    color: #ffffff; 
+    background: rgba(166, 93, 242, 0.12); 
+    border-color: rgba(166, 93, 242, 0.3); 
+    text-shadow: 0 0 8px var(--neon-purple); 
+}
+
+.header-user-zone { display: flex; align-items: center; gap: 20px; }
+.noti-bell { font-size: 1.1rem; cursor: pointer; color: var(--text-muted); transition: 0.2s; }
+.noti-bell:hover { color: #fff; }
+
+.user-pill {
+    display: flex; align-items: center; gap: 10px; background: rgba(166, 93, 242, 0.08);
+    border: 1px solid rgba(166, 93, 242, 0.25); padding: 6px 14px; border-radius: 20px;
+}
+.user-avatar { width: 26px; height: 26px; background: var(--neon-purple); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; color: #000; font-weight: bold; }
+.user-meta strong { font-size: 0.75rem; color: #fff; display: block; }
+
+/* CONTAINER PRINCIPAL DO DASHBOARD */
+.dash-main-content { 
+    flex: 1; 
+    margin-top: 75px; 
+    padding: 40px 40px 100px 40px; 
+    display: flex; 
+    flex-direction: column; 
+    gap: 35px;
+    width: 100%;
+    max-width: 1400px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* ==========================================================================
+   2. SINTONIA DA MALHA DE CARDS EXPANDIDOS (CSS GRID CENTRALIZADO)
+   ========================================================================== */
+.welcome-row-grid {
+    display: grid;
+    grid-template-columns: 1.8fr 1fr;
+    gap: 30px;
+    width: 100%;
+}
+
+.glass-panel-card {
+    background-color: var(--panel-glass);
+    border: 1px solid var(--border-purple);
+    border-radius: 12px;
+    padding: 26px;
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+}
+
+.welcome-hero-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+.welcome-text-side { width: 60%; }
+.welcome-text-side h1 { font-family: 'Cinzel', serif; font-size: 2.2rem; margin-bottom: 6px; color: #fff; }
+.welcome-text-side p { font-size: 0.88rem; color: var(--text-muted); margin-bottom: 25px; }
+
+/* Indicador de Progresso na Horizontal */
+.progress-indicator-box { width: 100%; max-width: 380px; text-align: left; }
+.progress-indicator-box span { font-size: 0.65rem; color: var(--text-muted); font-weight: 700; letter-spacing: 0.5px; display: block; margin-bottom: 4px; }
+.progress-title-percent h4 { font-size: 1.5rem; font-weight: 700; color: #fff; margin-bottom: 6px; }
+.progress-bar-track { width: 100%; height: 6px; background: rgba(255,255,255,0.05); border-radius: 10px; overflow: hidden; margin-bottom: 8px; }
+.progress-bar-fill { width: 32%; height: 100%; background: linear-gradient(90deg, var(--neon-purple), var(--neon-hover)); border-radius: 10px; box-shadow: 0 0 10px rgba(166, 93, 242, 0.4); }
+.progress-indicator-box small { font-size: 0.7rem; color: var(--text-muted); }
+
+/* Ilustração Integrada da Coraline */
+.welcome-avatar-side { width: 35%; display: flex; justify-content: center; align-items: center; }
+.welcome-avatar-side img {
+    width: 140px; height: auto; object-fit: contain;
+    filter: drop-shadow(0 10px 25px rgba(0,0,0,0.8));
+    animation: floatAnimation 5s ease-in-out infinite alternate;
+}
+
+/* Bloco da Ofensiva / Calendário Semanal */
+.streak-container-box { display: flex; flex-direction: column; justify-content: space-between; height: 100%; }
+.streak-header-title { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+.streak-fire-icon { font-size: 2.2rem; color: var(--accent-yellow); text-shadow: 0 0 15px rgba(255, 157, 0, 0.4); }
+.streak-header-title h3 { font-size: 0.9rem; font-weight: 700; color: #fff; }
+.streak-header-title p { font-size: 0.72rem; color: var(--text-muted); }
+
+.streak-calendar-row { display: flex; justify-content: space-between; margin: 15px 0; }
+.streak-day-dot { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.streak-day-dot span { font-size: 0.65rem; color: var(--text-muted); font-weight: 600; }
+.streak-circle-check {
+    width: 26px; height: 26px; border-radius: 50%; background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: center; font-size: 0.72rem; color: var(--text-muted);
+}
+.streak-day-dot.concluido .streak-circle-check {
+    background: var(--neon-purple); border-color: var(--neon-hover); color: #000; font-weight: bold;
+    box-shadow: 0 0 12px rgba(166, 93, 242, 0.4);
+}
+.streak-day-dot.concluido span { color: #fff; font-weight: 700; }
+.streak-footer-reward { display: flex; justify-content: space-between; align-items: center; border-top: 1px dashed rgba(255,255,255,0.08); padding-top: 12px; }
+.reward-info-text small { display: block; font-size: 0.65rem; color: var(--text-muted); }
+.reward-info-text strong { display: block; font-size: 0.78rem; color: var(--accent-yellow); }
+.reward-game-icon { font-size: 1.3rem; color: var(--neon-purple); }
+
+/* LINHA INFERIOR (TRILHAS, ESTUDOS E PORTFÓLIO) */
+.main-dashboard-grid {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr 1fr;
+    gap: 30px;
+    width: 100%;
+}
+
+.panel-section-title {
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 0.75rem; color: var(--text-muted); font-weight: 700; letter-spacing: 1px;
+    margin-bottom: 18px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 8px;
+}
+.panel-section-title a { color: var(--neon-purple); text-decoration: none; font-size: 0.7rem; }
+.panel-section-title a:hover { color: #fff; }
+
+/* Card Continue de Onde Parou */
+.continue-lesson-card { display: flex; gap: 15px; background: rgba(5,3,8,0.4); border: 1px solid rgba(255,255,255,0.04); padding: 16px; border-radius: 8px; align-items: center; }
+.lesson-img-cover { width: 120px; aspect-ratio: 16/9; background-size: cover; background-position: center; border-radius: 6px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(166, 93, 242, 0.15); position: relative; }
+.play-btn-small { width: 30px; height: 30px; background: rgba(0,0,0,0.6); border: 1px solid #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; cursor: pointer; color: #fff; transition: 0.2s; }
+.lesson-img-cover:hover .play-btn-small { background: var(--neon-purple); border-color: var(--neon-hover); transform: scale(1.1); }
+
+.lesson-meta-side { flex: 1; text-align: left; display: flex; flex-direction: column; gap: 4px; }
+.lesson-meta-side h4 { font-size: 0.85rem; color: #fff; font-weight: 700; }
+.lesson-meta-side .track-tag { font-size: 0.65rem; color: var(--text-muted); }
+.lesson-meta-side p { font-size: 0.72rem; color: var(--text-muted); line-height: 1.4; margin-bottom: 6px; }
+.btn-continue-act { width: 100%; max-width: 140px; padding: 8px 12px; background: #6a0dad; border: none; color: #fff; font-size: 0.7rem; font-weight: bold; border-radius: 4px; cursor: pointer; transition: 0.2s; }
+.btn-continue-act:hover { background: #8a2be2; transform: translateY(-1px); }
+
+/* Lista de Trilhas do Aluno */
+.tracks-progress-list { display: flex; flex-direction: column; gap: 14px; }
+.track-progress-row { display: flex; flex-direction: column; gap: 6px; cursor: pointer; padding: 4px; border-radius: 6px; transition: 0.2s; }
+.track-progress-row:hover { background: rgba(255,255,255,0.02); }
+.track-meta-row { display: flex; justify-content: space-between; align-items: center; font-size: 0.78rem; }
+.track-meta-row h5 { font-weight: 600; color: #fff; }
+.track-meta-row small { color: var(--text-muted); font-size: 0.65rem; margin-left: auto; margin-right: 12px; }
+.track-meta-row span { color: var(--neon-hover); font-weight: 700; font-size: 0.72rem; }
+.track-bar-track { width: 100%; height: 5px; background: rgba(255,255,255,0.04); border-radius: 10px; overflow: hidden; }
+.track-bar-fill { height: 100%; background: var(--neon-purple); border-radius: 10px; }
+
+/* Projetos Portfólio */
+.recent-projects-list { display: flex; flex-direction: column; gap: 10px; }
+.project-row-card { display: flex; align-items: center; justify-content: space-between; background: rgba(5,3,8,0.3); padding: 11px 14px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.03); }
+.proj-left-side { display: flex; align-items: center; gap: 12px; }
+.proj-thumbnail-sphere { width: 32px; height: 32px; border-radius: 4px; background-color: #333; border: 1px solid rgba(255,255,255,0.08); }
+.proj-meta-side h5 { font-size: 0.78rem; color: #fff; font-weight: 600; }
+.proj-meta-side p { font-size: 0.65rem; color: var(--text-muted); }
+
+/* ==========================================================================
+   4. ESTILIZAÇÃO DO MURAL CINEMATOGRÁFICO DE RECOMENDAÇÕES (ESTILO NETFLIX)
+   ========================================================================== */
+.theater-row-container {
+    width: 100%;
+    margin-top: 10px;
+}
+
+.theater-cards-carousel {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr); /* 7 Colunas perfeitas para os 7 filmes listados */
+    gap: 16px;
+    width: 100%;
+}
+
+.movie-poster-card {
+    background-color: rgba(5, 3, 8, 0.5);
+    border: 1px solid rgba(166, 93, 242, 0.15);
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+}
+
+.movie-poster-card:hover {
+    transform: scale(1.04) translateY(-4px);
+    border-color: var(--neon-hover);
+    box-shadow: 0 12px 25px rgba(166, 93, 242, 0.25);
+}
+
+.poster-frame-pic {
+    width: 100%;
+    aspect-ratio: 2 / 3; /* Proporção matemática perfeita de pôster físico de cinema */
+    background-color: #110c1a;
+    background-size: cover;
+    background-position: center;
+    border-bottom: 1px solid rgba(166, 93, 242, 0.15);
+}
+
+.movie-meta-pad {
+    padding: 10px;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.movie-meta-pad h5 {
+    font-size: 0.75rem;
+    color: #fff;
+    font-weight: 700;
+    line-height: 1.3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; /* Corta o texto com "..." caso o título do filme seja muito longo */
+}
+
+.movie-meta-pad small {
+    font-size: 0.62rem;
+    color: var(--neon-hover);
+    font-weight: bold;
+    letter-spacing: 0.5px;
+}
+
+/* Rodapé Final */
+.dash-footer-row { background: #030205; border-top: 1px solid rgba(255,255,255,0.03); padding: 18px 40px; display: flex; justify-content: space-between; align-items: center; font-size: 0.75rem; color: var(--text-muted); margin-top: auto; }
+.dash-footer-row span { color: #fff; font-weight: bold; }
+
+@keyframes floatAnimation { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-6px); } }
+
+
+/* ==========================================================================
+   INTERFACES COMPLEMENTARES: DROPDOWN DE CONFIGURAÇÕES FLUTUANTE
+   ========================================================================== */
+.settings-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.settings-dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: rgba(7, 4, 10, 0.98);
+    min-width: 250px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.8);
+    border: 1px solid var(--border-purple);
+    border-radius: 8px;
+    z-index: 1000;
+    top: calc(100% + 15px);
+    right: 0;
+    padding: 12px 0;
+    backdrop-filter: blur(10px);
+}
+
+/* Ativação por classe controlada pelo clique do script */
+.settings-dropdown-content.active {
+    display: block;
+}
+
+.dropdown-section-title {
+    font-size: 0.62rem;
+    font-weight: 700;
+    color: var(--neon-purple);
+    padding: 6px 16px;
+    letter-spacing: 0.8px;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+    margin-bottom: 4px;
+}
+
+.settings-dropdown-content a {
+    color: var(--text-muted) !important;
+    padding: 10px 18px !important;
+    text-decoration: none;
+    display: block;
+    font-size: 0.75rem !important;
+    font-weight: 600 !important;
+    text-align: left !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    border: none !important;
+}
+
+.settings-dropdown-content a:hover {
+    color: #ffffff !important;
+    background-color: rgba(166, 93, 242, 0.15) !important;
+}
+
+.dropdown-divider {
+    height: 1px;
+    background: rgba(255,255,255,0.06);
+    margin: 8px 0;
+}
+
+.settings-dropdown-content .logout-link {
+    color: #f25d5d !important;
+}
+.settings-dropdown-content .logout-link:hover {
+    background-color: rgba(242, 93, 93, 0.12) !important;
+}

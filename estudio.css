@@ -1,0 +1,298 @@
+/* ==========================================================================
+   CSS EXCLUSIVO: ESTÚDIO DE ANIMAÇÃO (ESTUDIO.CSS) - PARTE 1 DE 2
+   ========================================================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --bg-deep: #050307;
+    --panel-glass: rgba(14, 8, 22, 0.7);
+    --border-purple: rgba(166, 93, 242, 0.25);
+    --neon-purple: #a65df2;
+    --neon-hover: #c18fff;
+    --accent-yellow: #ff9d00;
+    --text-main: #ffffff;
+    --text-muted: #958d9c;
+}
+
+body {
+    background-color: var(--bg-deep);
+    color: var(--text-main);
+    font-family: 'Montserrat', sans-serif;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* Previne barras de rolagem para travar a interface de edição */
+}
+
+h1, h2, h3, h4, .logo {
+    font-family: 'Cinzel', serif;
+    letter-spacing: 1px;
+}
+
+/* NAVBAR SUPERIOR FIXA DO ESTÚDIO (IDÊNTICA AO PRINT) */
+.dash-header {
+    background: #07040a;
+    padding: 0 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border-purple);
+    position: fixed;
+    top: 0; left: 0; width: 100%;
+    z-index: 100;
+    height: 65px;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.8);
+}
+
+.logo { font-size: 1.2rem; font-weight: 700; color: #fff; }
+.logo span { font-size: 0.6rem; background: rgba(166, 93, 242, 0.15); border: 1px solid var(--border-purple); padding: 2px 6px; border-radius: 4px; margin-left: 6px; color: var(--neon-hover); }
+
+.header-center-nav { display: flex; gap: 12px; }
+.header-center-nav a { 
+    color: var(--text-muted); font-size: 0.75rem; font-weight: 700; text-decoration: none; 
+    padding: 8px 12px; border-radius: 4px; transition: 0.2s;
+}
+.header-center-nav a:hover, .header-center-nav a.active { 
+    color: #fff; background: rgba(166, 93, 242, 0.1); border: 1px solid rgba(166, 93, 242, 0.2); 
+}
+
+.header-user-zone { display: flex; align-items: center; gap: 20px; }
+.noti-bell { font-size: 1.1rem; color: var(--text-muted); cursor: pointer; }
+.user-pill { display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); padding: 5px 12px; border-radius: 20px; }
+.user-avatar { width: 24px; height: 24px; background: var(--neon-purple); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; color: #000; font-weight: bold; }
+
+/* LAYOUT GLOBAL DE TRABALHO (GRID EM 3 COLUNAS PERFEITAS) */
+.studio-workspace-container {
+    display: flex;
+    margin-top: 65px;
+    height: calc(100vh - 65px);
+    width: 100vw;
+}
+
+/* SIDEBAR ESQUERDA: LISTA DE PROJETOS E BOTÕES DE EDICÃO */
+.studio-sidebar-left {
+    width: 260px;
+    background: #07040a;
+    border-right: 1px solid var(--border-purple);
+    padding: 20px 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    height: 100%;
+}
+
+.btn-studio-back {
+    width: 100%; padding: 10px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);
+    color: var(--text-muted); font-size: 0.75rem; font-weight: bold; border-radius: 6px; cursor: pointer; text-align: left;
+}
+.btn-studio-back:hover { color: #fff; border-color: rgba(255,255,255,0.2); }
+
+.btn-purple-action-studio {
+    width: 100%; padding: 12px; background: #5a189a; border: none; color: #fff;
+    font-size: 0.75rem; font-weight: bold; border-radius: 6px; cursor: pointer;
+    box-shadow: 0 4px 15px rgba(90, 24, 154, 0.3); transition: 0.2s;
+}
+.btn-purple-action-studio:hover { background: #7b2cbf; transform: translateY(-1px); }
+
+.project-list-section h3, .studio-tools-box h3 {
+    font-size: 0.65rem; color: var(--text-muted); font-weight: 700; margin-bottom: 12px; letter-spacing: 0.5px;
+}
+
+.studio-proj-card {
+    display: flex; align-items: center; gap: 12px; padding: 10px; border-radius: 6px;
+    background: rgba(255,255,255,0.01); border: 1px solid rgba(255,255,255,0.03); margin-bottom: 8px; cursor: pointer;
+}
+.studio-proj-card.active { border-color: var(--border-purple); background: rgba(166,93,242,0.04); }
+.proj-mini-thumb { font-size: 1.2rem; background: rgba(255,255,255,0.03); width: 34px; height: 34px; border-radius: 4px; display: flex; align-items: center; justify-content: center; }
+.proj-mini-meta strong { font-size: 0.75rem; color: #fff; display: block; }
+.proj-mini-meta small { font-size: 0.62rem; color: var(--text-muted); }
+
+/* CAIXA DE FERRAMENTAS DO CANTO INFERIOR ESQUERDO */
+.studio-tools-box { margin-top: auto; border-top: 1px solid rgba(255,255,255,0.04); padding-top: 20px; }
+.tools-grid-icons { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-bottom: 15px; }
+
+.tool-icon-btn {
+    aspect-ratio: 1; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06);
+    color: var(--text-muted); border-radius: 4px; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s;
+}
+.tool-icon-btn:hover, .tool-icon-btn.active { color: #fff; background: rgba(166, 93, 242, 0.15); border-color: var(--neon-purple); }
+
+.tool-toggle-row { font-size: 0.7rem; color: var(--text-muted); display: flex; align-items: center; gap: 6px; }
+.tool-toggle-row input { cursor: pointer; }
+
+
+/* ==========================================================================
+   CSS EXCLUSIVO: ESTÚDIO DE ANIMAÇÃO (ESTUDIO.CSS) - PARTE 2 DE 2
+   ========================================================================== */
+/* PALCO CENTRAL DE ANIMAÇÃO E INTERFACE PRINCIPAL */
+.studio-center-stage {
+    flex: 1;
+    background: #030106;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    height: 100%;
+    overflow: hidden;
+}
+
+.studio-top-controls-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.project-title-zone h2 { font-size: 1.15rem; color: #fff; display: inline-block; }
+.project-title-zone span { font-size: 0.65rem; color: #5df2a6; margin-left: 8px; }
+
+.action-bar-buttons { display: flex; gap: 8px; }
+.btn-secondary-studio {
+    padding: 8px 14px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);
+    color: var(--text-muted); font-size: 0.72rem; font-weight: 600; border-radius: 4px; cursor: pointer;
+}
+.btn-secondary-studio:hover { color: #fff; border-color: rgba(255,255,255,0.15); }
+
+/* VISOR DE CINEMA WIDESCREEN ONDE O CANVAS OPERA */
+.cinema-viewfinder-frame {
+    width: 100%;
+    max-width: 854px;
+    aspect-ratio: 16 / 9;
+    margin: 0 auto;
+    background: #000;
+    border-radius: 8px;
+    border: 2px solid rgba(166, 93, 242, 0.2);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.9), inset 0 0 30px #000;
+}
+
+#studio-canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+/* Camada transparente superior responsável pela injeção dos filtros góticos */
+.canvas-effect-overlay {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none; /* Deixa cliques passarem direto para os bonecos do Canvas */
+    z-index: 5;
+    transition: all 0.3s ease;
+}
+
+/* CLASSES DE ATIVAÇÃO DOS FILTROS ESPECIAIS */
+.filtro-sepia-vintage {
+    background-color: rgba(230, 190, 130, 0.15);
+    backdrop-filter: sepia(0.8) contrast(1.2) brightness(0.9);
+}
+
+.filtro-neve-particulas {
+    background-color: rgba(255, 255, 255, 0.05);
+    backdrop-filter: brightness(1.1) saturate(0.5);
+    /* Simulação rápida em CSS de ruído de neblina clara gótica */
+    background-image: radial-gradient(rgba(255,255,255,0.15) 1px, transparent 1px);
+    background-size: 16px 16px;
+}
+
+.filtro-fantasma-blur {
+    backdrop-filter: blur(2px) hue-rotate(45deg);
+    background-color: rgba(147, 112, 219, 0.08);
+}
+
+/* PLAYER HUD INTERNO: PONTOS, TEMPO E O DISPARADOR */
+.player-hud-dashboard {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(7, 4, 10, 0.8);
+    border: 1px solid rgba(166, 93, 242, 0.15);
+    padding: 10px 20px;
+    border-radius: 6px;
+    margin: 15px auto;
+    width: 100%;
+    max-width: 854px;
+}
+
+.hud-playback-buttons { display: flex; gap: 4px; }
+.hud-control-btn {
+    width: 32px; height: 32px; background: transparent; border: none;
+    color: var(--text-muted); font-size: 0.9rem; cursor: pointer; transition: 0.2s;
+}
+.hud-control-btn:hover { color: var(--neon-hover); }
+
+.hud-timecode-display { font-family: monospace; font-size: 0.85rem; color: var(--text-muted); font-weight: bold; display: flex; gap: 12px; }
+.hud-timecode-display span { color: #fff; }
+.hud-timecode-display .fps-tag { color: var(--neon-purple); }
+.hud-divider { color: rgba(255,255,255,0.1) !important; }
+
+.btn-shutter-capture {
+    padding: 10px 20px; background: #6a0dad; border: 1px dashed var(--neon-hover);
+    color: #fff; font-family: 'Cinzel', serif; font-size: 0.72rem; font-weight: bold;
+    border-radius: 4px; cursor: pointer; box-shadow: 0 0 15px rgba(166,93,242,0.3);
+}
+.btn-shutter-capture:hover { background: var(--neon-purple); color: #000; }
+
+.studio-effects-row { display: flex; gap: 20px; width: 100%; max-width: 854px; margin: 0 auto 15px auto; justify-content: space-between; }
+.effect-select-group { display: flex; align-items: center; gap: 8px; font-size: 0.7rem; font-weight: bold; color: var(--text-muted); }
+.effect-select-group select { background: #07040a; border: 1px solid rgba(166,93,242,0.2); padding: 6px 10px; color: #fff; border-radius: 4px; font-family: 'Montserrat', sans-serif; font-size: 0.68rem; cursor: pointer; }
+
+/* LINHA DO TEMPO HORIZONTAL INFRAESTRUTURAL */
+.studio-timeline-footer {
+    background: #07040a; border: 1px solid var(--border-purple); border-radius: 6px; padding: 12px 15px; margin-top: auto; display: flex; flex-direction: column; gap: 10px;
+}
+.timeline-header-actions { display: flex; justify-content: space-between; align-items: center; font-size: 0.65rem; font-weight: bold; color: var(--text-muted); letter-spacing: 0.5px; }
+.timeline-buttons-group { display: flex; gap: 8px; }
+.timeline-buttons-group button { background: transparent; border: none; color: var(--text-muted); font-size: 0.65rem; font-weight: bold; cursor: pointer; font-family: 'Montserrat'; }
+.timeline-buttons-group button:hover { color: #fff; }
+
+.timeline-frames-track {
+    display: flex; gap: 10px; width: 100%; height: 75px; overflow-x: auto; padding: 5px 0;
+}
+.empty-timeline-msg { font-size: 0.7rem; color: rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center; width: 100%; text-align: center; }
+
+/* Miniaturas quadradas geradas pelas fotos tiradas */
+.timeline-thumb-node {
+    width: 90px; height: 100%; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); border-radius: 4px; position: relative; flex-shrink: 0; cursor: pointer; text-align: center; display: flex; flex-direction: column; align-items: center;
+}
+.timeline-thumb-node.active, .timeline-thumb-node:hover { border-color: var(--neon-purple); background: rgba(166,93,242,0.05); }
+.thumb-number { position: absolute; top: 4px; left: 4px; font-size: 0.52rem; font-family: monospace; color: var(--text-muted); }
+.thumb-delete-x { position: absolute; top: 4px; right: 4px; font-size: 0.55rem; color: var(--text-muted); cursor: pointer; display: none; }
+.timeline-thumb-node:hover .thumb-delete-x { display: block; }
+.thumb-delete-x:hover { color: #f25d5d; }
+
+/* SIDEBAR DIREITA: CATALOGO DE ATIVOS (CENÁRIOS, BONECOS E PROPRIEDADES) */
+.studio-sidebar-right {
+    width: 280px; background: #07040a; border-left: 1px solid var(--border-purple); padding: 20px 15px; display: flex; flex-direction: column; gap: 15px; height: 100%;
+}
+
+.studio-tabs-header { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; border-bottom: 1px solid rgba(255,255,255,0.04); padding-bottom: 10px; }
+.tab-btn { background: transparent; border: none; color: var(--text-muted); font-size: 0.65rem; font-weight: bold; font-family: 'Montserrat'; padding: 6px 0; cursor: pointer; border-radius: 4px; text-align: center; }
+.tab-btn.active { color: #fff; background: rgba(166,93,242,0.12); border: 1px solid rgba(166,93,242,0.2); }
+
+.search-assets-bar input { width: 100%; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.05); padding: 8px 12px; color: #fff; font-size: 0.72rem; border-radius: 4px; font-family: 'Montserrat'; }
+
+.assets-scroll-zone { flex: 1; overflow-y: auto; padding-right: 2px; }
+.assets-tab-content { display: none; grid-template-columns: 1fr 1fr; gap: 10px; }
+.assets-tab-content.active { display: grid; }
+
+.asset-grid-item {
+    background: rgba(255,255,255,0.01); border: 1px solid rgba(255,255,255,0.04); border-radius: 6px; padding: 10px; text-align: center; cursor: pointer; display: flex; flex-direction: column; gap: 6px; transition: 0.2s;
+}
+.asset-grid-item:hover, .asset-grid-item.selected { border-color: var(--border-purple); background: rgba(166,93,242,0.03); }
+.asset-preview-box { width: 100%; aspect-ratio: 4 / 3; border-radius: 4px; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.03); display: flex; align-items: center; justify-content: center; font-size: 1.6rem; }
+.asset-grid-item span { font-size: 0.65rem; color: var(--text-muted); font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.asset-grid-item:hover span, .asset-grid-item.selected span { color: #fff; }
+
+/* CONFIGURAÇÕES TÉCNICAS DA BASE DIREITA */
+.studio-config-panel-base { border-top: 1px solid rgba(255,255,255,0.05); padding-top: 15px; display: flex; flex-direction: column; gap: 10px; }
+.studio-config-panel-base h3 { font-size: 0.65rem; color: var(--text-muted); font-weight: 700; letter-spacing: 0.5px; }
+.config-select-row { display: flex; justify-content: space-between; align-items: center; font-size: 0.68rem; color: var(--text-muted); font-weight: 600; }
+.config-select-row select { background: #000; border: 1px solid rgba(255,255,255,0.08); padding: 5px 8px; color: #fff; font-size: 0.65rem; border-radius: 4px; font-family: 'Montserrat'; cursor: pointer; width: 140px; }
+
+.btn-advanced-config { width: 100%; padding: 8px; background: rgba(166, 93, 242, 0.04); border: 1px dashed var(--border-purple); color: var(--neon-hover); font-size: 0.65rem; font-weight: bold; border-radius: 4px; cursor: pointer; font-family: 'Cinzel', serif; transition: 0.2s; }
+.btn-advanced-config:hover { background: rgba(166, 93, 242, 0.15); color: #fff; }

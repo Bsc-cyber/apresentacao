@@ -3,411 +3,264 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>STOP_MOTION PORTAL - Dashboard</title>
+    <title>STOP_ART PORTAL - Dashboard</title>
+    <!-- Vincula perfeitamente a sua folha de estilos externa home.css -->
+    <link rel="stylesheet" href="home.css">
     <!-- Fontes do Google (Cinzel gótica e Montserrat técnica) -->
     <link rel="preconnect" href="https://googleapis.com">
     <link rel="preconnect" href="https://gstatic.com" crossorigin>
     <link href="https://googleapis.com/css2?family=Cinzel:wght@400;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        /* ==========================================================================
-           1. RESET E VARIÁVEIS DO DASHBOARD GAMIFICADO
-           ========================================================================== */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
-        :root {
-            --bg-deep: #050307;
-            --panel-glass: rgba(14, 8, 22, 0.55);
-            --border-purple: rgba(166, 93, 242, 0.2);
-            --neon-purple: #a65df2;
-            --neon-hover: #c18fff;
-            --accent-yellow: #ff9d00;
-            --text-main: #ffffff;
-            --text-muted: #958d9c;
-        }
-
-        body {
-            background-color: var(--bg-deep);
-            color: var(--text-main);
-            font-family: 'Montserrat', sans-serif;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            overflow-x: hidden;
-            background-image: radial-gradient(circle at 80% 20%, rgba(166, 93, 242, 0.05) 0%, transparent 50%), url('assets/fundo_principal.png');
-            background-size: cover; background-position: center; background-attachment: fixed;
-        }
-
-        h2, h3, h4, .logo { font-family: 'Cinzel', serif; letter-spacing: 1px; }
-
-        /* Topo do Dashboard (Header) */
-        .dash-header {
-            background: #07040a; padding: 12px 40px; display: flex;
-            justify-content: space-between; align-items: center;
-            border-bottom: 1px solid var(--border-purple); position: fixed;
-            top: 0; left: 0; width: 100%; z-index: 100; height: 65px;
-        }
-        .logo { font-size: 1.2rem; font-weight: 700; letter-spacing: 1px; color: #fff; }
-        .logo span { font-size: 0.6rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 2px 5px; border-radius: 4px; margin-left: 5px; color: var(--text-muted); }
-        
-        .header-center-nav { display: flex; gap: 30px; }
-        .header-center-nav a { color: var(--text-muted); font-size: 0.8rem; font-weight: 600; text-decoration: none; transition: 0.2s; }
-        .header-center-nav a:hover, .header-center-nav a.active { color: #fff; text-shadow: 0 0 8px var(--neon-purple); }
-
-        .header-user-zone { display: flex; align-items: center; gap: 20px; }
-        .noti-bell { font-size: 1.1rem; cursor: pointer; color: var(--text-muted); transition: 0.2s; }
-        .noti-bell:hover { color: #fff; }
-        
-        .user-pill {
-            display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.08); padding: 5px 12px; border-radius: 20px; cursor: pointer;
-        }
-        .user-avatar { width: 26px; height: 26px; background: var(--neon-purple); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; color: #000; font-weight: bold; }
-        .user-meta { display: flex; flex-direction: column; text-align: left; }
-        .user-meta strong { font-size: 0.75rem; }
-        .user-meta small { font-size: 0.6rem; color: var(--text-muted); }
-
-        /* Estrutura Geral Layout */
-        .dash-layout { display: flex; margin-top: 65px; min-height: calc(100vh - 65px); }
-
-        /* Sidebar Fixa Esquerda */
-        .dash-sidebar {
-            width: 240px; background: rgba(7, 4, 10, 0.85); border-right: 1px solid var(--border-purple);
-            padding: 30px 15px; display: flex; flex-direction: column; justify-content: space-between;
-            position: fixed; top: 65px; left: 0; height: calc(100vh - 65px); z-index: 90;
-        }
-        .sidebar-menu { display: flex; flex-direction: column; gap: 8px; }
-        
-        .menu-item {
-            display: flex; align-items: center; gap: 12px; padding: 12px 16px;
-            color: var(--text-muted); font-size: 0.8rem; font-weight: 600; text-decoration: none;
-            border-radius: 8px; transition: all 0.2s ease;
-        }
-        .menu-item:hover, .menu-item.active {
-            color: #fff; background: linear-gradient(90deg, rgba(166, 93, 242, 0.15), transparent);
-            border-left: 3px solid var(--neon-purple); padding-left: 18px;
-        }
-
-        .sidebar-footer-card {
-            background: rgba(166, 93, 242, 0.03); border: 1px dashed var(--border-purple); padding: 15px; border-radius: 8px; text-align: center;
-        }
-        .sidebar-footer-card small { display: block; font-size: 0.65rem; color: var(--text-muted); margin-bottom: 2px; }
-        .sidebar-footer-card strong { display: block; font-size: 0.78rem; margin-bottom: 10px; color: var(--neon-purple); }
-        .btn-plans { width: 100%; padding: 8px; background: var(--neon-purple); border: none; color: #000; font-weight: bold; font-family: 'Cinzel', serif; font-size: 0.65rem; border-radius: 4px; cursor: pointer; transition: 0.2s; }
-        .btn-plans:hover { background: #fff; }
-
-        /* Área do Dashboard */
-        .dash-main-content { flex: 1; margin-left: 240px; padding: 30px 40px 100px 40px; display: flex; flex-direction: column; gap: 30px; }
-        /* ==========================================================================
-           2. MALHA DE BLOCOS GAMIFICADOS (CSS GRID DO TOPO)
-           ========================================================================== */
-        .welcome-row-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 25px; width: 100%; }
-
-        .glass-panel-card {
-            background-color: var(--panel-glass); border: 1px solid var(--border-purple); border-radius: 12px; padding: 24px;
-            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
-        }
-
-        .welcome-hero-box { display: flex; justify-content: space-between; align-items: center; position: relative; overflow: hidden; }
-        .welcome-text-side { width: 55%; }
-        .welcome-text-side h1 { font-family: 'Cinzel', serif; font-size: 2rem; margin-bottom: 5px; color: #fff; }
-        .welcome-text-side p { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 25px; }
-
-        .progress-indicator-box { width: 100%; max-width: 320px; text-align: left; }
-        .progress-indicator-box span { font-size: 0.65rem; color: var(--text-muted); font-weight: 700; display: block; margin-bottom: 4px; }
-        .progress-title-percent { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; }
-        .progress-title-percent h4 { font-size: 1.4rem; font-weight: 700; color: #fff; }
-        .progress-bar-track { width: 100%; height: 6px; background: rgba(255,255,255,0.05); border-radius: 10px; overflow: hidden; margin-bottom: 6px; }
-        .progress-bar-fill { width: 32%; height: 100%; background: linear-gradient(90deg, var(--neon-purple), var(--neon-hover)); border-radius: 10px; box-shadow: 0 0 10px rgba(166, 93, 242, 0.4); }
-        .progress-indicator-box small { font-size: 0.68rem; color: var(--text-muted); }
-
-        .welcome-avatar-side { width: 38%; display: flex; justify-content: center; position: relative; }
-        .welcome-avatar-side img { width: 140px; height: auto; object-fit: contain; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.8)); animation: floatAnimation 5s ease-in-out infinite alternate; }
-
-        .streak-container-box { display: flex; flex-direction: column; justify-content: space-between; height: 100%; }
-        .streak-header-title { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
-        .streak-fire-icon { font-size: 2rem; color: var(--accent-yellow); text-shadow: 0 0 15px rgba(255, 157, 0, 0.4); }
-        .streak-header-title h3 { font-size: 0.85rem; font-weight: 700; color: #fff; }
-        .streak-header-title p { font-size: 0.72rem; color: var(--text-muted); }
-
-        .streak-calendar-row { display: flex; justify-content: space-between; margin: 15px 0; }
-        .streak-day-dot { display: flex; flex-direction: column; align-items: center; gap: 6px; }
-        .streak-day-dot span { font-size: 0.65rem; color: var(--text-muted); font-weight: 600; }
-        .streak-circle-check { width: 24px; height: 24px; border-radius: 50%; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; color: var(--text-muted); }
-        .streak-day-dot.concluido .streak-circle-check { background: var(--neon-purple); border-color: var(--neon-hover); color: #000; font-weight: bold; box-shadow: 0 0 10px rgba(166, 93, 242, 0.4); }
-        .streak-day-dot.concluido span { color: #fff; font-weight: 700; }
-
-        .streak-footer-reward { display: flex; justify-content: space-between; align-items: center; border-top: 1px dashed rgba(255,255,255,0.08); padding-top: 12px; }
-        .reward-info-text small { display: block; font-size: 0.65rem; color: var(--text-muted); }
-        .reward-info-text strong { display: block; font-size: 0.75rem; color: var(--accent-yellow); }
-        .reward-game-icon { font-size: 1.3rem; color: var(--neon-purple); }
-        /* ==========================================================================
-           3. MALHA CENTRAL E INFERIOR (ESTILIZAÇÃO FINAL)
-           ========================================================================== */
-        .main-dashboard-grid { display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 25px; width: 100%; }
-        .panel-section-title { display: flex; justify-content: space-between; align-items: center; font-size: 0.72rem; color: var(--text-muted); font-weight: 700; letter-spacing: 1px; margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 6px; }
-        .panel-section-title a { color: var(--neon-purple); text-decoration: none; font-size: 0.68rem; }
-        .panel-section-title a:hover { color: #fff; }
-
-        .continue-lesson-card { display: flex; gap: 15px; background: rgba(5,3,8,0.4); border: 1px solid rgba(255,255,255,0.04); padding: 15px; border-radius: 8px; align-items: center; }
-        .lesson-img-cover { width: 110px; aspect-ratio: 16/9; background-size: cover; background-position: center; border-radius: 6px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(166, 93, 242, 0.15); position: relative; }
-        .play-btn-small { width: 28px; height: 28px; background: rgba(0,0,0,0.6); border: 1px solid #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; cursor: pointer; color: #fff; transition: 0.2s; }
-        .lesson-img-cover:hover .play-btn-small { background: var(--neon-purple); border-color: var(--neon-hover); transform: scale(1.1); }
-        
-        .lesson-meta-side { flex: 1; text-align: left; display: flex; flex-direction: column; gap: 4px; }
-        .lesson-meta-side h4 { font-size: 0.85rem; color: #fff; font-weight: 700; }
-        .lesson-meta-side .track-tag { font-size: 0.65rem; color: var(--text-muted); }
-        .lesson-meta-side p { font-size: 0.72rem; color: var(--text-muted); line-height: 1.4; margin: 2px 0 8px 0; }
-        .btn-continue-act { width: 100%; max-width: 140px; padding: 8px 12px; background: #6a0dad; border: none; color: #fff; font-size: 0.7rem; font-weight: bold; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: 0.2s; }
-        .btn-continue-act:hover { background: #8a2be2; transform: translateY(-1px); }
-
-        .quick-access-box { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 12px; height: calc(100% - 30px); }
-        .quick-item-btn { display: flex; align-items: center; gap: 12px; background: rgba(5,3,8,0.4); border: 1px solid rgba(255,255,255,0.04); padding: 14px; border-radius: 8px; cursor: pointer; transition: 0.2s; text-align: left; position: relative; }
-        .quick-item-btn:hover { border-color: rgba(166, 93, 242, 0.3); background: rgba(166,93,242,0.03); transform: translateX(2px); }
-        .quick-icon-frame { font-size: 1.2rem; background: rgba(166,93,242,0.08); width: 34px; height: 34px; border-radius: 6px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(166, 93, 242, 0.15); }
-        .quick-text-wrapper h5 { font-size: 0.75rem; color: #fff; font-weight: 700; margin-bottom: 2px; }
-        .quick-text-wrapper p { font-size: 0.62rem; color: var(--text-muted); }
-        .quick-arrow-indicator { position: absolute; bottom: 12px; right: 12px; font-size: 0.65rem; color: var(--text-muted); opacity: 0; transition: 0.2s; }
-        .quick-item-btn:hover .quick-arrow-indicator { opacity: 1; color: var(--neon-purple); }
-
-        .achievements-list-wrapper { display: flex; flex-direction: column; gap: 12px; }
-        .achievement-row-item { display: flex; align-items: center; justify-content: space-between; background: rgba(5,3,8,0.3); padding: 10px 12px; border-radius: 6px; border-left: 3px solid rgba(255,255,255,0.05); }
-        .achievement-row-item.concluida { border-left-color: var(--neon-purple); }
-        .ach-left-block { display: flex; align-items: center; gap: 12px; }
-        .ach-icon-sphere { width: 28px; height: 28px; border-radius: 50%; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: center; font-size: 0.8rem; }
-        .achievement-row-item.concluida .ach-icon-sphere { background: rgba(166, 93, 242, 0.1); border-color: rgba(166, 93, 242, 0.3); }
-        .ach-text-block h5 { font-size: 0.75rem; color: #fff; font-weight: 600; margin-bottom: 1px; }
-        .ach-text-block p { font-size: 0.65rem; color: var(--text-muted); }
-        .ach-xp-badge { font-size: 0.68rem; color: var(--neon-hover); font-weight: 700; }
-
-        .bottom-dashboard-grid { display: grid; grid-template-columns: 1fr 1.2fr 1fr; gap: 25px; width: 100%; }
-        .tracks-progress-list { display: flex; flex-direction: column; gap: 14px; }
-        .track-progress-row { display: flex; flex-direction: column; gap: 6px; cursor: pointer; padding: 6px; border-radius: 6px; transition: 0.2s; }
-        .track-meta-row { display: flex; justify-content: space-between; align-items: center; font-size: 0.75rem; }
-        .track-meta-row h5 { font-weight: 600; color: #fff; }
-        .track-meta-row small { color: var(--text-muted); font-size: 0.65rem; margin-left: auto; margin-right: 12px; }
-        .track-meta-row span { color: var(--neon-hover); font-weight: 700; font-size: 0.72rem; }
-        .track-bar-track { width: 100%; height: 5px; background: rgba(255,255,255,0.04); border-radius: 10px; overflow: hidden; }
-        .track-bar-fill { height: 100%; background: var(--neon-purple); border-radius: 10px; }
-
-        .training-cards-row { display: flex; gap: 12px; width: 100%; }
-        .training-mini-card { flex: 1; background: rgba(5,3,8,0.4); border: 1px solid rgba(255,255,255,0.04); border-radius: 8px; overflow: hidden; cursor: pointer; transition: 0.2s; display: flex; flex-direction: column; }
-        .training-mini-card:hover { border-color: rgba(166, 93, 242, 0.25); transform: translateY(-2px); }
-        .train-cover-pic { width: 100%; height: 75px; background-size: cover; background-position: center; border-bottom: 1px solid rgba(255,255,255,0.03); }
-        .train-text-pad { padding: 10px; text-align: left; display: flex; flex-direction: column; gap: 2px; flex: 1; justify-content: space-between; }
-        .train-text-pad h5 { font-size: 0.72rem; color: #fff; font-weight: 700; line-height: 1.2; }
-        .train-text-pad small { font-size: 0.6rem; font-weight: 700; margin-top: 4px; display: inline-block; }
-        .train-text-pad .facil { color: #5df2a6; }
-        .train-text-pad .medio { color: var(--accent-yellow); }
-        .train-text-pad .dificil { color: #f25d5d; }
-
-        .recent-projects-list { display: flex; flex-direction: column; gap: 10px; }
-        .project-row-card { display: flex; align-items: center; justify-content: space-between; background: rgba(5,3,8,0.3); padding: 10px 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.03); }
-        .proj-left-side { display: flex; align-items: center; gap: 12px; }
-        .proj-thumbnail-sphere { width: 30px; height: 30px; border-radius: 4px; background-size: cover; background-position: center; border: 1px solid rgba(255,255,255,0.08); }
-        .proj-meta-side h5 { font-size: 0.75rem; color: #fff; font-weight: 600; }
-        .proj-meta-side p { font-size: 0.62rem; color: var(--text-muted); margin-top: 1px; }
-        .proj-options-dots { color: var(--text-muted); font-size: 0.9rem; cursor: pointer; padding: 0 4px; }
-
-        .dash-footer-row { background: #030205; border-top: 1px solid rgba(255,255,255,0.03); padding: 15px 40px; display: flex; justify-content: space-between; align-items: center; font-size: 0.72rem; color: var(--text-muted); margin-top: auto; }
-        .dash-footer-row span { color: #fff; font-weight: bold; }
-        .footer-socials { display: flex; gap: 15px; font-size: 1rem; }
-        .footer-socials a { color: var(--text-muted); text-decoration: none; }
-
-        @keyframes floatAnimation { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-6px); } }
-    </style>
 </head>
-<body>
+<body id="portal-body">
 
-    <!-- BARRA SUPERIOR DO PORTAL LOGADO (HEADER FIXO) -->
+    <!-- BARRA SUPERIOR DO PORTAL LOGADO (NAVBAR COM MENU SUSPENSO DE CONFIGURAÇÕES) -->
     <header class="dash-header">
-        <div class="logo">STOP_MOTION <span>PORTAL</span></div>
+        <div class="logo">STOP_ART <span>PORTAL</span></div>
         <nav class="header-center-nav">
-            <a href="#" class="active">INÍCIO</a>
-            <a href="aulas-info.html">COMO FUNCIONAM AS AULAS</a>
-            <a href="saiba-mais.html">COMUNIDADE</a>
-            <a href="saiba-mais.html#faq">DÚVIDAS FREQUENTES</a>
+            <a href="#" class="active">DASHBOARD</a>
+            <a href="aulas-info.html">MINHAS AULAS</a>
+            <a href="jogos.html">SALAS DE JOGOS</a>
+            <a href="#">ESTÚDIO</a>
+            <a href="#">PROJETOS</a>
+            <a href="#">CONQUISTAS</a>
+            <a href="#">COMUNIDADE</a>
+            
+            <!-- CONTÊINER DO MENU SUSPENSO INTERATIVO -->
+            <div class="settings-dropdown">
+                <a href="#" id="settings-trigger" onclick="toggleSettingsMenu(event)">CONFIGURAÇÕES ▾</a>
+                <div class="settings-dropdown-content" id="settings-menu">
+                    <div class="dropdown-section-title">🌓 APARÊNCIA</div>
+                    <a href="#" onclick="alternarTema('escuro')">⚫ Modo Escuro (Padrão)</a>
+                    <a href="#" onclick="alternarTema('claro')">⚪ Modo Claro Cinematográfico</a>
+                    
+                    <div class="dropdown-section-title">🔤 ACESSIBILIDADE</div>
+                    <a href="#" onclick="alternarFonte('pequena')">🔎 Fonte Compacta</a>
+                    <a href="#" onclick="alternarFonte('grande')">🔍 Fonte Expandida</a>
+                    
+                    <div class="dropdown-divider"></div>
+                    <a href="#" class="logout-link" onclick="desconectarConta()">🚪 SALVAR E SAIR</a>
+                </div>
+            </div>
         </nav>
+        
         <div class="header-user-zone">
             <div class="noti-bell">🔔</div>
             <div class="user-pill">
                 <div class="user-avatar">B</div>
-                <div class="user-meta"><strong>Bianca</strong><small>Criador Iniciante</small></div>
+                <div class="user-meta"><strong>Bianca</strong></div>
             </div>
         </div>
     </header>
 
-    <!-- CONTAINER ESTRUTURAL DA BARRA LATERAL -->
-    <div class="dash-layout">
-        <aside class="dash-sidebar">
-            <div class="sidebar-menu">
-                <a href="#" class="menu-item active">🏠 DASHBOARD</a>
-                <a href="aulas-info.html" class="menu-item">📖 MINHAS AULAS</a>
-                <a href="jogos.html" class="menu-item">🎮 SALAS DE JOGOS</a>
-                <a href="#" class="menu-item">🎨 ESTÚDIO</a>
-                <a href="#" class="menu-item">📂 PROJETOS</a>
-                <a href="#" class="menu-item">🏆 CONQUISTAS</a>
-                <a href="#" class="menu-item">👥 COMUNIDADE</a>
-                <a href="#" class="menu-item">⚙️ CONFIGURAÇÕES</a>
-            </div>
-            <div class="sidebar-footer-card">
-                <small>Plano Atual</small><strong>Criador Iniciante</strong>
-                <button class="btn-plans">★ VER PLANOS</button>
-            </div>
-        </aside>
-        <!-- CONTAINER PRINCIPAL DO DASHBOARD -->
-        <div class="dash-main-content">
+    <!-- CONTAINER PRINCIPAL DO DASHBOARD (TELA CHEIA FLUIDA COM IDS DE ACESSIBILIDADE) -->
+    <main class="dash-main-content" id="main-content-area">
 
-            <!-- LINHA 1: BOAS VINDAS COM HISTÓRICO E OFENSIVA (STREAK) -->
-            <div class="welcome-row-grid">
-                <div class="glass-panel-card welcome-hero-box">
-                    <div class="welcome-text-side">
-                        <h1>Olá, Bianca! 👋</h1>
-                        <p>Continue sua jornada no mundo do Stop Motion.</p>
-                        <div class="progress-indicator-box">
-                            <span>SEU PROGRESSO GERAL</span>
-                            <div class="progress-title-percent"><h4>32%</h4></div>
-                            <div class="progress-bar-track"><div class="progress-bar-fill"></div></div>
-                            <small>Você completou 8 de 25 aulas da Trilha Iniciante.</small>
+        <!-- LINHA 1: BOAS VINDAS COM PROGRESSO E OFENSIVA (STREAK) -->
+        <div class="welcome-row-grid">
+            
+            <!-- Bloco Esquerdo: Boas-vindas com progresso acumulado -->
+            <div class="glass-panel-card welcome-hero-box">
+                <div class="welcome-text-side">
+                    <h1 id="welcome-heading">Olá, Bianca! 👋</h1>
+                    <p>Continue sua jornada no universo do Stop Motion artesanal.</p>
+                    
+                    <div class="progress-indicator-box">
+                        <span>SEU PROGRESSO GERAL</span>
+                        <div class="progress-title-percent">
+                            <h4>32%</h4>
                         </div>
-                    </div>
-                    <div class="welcome-avatar-side">
-                        <img src="https://stickpng.com" alt="Coraline">
+                        <div class="progress-bar-track">
+                            <div class="progress-bar-fill"></div>
+                        </div>
+                        <small>Você completou 8 de 25 aulas da Trilha Iniciante.</small>
                     </div>
                 </div>
+                <div class="welcome-avatar-side">
+                    <img src="https://stickpng.com" alt="Coraline" onerror="this.style.display='none'">
+                </div>
+            </div>
 
-                <div class="glass-panel-card">
-                    <div class="streak-container-box">
-                        <div class="streak-header-title">
-                            <div class="streak-fire-icon">🔥</div>
-                            <div><h3>7 DIAS SEGUIDOS</h3><p>Continue assim!</p></div>
+            <!-- Bloco Direito: Calendário de Ofensiva (Streak Gamificado) -->
+            <div class="glass-panel-card">
+                <div class="streak-container-box">
+                    <div class="streak-header-title">
+                        <div class="streak-fire-icon">🔥</div>
+                        <div>
+                            <h3>7 DIAS SEGUIDOS</h3>
+                            <p>Sua constância gera arte!</p>
                         </div>
-                        <div class="streak-calendar-row">
-                            <div class="streak-day-dot concluido"><span>D</span><div class="streak-circle-check">✓</div></div>
-                            <div class="streak-day-dot concluido"><span>S</span><div class="streak-circle-check">✓</div></div>
-                            <div class="streak-day-dot concluido"><span>T</span><div class="streak-circle-check">✓</div></div>
-                            <div class="streak-day-dot concluido"><span>Q</span><div class="streak-circle-check">✓</div></div>
-                            <div class="streak-day-dot concluido"><span>Q</span><div class="streak-circle-check">✓</div></div>
-                            <div class="streak-day-dot concluido"><span>S</span><div class="streak-circle-check">✓</div></div>
-                            <div class="streak-day-dot concluido"><span>S</span><div class="streak-circle-check">✓</div></div>
+                    </div>
+
+                    <div class="streak-calendar-row">
+                        <div class="streak-day-dot concluido"><span>D</span><div class="streak-circle-check">✓</div></div>
+                        <div class="streak-day-dot concluido"><span>S</span><div class="streak-circle-check">✓</div></div>
+                        <div class="streak-day-dot concluido"><span>T</span><div class="streak-circle-check">✓</div></div>
+                        <div class="streak-day-dot concluido"><span>Q</span><div class="streak-circle-check">✓</div></div>
+                        <div class="streak-day-dot concluido"><span>Q</span><div class="streak-circle-check">✓</div></div>
+                        <div class="streak-day-dot concluido"><span>S</span><div class="streak-circle-check">✓</div></div>
+                        <div class="streak-day-dot concluido"><span>S</span><div class="streak-circle-check">✓</div></div>
+                    </div>
+
+                    <div class="streak-footer-reward">
+                        <div class="reward-info-text">
+                            <small>Próxima recompensa de estúdio:</small>
+                            <strong>+1 jogo disponível no fliperama</strong>
                         </div>
-                        <div class="streak-footer-reward">
-                            <div class="reward-info-text"><small>Próxima recompensa:</small><strong>+1 jogo disponível</strong></div>
-                            <div class="reward-game-icon">🎮</div>
-                        </div>
+                        <div class="reward-game-icon">🎮</div>
                     </div>
                 </div>
             </div>
 
-            <!-- LINHA 2: CONTINUE, ACESSO RÁPIDO (CONECTADO) E CONQUISTAS -->
-            <div class="main-dashboard-grid">
-                <div class="glass-panel-card">
-                    <div class="panel-section-title">CONTINUE DE ONDE PAROU</div>
-                    <div class="continue-lesson-card">
-                        <div class="lesson-img-cover" style="background-color: #111;"><div class="play-btn-small" onclick="window.location.href='aulas-info.html'">▶</div></div>
-                        <div class="lesson-meta-side">
-                            <span class="track-tag">Aula 04 • Trilha Iniciante</span>
-                            <h4>Fotografia para Stop Motion</h4>
-                            <p>Aprenda técnicas de enquadramento e iluminação.</p>
-                            <button class="btn-continue-act" onclick="window.location.href='aulas-info.html'">▶ CONTINUAR</button>
-                        </div>
+        </div> <!-- Fim da linha 1 -->
+        <!-- LINHA 2: ESTUDOS ATUAIS, PROGRESSO POR TRILHA E PORTFÓLIO -->
+        <div class="main-dashboard-grid">
+            
+            <!-- Bloco 2.1: Histórico de Estudos (Última Aula Assistida) -->
+            <div class="glass-panel-card">
+                <div class="panel-section-title">CONTINUE DE ONDE PAROU</div>
+                <div class="continue-lesson-card">
+                    <div class="lesson-img-cover" style="background-color: #111;">
+                        <div class="play-btn-small" onclick="window.location.href='aulas-info.html'">▶</div>
                     </div>
-                </div>
-
-                <!-- CARD DE ACESSO RÁPIDO REDIRECIONANDO DIRETAMENTE PARA JOGOS.HTML -->
-                <div class="glass-panel-card">
-                    <div class="panel-section-title">ACESSO RÁPIDO</div>
-                    <div class="quick-access-box">
-                        <div class="quick-item-btn" onclick="window.location.href='jogos.html'">
-                            <div class="quick-icon-frame">👾</div>
-                            <div class="quick-text-wrapper"><h5>SALAS DE JOGOS</h5><p>Treine brincando</p></div>
-                            <div class="quick-arrow-indicator">➔</div>
-                        </div>
-                        <div class="quick-item-btn">
-                            <div class="quick-icon-frame">🎬</div>
-                            <div class="quick-text-wrapper"><h5>ESTÚDIO</h5><p>Crie seus filmes</p></div>
-                        </div>
-                        <div class="quick-item-btn">
-                            <div class="quick-icon-frame">📂</div>
-                            <div class="quick-text-wrapper"><h5>PROJETOS</h5><p>Seus projetos</p></div>
-                        </div>
-                        <div class="quick-item-btn">
-                            <div class="quick-icon-frame">🏅</div>
-                            <div class="quick-text-wrapper"><h5>CONQUISTAS</h5><p>Veja suas badges</p></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="glass-panel-card">
-                    <div class="panel-section-title">CONQUISTAS RECENTES <a href="#">VER TODAS</a></div>
-                    <div class="achievements-list-wrapper">
-                        <div class="achievement-row-item concluida">
-                            <div class="ach-left-block"><div class="ach-icon-sphere">⭐</div><div class="ach-text-block"><h5>Primeira Aula</h5><p>Concluiu sua primeira aula</p></div></div>
-                            <div class="ach-xp-badge">+50 XP</div>
-                        </div>
-                        <div class="achievement-row-item concluida">
-                            <div class="ach-left-block"><div class="ach-icon-sphere">🧭</div><div class="ach-text-block"><h5>Explorador</h5><p>Completou 5 aulas</p></div></div>
-                            <div class="ach-xp-badge">+100 XP</div>
-                        </div>
+                    <div class="lesson-meta-side">
+                        <span class="track-tag">Aula 04 • Trilha Iniciante</span>
+                        <h4>Fotografia para Stop Motion</h4>
+                        <p>Aprenda técnicas profissionais de enquadramento, iluminação e captura de arcos.</p>
+                        <button class="btn-continue-act" onclick="window.location.href='aulas-info.html'">▶ REPRODUZIR</button>
                     </div>
                 </div>
             </div>
 
-            <!-- LINHA 3: TRILHAS, TREINAMENTO INTERATIVO (CONECTADO) E PROJETOS -->
-            <div class="bottom-dashboard-grid">
-                <div class="glass-panel-card">
-                    <div class="panel-section-title">SEU PROGRESSO POR TRILHA <a href="#">VER TODAS</a></div>
-                    <div class="tracks-progress-list">
-                        <div class="track-progress-row">
-                            <div class="track-meta-row"><h5>Trilha Iniciante</h5><small>8 de 25</small><span>32% ➔</span></div>
-                            <div class="track-bar-track"><div class="track-bar-fill" style="width: 32%;"></div></div>
-                        </div>
-                        <div class="track-progress-row">
-                            <div class="track-meta-row"><h5>Trilha Intermediária</h5><small>3 de 30</small><span>10% ➔</span></div>
-                            <div class="track-bar-track"><div class="track-bar-fill" style="width: 10%;"></div></div>
-                        </div>
+            <!-- Bloco 2.2: Nível acumulado individual por Trilha Técnica -->
+            <div class="glass-panel-card">
+                <div class="panel-section-title">SEU PROGRESSO POR TRILHA <a href="#">VER TODAS</a></div>
+                <div class="tracks-progress-list">
+                    <div class="track-progress-row">
+                        <div class="track-meta-row"><h5>Trilha Iniciante</h5><small>8 de 25 lições</small><span>32% ➔</span></div>
+                        <div class="track-bar-track"><div class="track-bar-fill" style="width: 32%;"></div></div>
+                    </div>
+                    <div class="track-progress-row">
+                        <div class="track-meta-row"><h5>Trilha Intermediária</h5><small>3 de 30 lições</small><span>10% ➔</span></div>
+                        <div class="track-bar-track"><div class="track-bar-fill" style="width: 10%;"></div></div>
+                    </div>
+                    <div class="track-progress-row">
+                        <div class="track-meta-row"><h5>Trilha Avançada</h5><small>0 de 25 lições</small><span>0% ➔</span></div>
+                        <div class="track-bar-track"><div class="track-bar-fill" style="width: 0%;"></div></div>
                     </div>
                 </div>
+            </div>
 
-                <!-- TREINAMENTO INTERATIVO CONECTADO DIRETAMENTE AOS DOIS JOGOS CRIADOS -->
-                <div class="glass-panel-card">
-                    <div class="panel-section-title">TREINAMENTO INTERATIVO <a href="#">VER TODOS</a></div>
-                    <div class="training-cards-row">
-                        <div class="training-mini-card" onclick="window.location.href='jogos.html'">
-                            <div class="train-cover-pic" style="background-color: #222;"></div>
-                            <div class="train-text-pad"><h5>Memória de Cena</h5><small class="facil">FÁCIL</small></div>
-                        </div>
-                        <div class="training-mini-card" onclick="window.location.href='jogo-easing.html'">
-                            <div class="train-cover-pic" style="background-color: #222;"></div>
-                            <div class="train-text-pad"><h5>Mestre do Easing</h5><small class="dificil" style="color:#ff9d00;">DESAFIO ⚡</small></div>
+            <!-- Bloco 2.3: Portfólio de Projetos Atuais do Aluno -->
+            <div class="glass-panel-card">
+                <div class="panel-section-title">PROJETOS RECENTES <a href="#">VER TODOS</a></div>
+                <div class="recent-projects-list">
+                    <div class="project-row-card">
+                        <div class="proj-left-side">
+                            <div class="proj-thumbnail-sphere" style="background-color: #222;"></div>
+                            <div class="proj-meta-side"><h5>Meu Primeiro Filme</h5><p>Editado há 2 dias</p></div>
                         </div>
                     </div>
-                </div>
-
-                <div class="glass-panel-card">
-                    <div class="panel-section-title">PROJETOS RECENTES <a href="#">VER TODOS</a></div>
-                    <div class="recent-projects-list">
-                        <div class="project-row-card">
-                            <div class="proj-left-side">
-                                <div class="proj-thumbnail-sphere" style="background-color: #333;"></div>
-                                <div class="proj-meta-side"><h5>Meu Primeiro Filme</h5><p>Há 2 dias</p></div>
-                            </div>
-                        </div>
-                        <div class="project-row-card">
-                            <div class="proj-left-side">
-                                <div class="proj-thumbnail-sphere" style="background-image: none; background-color: #333;"></div>
-                                <div class="proj-meta-side"><h5>Aventuras Pinguim</h5><p>Há 1 semana</p></div>
-                            </div>
+                    <div class="project-row-card">
+                        <div class="proj-left-side">
+                            <div class="proj-thumbnail-sphere" style="background-color: #333;"></div>
+                            <div class="proj-meta-side"><h5>Aventuras do Pinguim</h5><p>Editado há 1 semana</p></div>
                         </div>
                     </div>
                 </div>
             </div>
 
-        </div> <!-- Fim de .dash-main-content -->
-    </div> <!-- Fim de .dash-layout -->
+        </div> <!-- Fim da linha 2 -->
 
+        <!-- LINHA 3: MURAL DE RECOMENDAÇÕES CINEMATOGRÁFICAS (ESTILO STREAMING) -->
+        <div class="glass-panel-card theater-row-container">
+            <div class="panel-section-title">🎬 CINEMA INSPIRADOR: RECOMENDAÇÕES DO DIRETOR <span style="color: var(--neon-hover); font-size: 0.65rem;">CLIQUE PARA VER OS BASTIDORES</span></div>
+            
+            <div class="theater-cards-carousel">
+                <div class="movie-poster-card" onclick="window.location.href='movie-coraline.html'">
+                    <div class="poster-frame-pic" style="background-image: url('assets/posters/coraline.jpg'); background-color: #1a0f2e;"></div>
+                    <div class="movie-meta-pad"><h5>Coraline</h5><small>LAIKA STUDIOS 🍿</small></div>
+                </div>
+                <div class="movie-poster-card" onclick="window.location.href='movie-paranorman.html'">
+                    <div class="poster-frame-pic" style="background-image: url('assets/posters/paranorman.jpg'); background-color: #12251a;"></div>
+                    <div class="movie-meta-pad"><h5>ParaNorman</h5><small>LAIKA STUDIOS 🍿</small></div>
+                </div>
+                <div class="movie-poster-card" onclick="window.location.href='movie-wallace.html'">
+                    <div class="poster-frame-pic" style="background-image: url('assets/posters/wallace.jpg'); background-color: #2b1f15;"></div>
+                    <div class="movie-meta-pad"><h5>Wallace & Gromit</h5><small>AARDMAN 🍿</small></div>
+                </div>
+                <div class="movie-poster-card" onclick="window.location.href='movie-noiva.html'">
+                    <div class="poster-frame-pic" style="background-image: url('assets/posters/noiva.jpg'); background-color: #0f1c24;"></div>
+                    <div class="movie-meta-pad"><h5>Noiva Cadáver</h5><small>TIM BURTON 🍿</small></div>
+                </div>
+                <div class="movie-poster-card" onclick="window.location.href='movie-jack.html'">
+                    <div class="poster-frame-pic" style="background-image: url('assets/posters/jack.jpg'); background-color: #1c1524;"></div>
+                    <div class="movie-meta-pad"><h5>Mundo de Jack</h5><small>TIM BURTON 🍿</small></div>
+                </div>
+                <div class="movie-poster-card" onclick="window.location.href='movie-frankenweenie.html'">
+                    <div class="poster-frame-pic" style="background-image: url('assets/posters/frankenweenie.jpg'); background-color: #1c1c1c;"></div>
+                    <div class="movie-meta-pad"><h5>Frankenweenie</h5><small>TIM BURTON 🍿</small></div>
+                </div>
+                <div class="movie-poster-card" onclick="window.location.href='movie-galinhas.html'">
+                    <div class="poster-frame-pic" style="background-image: url('assets/posters/galinhas.jpg'); background-color: #2e1515;"></div>
+                    <div class="movie-meta-pad"><h5>Fuga das Galinhas</h5><small>AARDMAN 🍿</small></div>
+                </div>
+            </div>
+        </div> <!-- Fim da linha 3 -->
+
+    </main>
+
+    <!-- RODAPÉ DE ENCERRAMENTO UNIFICADO -->
     <footer class="dash-footer-row">
-        <div>© 2026 <span>STOP_MOTION</span> | Todos os direitos reservados.</div>
+        <div>© 2026 <span>STOP_ART</span> | Todos os direitos reservados.</div>
     </footer>
 
+    <!-- INTERATIVIDADE SCRIPT: DROPDOWN, TEMAS E ACESSIBILIDADE DE FONTES -->
+    <script>
+        // Função Abre/Fecha do Menu Suspenso ao Clicar
+        function toggleSettingsMenu(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            const menu = document.getElementById('settings-menu');
+            menu.classList.toggle('active');
+        }
+
+        // Fecha o menu caso o aluno clique em qualquer outra parte vazia da Dashboard
+        document.addEventListener('click', function() {
+            const menu = document.getElementById('settings-menu');
+            if (menu) menu.classList.remove('active');
+        });
+
+        // Função do Botão de Abortar Sessão (Deslogar da Conta)
+        function desconectarConta() {
+            if(confirm("Deseja realmente encerrar sua sessão no portal StopArt?")) {
+                window.location.href = "index.html";
+            }
+        }
+
+        // Função de Acessibilidade: Altera proporcionalmente o tamanho da fonte da área principal
+        function alternarFonte(tamanho) {
+            const mainContent = document.getElementById('main-content-area');
+            if (tamanho === 'grande') {
+                mainContent.style.fontSize = '1.15rem';
+                document.getElementById('welcome-heading').style.fontSize = '2.6rem';
+            } else {
+                mainContent.style.fontSize = '1rem';
+                document.getElementById('welcome-heading').style.fontSize = '2.2rem';
+            }
+        }
+
+        // Função União de Tema: Aplica filtros dinâmicos de iluminação no corpo do portal
+        function alternarTema(modo) {
+            const corpo = document.getElementById('portal-body');
+            if (modo === 'claro') {
+                // Aplica filtros de inversão e brilho controlados para clarear os painéis sem distorcer as cores principais
+                corpo.style.filter = 'invert(0.9) hue-rotate(180deg)';
+                corpo.style.backgroundColor = '#e5e0eb';
+            } else {
+                corpo.style.filter = 'none';
+                corpo.style.backgroundColor = '#050307';
+            }
+        }
+    </script>
 </body>
 </html>
