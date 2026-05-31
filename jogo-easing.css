@@ -37,7 +37,7 @@ h1, h2, h3, h4, .logo {
     letter-spacing: 1px;
 }
 
-/* NAVBAR SUPERIOR FIXA */
+/* NAVBAR SUPERIOR FIXA DO PORTAL LOGADO */
 .dash-header {
     background: #07040a;
     padding: 12px 40px;
@@ -97,6 +97,7 @@ h1, h2, h3, h4, .logo {
 .btn-plans { width: 100%; padding: 8px; background: var(--neon-purple); border: none; color: #000; font-weight: bold; font-family: 'Cinzel', serif; font-size: 0.65rem; border-radius: 4px; cursor: pointer; }
 
 
+
 /* ==========================================================================
    CSS EXCLUSIVO: JOGO MESTRE DO EASING (JOGO-EASING.CSS) - PARTE 2 DE 2
    ========================================================================== */
@@ -118,7 +119,7 @@ h1, h2, h3, h4, .logo {
     align-items: flex-start;
 }
 
-/* Painel Central do Gabinete (Vidro Roxo) */
+/* Painel Central do Fliperama (Vidro Roxo) */
 .arcade-cabinet {
     flex: 1; 
     background: rgba(14, 8, 22, 0.6); 
@@ -135,7 +136,7 @@ h1, h2, h3, h4, .logo {
 .arcade-cabinet h1 { font-family: 'Cinzel', serif; font-size: 1.4rem; color: #fff; margin-bottom: 5px; }
 .arcade-cabinet .game-tagline { font-size: 0.8rem; color: #958d9c; margin-bottom: 25px; }
 
-/* HUD de Feedback */
+/* HUD de Status */
 .game-hud-bar {
     display: flex; 
     justify-content: space-between; 
@@ -201,7 +202,7 @@ h1, h2, h3, h4, .logo {
     border: 1px solid rgba(166, 93, 242, 0.1);
 }
 
-/* Os Nós / Marcadores Arrastáveis das Fotos */
+/* Os Nós / Marcadores Arrastáveis */
 .timeline-node {
     position: absolute;
     top: -10px;
@@ -227,7 +228,7 @@ h1, h2, h3, h4, .logo {
     box-shadow: 0 0 12px var(--neon-hover);
 }
 
-/* Telas de Transição Overlay por cima do tabuleiro */
+/* Telas de Transição Overlay */
 .stage-overlay-screen {
     position: absolute; 
     top: 0; left: 0; 

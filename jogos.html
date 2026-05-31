@@ -3,17 +3,89 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>STOP_MOTION PORTAL - Laboratório de Jogos</title>
-    <!-- Vincula exclusivamente o arquivo jogos.css isolando as regras antigas -->
+    <title>STOP_MOTION PORTAL - Salas de Jogos</title>
+    <!-- Vincula o CSS específico da Sala de Jogos -->
     <link rel="stylesheet" href="jogos.css">
-    <!-- Fontes do Google (Cinzel gótica e Montserrat técnica) -->
+    <!-- Fontes do Google -->
     <link rel="preconnect" href="https://googleapis.com">
     <link rel="preconnect" href="https://gstatic.com" crossorigin>
     <link href="https://googleapis.com/css2?family=Cinzel:wght@400;700&family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Estilos complementares exclusivos do Lobby de Seleção */
+        .arcade-lobby-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            width: 100%;
+            margin-top: 15px;
+        }
+
+        .arcade-game-card {
+            background: rgba(14, 8, 22, 0.6);
+            border: 1px solid rgba(166, 93, 242, 0.25);
+            border-radius: 16px;
+            padding: 30px;
+            text-align: left;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.3s, border-color 0.3s;
+        }
+
+        .arcade-game-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--neon-hover);
+            box-shadow: 0 20px 40px rgba(166, 93, 242, 0.15);
+        }
+
+        .game-banner-simulado {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            background-color: #050307;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            box-shadow: inset 0 0 30px #000;
+        }
+
+        .arcade-game-card h2 {
+            font-family: 'Cinzel', serif;
+            font-size: 1.3rem;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+
+        .arcade-game-card p {
+            font-size: 0.82rem;
+            color: #c9bfae;
+            line-height: 1.6;
+            margin-bottom: 25px;
+            flex: 1;
+        }
+
+        .game-meta-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+        .badge-facil { background: rgba(93, 242, 166, 0.1); border: 1px solid #5df2a6; color: #5df2a6; }
+        .badge-dificil { background: rgba(255, 157, 0, 0.1); border: 1px solid #ff9d00; color: #ff9d00; }
+    </style>
 </head>
 <body>
 
-    <!-- BARRA SUPERIOR DO PORTAL LOGADO (HEADER FIXO) -->
+    <!-- BARRA SUPERIOR FIXA -->
     <header class="dash-header">
         <div class="logo">STOP_MOTION <span>PORTAL</span></div>
         <nav class="header-center-nav">
@@ -32,7 +104,7 @@
     </header>
 
     <div class="dash-layout">
-        <!-- BARRA LATERAL FIXA DA ESQUERDA (SIDEBAR MENU) -->
+        <!-- BARRA LATERAL FIXA DA ESQUERDA -->
         <aside class="dash-sidebar">
             <div class="sidebar-menu">
                 <a href="home.html" class="menu-item">🏠 DASHBOARD</a>
@@ -44,199 +116,46 @@
                 <a href="#" class="menu-item">👥 COMUNIDADE</a>
                 <a href="#" class="menu-item">⚙️ CONFIGURAÇÕES</a>
             </div>
-
-            <!-- Card de Upgrades na base do menu lateral -->
             <div class="sidebar-footer-card">
-                <small>Plano Atual</small>
-                <strong>Criador Iniciante</strong>
+                <small>Plano Atual</small><strong>Criador Iniciante</strong>
                 <button class="btn-plans">★ VER PLANOS</button>
             </div>
         </aside>
 
-        <!-- CONTAINER PRINCIPAL DO FLIPERAMA -->
+        <!-- AREA CENTRAL: LOBBY DE SELEÇÃO DE JOGOS -->
         <div class="dash-main-content">
-            <div class="game-layout-container">
-                <!-- PAINEL CENTRAL DO FLIPERAMA GÓTICO -->
-                <div class="arcade-cabinet">
-                    <h1>LABORATÓRIO DE MEMÓRIA VISUAL</h1>
-                    <p class="game-tagline">Treine seu cérebro para capturar variações milimétricas entre quadros.</p>
+            <div style="text-align: left; border-bottom: 1px solid rgba(166, 93, 242, 0.15); padding-bottom: 15px;">
+                <h1 style="font-family: 'Cinzel', serif; font-size: 1.8rem; color: #fff;">FLIPERAMA DE STOP MOTION</h1>
+                <p style="font-size: 0.85rem; color: #958d9c; margin-top: 4px;">Escolha um laboratório prático para treinar suas habilidades mecânicas e visuais.</p>
+            </div>
 
-                    <!-- HUD: Barra de Status (Tempo e Recorde) -->
-                    <div class="game-hud-bar">
-                        <div class="hud-item hud-timer">TEMPO: <span id="timer-label">10s</span></div>
-                        <div class="hud-item hud-score">PONTOS: <span id="score-label">0</span></div>
+            <div class="arcade-lobby-grid">
+                
+                <!-- GABINETE JOGO 1: MEMÓRIA DE CENA -->
+                <div class="arcade-game-card">
+                    <div>
+                        <div class="game-meta-badge badge-facil">TREINAMENTO • FÁCIL</div>
+                        <div class="game-banner-simulado" style="background-image: linear-gradient(rgba(5,3,8,0.5), rgba(5,3,8,0.5)), url('assets/fundo_principal.png'); background-size: cover; background-position: center;">👁️</div>
+                        <h2>MEMÓRIA DE CENA</h2>
+                        <p>Treine a habilidade que os profissionais chamam de <strong>Propagação de Arco</strong>. Memorize a posição do boneco e replique o enquadramento perfeito após o blackout de estúdio antes que o tempo de 10 segundos acabe!</p>
                     </div>
-
-                    <!-- TABULEIRO DO ESTÚDIO DE ANIMAÇÃO -->
-                    <div class="animation-stage" id="game-stage">
-                        
-                        <!-- Sombra alvo da posição antiga secreta -->
-                        <div class="shadow-target" id="puppet-target">ALVO</div>
-
-                        <!-- O Boneco / Marionete Arrastável de Teste -->
-                        <div class="marionette-puppet" id="puppet-actor">
-                            🧶
-                            <small>PUPPET_01</small>
-                        </div>
-
-                        <!-- TELA DE INTRODUÇÃO E EXPLICAÇÃO PEDAGÓGICA -->
-                        <div class="stage-overlay-screen" id="overlay-screen">
-                            <h2 id="overlay-title" style="color: #a65df2;">MEMÓRIA DE CENA</h2>
-                            
-                            <p id="overlay-msg" style="color: #c9bfae; text-align: justify; padding: 0 20px; font-size: 0.82rem; line-height: 1.6;">
-                                No cinema real de Stop Motion, essa habilidade se chama <strong>Memória de Cena e Propagação de Arco</strong>. Os grandes animadores passam horas treinando o olho para perceber se um objeto se moveu um milímetro para o lado errado entre um clique e outro. 
-                                <br><br>
-                                <strong>COMO JOGAR:</strong> Memorize a posição do boneco. A tela piscará em breu total e ele mudará de lugar sozinho. Você terá exatamente <strong>10 segundos</strong> quando a luz acender para arrastá-lo de volta com o mouse para a posição exata em que ele estava!
-                            </p>
-
-                            <!-- BOTOES DUPLOS: Iniciar o teste ou abortar voltando para a Home -->
-                            <div style="display: flex; gap: 15px; margin-top: 10px;">
-                                <button class="btn-arcade" id="action-btn" onclick="iniciarJogo()">INICIAR TREINAMENTO ⚡</button>
-                                <button class="btn-arcade" style="background: rgba(255,255,255,0.05); color: #fff; border-color: rgba(255,255,255,0.15);" onclick="window.location.href='home.html'">SAIR DO JOGO 🚪</button>
-                            </div>
-                        </div>
-
-                    </div>
+                    <button class="btn-arcade" style="width: 100%; margin: 0;" onclick="window.location.href='jogo-memoria.html'">ACESSAR GABINETE ⚡</button>
                 </div>
 
-                <!-- CAIXA LATERAL DIREITA: DIRETRIZES -->
-                <div class="game-rules-card">
-                    <h3>💡 DIRETRIZES DE ESTÚDIO</h3>
-                    <ul class="rules-list">
-                        <li><span>01.</span> O acerto exige precisão cirúrgica de aproximação do arco.</li>
-                        <li><span>02.</span> Cada replicação correta garante <span>+100 Pontos</span> de experiência.</li>
-                        <li><span>03.</span> Arrastar o boneco simula a movimentação mecânica de rigs de arame reais.</li>
-                    </ul>
+                <!-- GABINETE JOGO 2: MESTRE DO EASING -->
+                <div class="arcade-game-card">
+                    <div>
+                        <div class="game-meta-badge badge-dificil">LABORATÓRIO • DESAFIO</div>
+                        <div class="game-banner-simulado" style="background-image: linear-gradient(rgba(5,3,8,0.5), rgba(5,3,8,0.5)), url('assets/fundo_principal.png'); background-size: cover; background-position: center;">📊</div>
+                        <h2>MESTRE DO EASING</h2>
+                        <p>Aprenda a controlar as leis do <strong>Timing e Espaçamento</strong>. Ajuste os nós da linha do tempo para suavizar a velocidade da marionete criando uma desaceleração realista (Ease Out) para aprovação do diretor.</p>
+                    </div>
+                    <button class="btn-arcade" style="width: 100%; margin: 0; background: #ff9d00;" onclick="window.location.href='jogo-easing.html'">ACESSAR GABINETE ⚡</button>
                 </div>
 
-            </div> <!-- Fim da div .game-layout-container -->
-        </div> <!-- Fim do conteúdo principal .dash-main-content -->
-    </div> <!-- Fim do layout global .dash-layout -->
+            </div> <!-- Fim do grid -->
+        </div> <!-- Fim de .dash-main-content -->
+    </div> <!-- Fim de .dash-layout -->
 
-    <!-- JAVASCRIPT DE INTELIGÊNCIA MECÂNICA -->
-    <script>
-        let tempoRestante = 10;
-        let pontuacao = 0;
-        let cronometro;
-        let jogoAtivo = false;
-
-        let alvoX = 200;
-        let alvoY = 120;
-
-        const boneco = document.getElementById('puppet-actor');
-        const alvoInvisivel = document.getElementById('puppet-target');
-        const palco = document.getElementById('game-stage');
-        const overlay = document.getElementById('overlay-screen');
-
-        resetarPosicaoBoneco(alvoX, alvoY);
-
-        function iniciarJogo() {
-            overlay.style.display = 'none';
-            alvoInvisivel.style.display = 'none';
-            
-            // FASE DE MEMORIZAÇÃO: Boneco brilha em verde, mas o palco continua escuro (breu total de estúdio)
-            boneco.style.borderColor = '#5df2a6';
-            document.getElementById('timer-label').innerText = "PREPARE-SE!";
-            palco.classList.remove('luz-acesa'); /* Garante o breu de estúdio desligado */
-            
-            setTimeout(() => {
-                // ACENDE A LUZ! Ativa o cenário de fundo num estalo cinematográfico no início da rodada
-                palco.classList.add('luz-acesa');
-                
-                alvoX = Math.floor(Math.random() * (palco.clientWidth - 80)) + 10;
-                alvoY = Math.floor(Math.random() * (palco.clientHeight - 110)) + 10;
-                
-                resetarPosicaoBoneco(10, 10);
-                boneco.style.borderColor = '#a65df2';
-                
-                tempoRestante = 10;
-                jogoAtivo = true;
-                document.getElementById('timer-label').innerText = tempoRestante + "s";
-                
-                clearInterval(cronometro);
-                cronometro = setInterval(contarTempo, 1000);
-            }, 3000);
-        }
-
-        function contarTempo() {
-            tempoRestante--;
-            document.getElementById('timer-label').innerText = tempoRestante + "s";
-
-            if (tempoRestante <= 0) {
-                clearInterval(cronometro);
-                finalizarRodada();
-            }
-        }
-
-        function finalizarRodada() {
-            jogoAtivo = false;
-            
-            const bonecoX = parseInt(boneco.style.left || 0);
-            const bonecoY = parseInt(boneco.style.top || 0);
-            
-            const distanciaX = Math.abs(bonecoX - alvoX);
-            const distanciaY = Math.abs(bonecoY - alvoY);
-
-            alvoInvisivel.style.left = alvoX + 'px';
-            alvoInvisivel.style.top = alvoY + 'px';
-            alvoInvisivel.style.display = 'flex';
-
-            if (distanciaX < 35 && distanciaY < 35) {
-                pontuacao += 100;
-                document.getElementById('score-label').innerText = pontuacao;
-                exibirFimRodada("EXCELENTE!", "Sua memória de cena foi precisa! Arco de movimentação simulado com sucesso.", "PRÓXIMO NÍVEL ⚡");
-            } else {
-                exibirFimRodada("FALHA DE CONTINUIDADE", "O boneco ficou desalinhado em relação ao frame anterior. Treine sua percepção espacial!", "TENTAR DE NOVO 🔄");
-            }
-        }
-
-        function exibirFimRodada(titulo, mensagem, textoBotao) {
-            palco.classList.remove('luz-acesa'); /* Apaga os holofotes ao fim da rodada para voltar ao breu */
-            document.getElementById('overlay-title').innerText = titulo;
-            document.getElementById('overlay-title').style.color = titulo === "EXCELENTE!" ? "#5df2a6" : "#f25d5d";
-            document.getElementById('overlay-msg').innerHTML = mensagem;
-            
-            // Reconstrói a linha com os botões duplos de reiniciar ou abortar
-            document.getElementById('overlay-screen').querySelector('div').innerHTML = `
-                <button class="btn-arcade" id="action-btn" onclick="iniciarJogo()">${textoBotao}</button>
-                <button class="btn-arcade" style="background: rgba(255,255,255,0.05); color: #fff; border-color: rgba(255,255,255,0.15);" onclick="window.location.href='home.html'">SAIR DO JOGO 🚪</button>
-            `;
-            overlay.style.display = 'flex';
-        }
-
-        function resetarPosicaoBoneco(x, y) {
-            boneco.style.left = x + 'px';
-            boneco.style.top = y + 'px';
-        }
-
-        let arrastando = false;
-        let deslocamentoX, deslocamentoY;
-
-        boneco.addEventListener('mousedown', (e) => {
-            if (!jogoAtivo) return;
-            arrastando = true;
-            deslocamentoX = e.clientX - boneco.getBoundingClientRect().left;
-            deslocamentoY = e.clientY - boneco.getBoundingClientRect().top;
-        });
-
-        document.getElementById('game-stage').addEventListener('mousemove', (e) => {
-            if (!arrastando) return;
-            
-            let novoX = e.clientX - palco.getBoundingClientRect().left - deslocamentoX;
-            let novoY = e.clientY - palco.getBoundingClientRect().top - deslocamentoY;
-
-            if (novoX < 0) novoX = 0;
-            if (novoY < 0) novoY = 0;
-            if (novoX > palco.clientWidth - boneco.clientWidth) novoX = palco.clientWidth - boneco.clientWidth;
-            if (novoY > palco.clientHeight - boneco.clientHeight) novoY = palco.clientHeight - boneco.clientHeight;
-
-            boneco.style.left = novoX + 'px';
-            boneco.style.top = novoY + 'px';
-        });
-
-        document.addEventListener('mouseup', () => {
-            arrastando = false;
-        });
-    </script>
 </body>
 </html>

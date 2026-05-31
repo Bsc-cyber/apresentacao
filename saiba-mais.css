@@ -22,7 +22,7 @@ body {
     color: var(--text-light);
     font-family: 'Montserrat', sans-serif;
     line-height: 1.4;
-    overflow-x: hidden; /* Libera rolagens verticais e trava as horizontais quebradas */
+    overflow-x: hidden; /* Libera rolagens verticais e trava as horizontais */
 }
 
 h1, h2, h3, h4, .logo {
@@ -35,21 +35,18 @@ a {
     transition: 0.3s;
 }
 
-/* DEGRADÊ MÍSTICO CALIBRADO: ABRE PARA REVELAR OS PERSONAGENS DA IMAGEM NA DIREITA */
+/* DEGRADÊ MÍSTICO CALIBRADO EM PARALAXE */
 #main-site {
     min-height: 100vh;
     width: 100vw;
     position: relative;
-    
-    /* Tom sólido na esquerda protegendo a leitura do texto, abrindo completamente na marca de 45% */
     background-image: 
         linear-gradient(to right, rgba(14, 7, 24, 1) 0%, rgba(14, 7, 24, 0.95) 25%, rgba(14, 7, 24, 0.4) 38%, rgba(14, 7, 24, 0) 45%), 
         url('assets/fundo_principal.png'); 
-    
     background-size: cover;
     background-position: center top;
     background-repeat: no-repeat;
-    background-attachment: fixed; /* Efeito de paralaxe refinado */
+    background-attachment: fixed;
     display: flex;
     flex-direction: column;
 }
@@ -88,7 +85,7 @@ a {
 }
 .btn-login-nav:hover { background-color: var(--purple-neon); box-shadow: 0 0 15px rgba(166, 93, 242, 0.4); }
 
-/* SINTONIA: CORREÇÃO VISUAL CENTRALIZANDO TODOS OS TÍTULOS GRANDES DO TOUR */
+/* CENTRALIZAÇÃO TOTAL DOS TÍTULOS DE SEÇÃO */
 .section-divider {
     font-size: 1.2rem; 
     color: var(--purple-hover); 
@@ -152,6 +149,7 @@ a {
     width: 45%; 
     display: flex;
     align-items: center;
+    justify-content: center;
 }
 
 .manifesto-text h2 {
@@ -173,22 +171,29 @@ a {
 
 .manifesto-text p strong { color: var(--purple-hover); }
 
-.idea-frame {
+/* NOVA MOLDURA CINEMATOGRÁFICA PARA O VÍDEO QUADRADO DO CANVA */
+.video-frame-wrapper {
     width: 100%;
-    border: 2px dashed rgba(166, 93, 242, 0.35);
-    padding: 35px 30px;
+    aspect-ratio: 1 / 1; /* Força o quadrado perfeito vindo do Canva */
+    background: rgba(10, 6, 15, 0.4);
+    border: 1px solid rgba(166, 93, 242, 0.3);
     border-radius: 12px;
-    background: rgba(166, 93, 242, 0.02);
-    color: var(--text-muted);
-    font-size: 0.85rem;
-    line-height: 1.6;
-    text-align: center;
-    box-shadow: inset 0 0 20px rgba(166, 93, 242, 0.02);
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5), 0 0 15px rgba(166, 93, 242, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
-.idea-frame span { font-size: 2.2rem; display: block; margin-bottom: 15px; }
 
-/* Carrossel de Cards */
-.tour-carousel-box { display: flex; align-items: center; justify-content: space-between; gap: 20px; width: 100%; }
+.canva-stage-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Preenche o espaço quadrado sem achatar as proporções */
+    border-radius: 11px;
+}
+
+/* Carrossel de Cards Expandido */
+.tour-carousel-box { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
 .tour-cards-grid { display: flex; gap: 20px; width: 100%; justify-content: center; overflow: hidden; }
 .tour-feature-card {
     width: 300px; text-align: left; background: rgba(5, 3, 8, 0.5); 
@@ -197,12 +202,12 @@ a {
 }
 .tour-feature-card:hover { border-color: var(--purple-hover); transform: translateY(-4px); }
 .tour-card-img { height: 160px; background-size: cover; background-position: center; background-color: #110c1a; border-bottom: 1px solid rgba(166, 93, 242, 0.15); }
-.tour-feature-card h3 { font-size: 1rem; padding: 15px 15px 5px 15px; color: #fff; }
+.tour-feature-card h3 { font-size: 0.95rem; padding: 15px 15px 5px 15px; color: #fff; font-weight: 700; letter-spacing: 0.5px; }
 .tour-feature-card p { font-size: 0.8rem; color: #c9bfae; padding: 0 15px 20px 15px; line-height: 1.5; }
 .tour-arrow-btn { background: transparent; border: none; color: var(--text-muted); font-size: 2.2rem; cursor: pointer; padding: 10px; transition: 0.3s; }
 .tour-arrow-btn:hover { color: var(--purple-hover); }
 
-/* FAQ Accordion (Sanfona Automática) */
+/* FAQ Accordion (Sanfona) */
 .faq-tour-container { display: flex; gap: 40px; align-items: flex-start; }
 .faq-tour-accordion { width: 55%; display: flex; flex-direction: column; gap: 12px; }
 .faq-tour-item { border-bottom: 1px solid rgba(166, 93, 242, 0.15); padding-bottom: 10px; }
@@ -218,7 +223,7 @@ a {
 .faq-tour-item.active .faq-tour-question span { transform: rotate(45deg); color: var(--yellow-accent); }
 .faq-tour-answer p { font-size: 0.82rem; color: #c9bfae; line-height: 1.6; padding: 5px 5px 12px 5px; text-align: justify; }
 
-/* Bloco Informativo de Cadastro (CTA) */
+/* Caixa de Chamada (CTA Amarela) */
 .cta-tour-block { width: 45%; padding: 35px; background: rgba(166, 93, 242, 0.03); border: 1px solid rgba(166, 93, 242, 0.2); border-radius: 12px; text-align: center; box-shadow: inset 0 0 20px rgba(166, 93, 242, 0.05); }
 .cta-tour-block h3 { color: var(--yellow-accent); font-size: 1.15rem; margin-bottom: 12px; font-weight: bold; }
 .cta-tour-block p { color: var(--text-muted); margin-bottom: 25px; font-size: 0.82rem; line-height: 1.5; }
