@@ -147,7 +147,6 @@ a {
 .btn-login-nav:hover { background-color: var(--purple-neon); box-shadow: 0 0 15px rgba(166, 93, 242, 0.4); }
 
 
-
 /* ==========================================================================
    5. SEÇÃO HERO CENTRAL (COMPACTA E TEXTO ANIMAÇÃO ROXO NEON)
    ========================================================================== */
@@ -187,26 +186,42 @@ a {
 
 .tagline-clean { color: var(--text-muted); font-size: 0.88rem; line-height: 1.5; margin-bottom: 25px; max-width: 480px; }
 
-/* Botões Duplos com Animação Contínua de Respiração Sutil */
-.action-buttons-container { display: flex; gap: 15px; margin-bottom: 30px; width: 100%; }
+/* RECALIBRAÇÃO: CONTÊINER E BOTÃO SOLO INSTITUCIONAL CENTRALIZADO */
+.action-buttons-container { 
+    display: flex; 
+    justify-content: flex-start; 
+    width: 100%; 
+    margin-bottom: 30px; 
+}
 
-.btn-action-purple, .btn-action-outline { 
-    flex: 1; max-width: 230px; display: flex; align-items: center; gap: 12px; padding: 11px 16px; border-radius: 6px; cursor: pointer; font-family: 'Montserrat', sans-serif; 
-    transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out; 
+.btn-action-purple { 
+    background-color: #6a0dad; 
+    border: none; 
+    color: #ffffff; 
+    
+    /* Largura calibrada para o texto longo caber sem quebras desnecessárias */
+    width: 100%; 
+    max-width: 380px; 
+    
+    /* Centralização perfeita do conteúdo */
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    text-align: center; 
+    
+    padding: 14px 24px; 
+    border-radius: 6px; 
+    cursor: pointer; 
+    font-family: 'Montserrat', sans-serif; 
+    transition: background-color 0.2s ease-in-out; 
     animation: respirarBotao 4s ease-in-out infinite alternate;
 }
-.btn-action-purple { background-color: #6a0dad; border: none; color: #ffffff; }
 .btn-action-purple:hover { background-color: #8a2be2; }
 
-.btn-action-outline { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.15); color: var(--text-light); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); animation-delay: 2s; }
-.btn-action-outline:hover { background: rgba(255, 255, 255, 0.08); }
+.text-btn-wrapper { display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.text-btn-wrapper strong { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.5px; }
 
-.icon-btn { font-size: 1.2rem; }
-.text-btn-wrapper { display: flex; flex-direction: column; }
-.text-btn-wrapper strong { font-size: 0.82rem; font-weight: 700; }
-.text-btn-wrapper small { font-size: 0.68rem; opacity: 0.7; margin-top: 1px; }
-
-/* Coluna Direita (Vazia para limpar a Coraline) */
+/* Coluna Direita (Vazia para limpar os personagens) */
 .hero-right-content { width: 35%; display: flex; flex-direction: column; align-items: flex-end; }
 
 /* ==========================================================================
@@ -216,13 +231,13 @@ a {
     background-color: rgba(22, 11, 36, 0.45); 
     border: 1px solid rgba(166, 93, 242, 0.25); border-radius: 12px;
     backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-    padding: 14px 40px; 
+    padding: 14px 30px; 
     
-    /* MODIFICAÇÃO: Encolhido o tamanho para 72% e alinhado na esquerda para recuar e limpar os personagens da direita */
+    /* Afasta do chão e encolhe na largura para dar respiro aos personagens da direita */
     width: 72%; 
     margin: 0 0 45px 60px; 
     
-    display: grid; grid-template-columns: repeat(4, 1fr); gap: 25px;
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;
     position: relative; z-index: 10;
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6), inset 0 0 15px rgba(166, 93, 242, 0.1);
 }
@@ -233,31 +248,43 @@ a {
 .info-block-text p { font-size: 0.7rem; color: rgba(255, 255, 255, 0.85); }
 
 /* ==========================================================================
-   7. MODAL DE LOGIN E OUTROS
+   7. MODAL DE LOGIN FLUTUANTE OCULTO (CONSERTADO E ENCAPSULADO)
    ========================================================================== */
-.modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(0, 0, 0, 0.85); z-index: 10000; display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.4s ease; }
+.modal-overlay { 
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
+    background-color: rgba(0, 0, 0, 0.85); z-index: 10000; 
+    display: flex; justify-content: center; align-items: center; 
+    opacity: 0; pointer-events: none; transition: opacity 0.4s ease; 
+}
 .modal-overlay.active { opacity: 1; pointer-events: all; }
-.login-card-floating { background-color: rgba(10, 6, 15, 0.95); border: 1px solid var(--purple-neon); padding: 45px 35px; width: 100%; max-width: 440px; position: relative; backdrop-filter: blur(12px); box-shadow: 0 15px 40px rgba(0,0,0,0.8); border-radius: 12px; }
+
+.login-card-floating { 
+    background-color: rgba(10, 6, 15, 0.95); border: 1px solid var(--purple-neon); 
+    padding: 45px 35px; width: 100%; max-width: 440px; position: relative; 
+    backdrop-filter: blur(12px); box-shadow: 0 15px 40px rgba(0,0,0,0.8); border-radius: 12px; 
+}
 .close-modal-btn { position: absolute; top: 12px; right: 18px; background: transparent; border: none; color: var(--text-muted); font-size: 1.8rem; cursor: pointer; line-height: 1; }
 .close-modal-btn:hover { color: var(--purple-neon); }
-.login-card-floating h2 { font-size: 1.3rem; color: var(--purple-neon); margin-bottom: 20px; border-left: 3px solid var(--purple-neon); padding-left: 10px; }
-.login-card-floating .input-group { margin-bottom: 15px; }
+
+.login-card-floating h2 { font-size: 1.3rem; color: var(--purple-neon); margin-bottom: 20px; border-left: 3px solid var(--purple-neon); padding-left: 10px; text-align: left; }
+.login-card-floating .input-group { margin-bottom: 15px; text-align: left; }
 .login-card-floating label { display: block; color: var(--text-muted); font-size: 0.8rem; margin-bottom: 6px; }
-.login-card-floating input { width: 100%; padding: 12px 16px; background-color: rgba(0, 0, 0, 0.6); border: 1px solid rgba(255, 255, 255, 0.15); color: var(--text-light); border-radius: 4px; }
+.login-card-floating input { width: 100%; padding: 12px 16px; background-color: rgba(0, 0, 0, 0.6); border: 1px solid rgba(255, 255, 255, 0.15); color: var(--text-light); border-radius: 4px; font-family: 'Montserrat', sans-serif; }
+.login-card-floating input:focus { border-color: var(--purple-hover); outline: none; box-shadow: 0 0 10px rgba(166, 93, 242, 0.3); }
+
 .forgot-password { display: inline-block; color: var(--purple-neon); font-size: 0.8rem; margin-bottom: 20px; text-decoration: none; }
 .btn-primary { width: 100%; font-family: 'Cinzel', serif; font-size: 1rem; font-weight: bold; background-color: var(--purple-neon); border: 2px dashed #000; padding: 12px; cursor: pointer; border-radius: 4px; }
 .signup-text { margin-top: 15px; font-size: 0.8rem; color: var(--text-muted); text-align: center; }
 .signup-text a { color: var(--purple-neon); font-weight: bold; text-decoration: none; }
 
+/* Rodapé */
 .main-footer-clean { background-color: #030205; border-top: 1px solid rgba(255, 255, 255, 0.04); padding: 12px 60px; display: flex; justify-content: space-between; align-items: center; font-size: 0.75rem; color: var(--text-muted); }
 .main-footer-clean span { color: var(--text-light); font-weight: bold; }
 .footer-right { display: flex; align-items: center; gap: 30px; }
 .footer-email { color: var(--text-muted); text-decoration: none; }
-.footer-social-icons { display: flex; gap: 15px; font-size: 1.1rem; }
-.footer-social-icons a { text-decoration: none; }
 
 /* ==========================================================================
-   8. ANIMAÇÕES EXTRA DE ENTRADA, PELÍCULA E NEVE SUTIL
+   8. ANIMAÇÕES CRONOMETRADAS E COMPLEMENTARES
    ========================================================================== */
 @keyframes changeText { 0%, 35% { content: "LUZ..."; } 38%, 70% { content: "CÂMERA..."; } 73%, 99% { content: "ANIMAÇÃO!"; color: #ff9d00; } }
 @keyframes fadeOutScreen { 0%, 92% { opacity: 1; visibility: visible; } 100% { opacity: 0; visibility: hidden; } }
@@ -268,6 +295,7 @@ a {
 @keyframes lineScratch { 0% { transform: translateX(0); opacity: 0.2; } 50% { transform: translateX(30vw); opacity: 0.4; } 100% { transform: translateX(80vw); opacity: 0.1; } }
 @keyframes floatAnimation { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-6px); } }
 
+/* MICRO-ANIMATION: Efeito sutil e contínuo de respiração */
 @keyframes respirarBotao {
     0% { transform: scale(1); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4); }
     100% { transform: scale(1.02); box-shadow: 0 6px 20px rgba(166, 93, 242, 0.2); }
@@ -275,25 +303,7 @@ a {
 
 /* SISTEMA DE NEVE SUTIL EM CAMADAS (CSS PURO) */
 .snow { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 5; }
-
-.layer1 {
-    background-image: radial-gradient(2px 2px at 20px 30px, rgba(255,255,255,0.4) 100%, transparent),
-                      radial-gradient(3px 3px at 150px 50px, rgba(255,255,255,0.3) 100%, transparent),
-                      radial-gradient(2px 2px at 300px 120px, rgba(255,255,255,0.4) 100%, transparent);
-    background-size: 400px 400px; animation: cairNeve 25s linear infinite;
-}
-.layer2 {
-    background-image: radial-gradient(3px 3px at 80px 200px, rgba(166, 93, 242, 0.22) 100%, transparent), /* Flocos roxos bem sutis */
-                      radial-gradient(2px 2px at 250px 300px, rgba(255,255,255,0.3) 100%, transparent);
-    background-size: 300px 300px; animation: cairNeve 18s linear infinite; animation-delay: -5s;
-}
-.layer3 {
-    background-image: radial-gradient(4px 4px at 50px 100px, rgba(255,255,255,0.2) 100%, transparent),
-                      radial-gradient(2px 2px at 380px 240px, rgba(255,255,255,0.4) 100%, transparent);
-    background-size: 500px 500px; animation: cairNeve 35s linear infinite; animation-delay: -12s;
-}
-
-@keyframes cairNeve {
-    0% { background-position: 0px 0px; }
-    100% { background-position: 0px 1000px; }
-}
+.layer1 { background-image: radial-gradient(2px 2px at 20px 30px, rgba(255,255,255,0.4) 100%, transparent), radial-gradient(3px 3px at 150px 50px, rgba(255,255,255,0.3) 100%, transparent), radial-gradient(2px 2px at 300px 120px, rgba(255,255,255,0.4) 100%, transparent); background-size: 400px 400px; animation: cairNeve 25s linear infinite; }
+.layer2 { background-image: radial-gradient(3px 3px at 80px 200px, rgba(166, 93, 242, 0.22) 100%, transparent), radial-gradient(2px 2px at 250px 300px, rgba(255,255,255,0.3) 100%, transparent); background-size: 300px 300px; animation: cairNeve 18s linear infinite; animation-delay: -5s; }
+.layer3 { background-image: radial-gradient(4px 4px at 50px 100px, rgba(255,255,255,0.2) 100%, transparent), radial-gradient(2px 2px at 380px 240px, rgba(255,255,255,0.4) 100%, transparent); background-size: 500px 500px; animation: cairNeve 35s linear infinite; animation-delay: -12s; }
+@keyframes cairNeve { 0% { background-position: 0px 0px; } 100% { background-position: 0px 1000px; } }

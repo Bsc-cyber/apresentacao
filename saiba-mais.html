@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mundo da Animação - Conheça o Projeto</title>
+    <!-- Vincula exclusivamente o arquivo de estilos focado na página longa de tour -->
+    <link rel="stylesheet" href="saiba-mais.css">
+    <!-- Fontes do Google (Cinzel para títulos góticos e Montserrat para os textos) -->
+    <link rel="preconnect" href="https://googleapis.com">
+    <link rel="preconnect" href="https://gstatic.com" crossorigin>
+    <link href="https://googleapis.com/css2?family=Cinzel:wght@400;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- CONTAINER SITE PRINCIPAL (SEM AS DIVS DA NEVE PARA LEITURA LIMPA) -->
+    <div id="main-site">
+
+        <!-- CABEÇALHO DA PLATAFORMA (NAVBAR) -->
+        <header class="main-header">
+            <div class="logo">STOP_MOTION <span class="logo-badge">TOUR</span></div>
+            <nav class="nav-menu">
+                <a href="index.html">VOLTAR AO INÍCIO</a>
+                <a href="#projeto">O PROJETO</a>
+                <a href="#galeria">GALERIA</a>
+                <a href="#faq">DÚVIDAS FREQUENTES</a>
+            </nav>
+            <button class="btn-login-nav" onclick="window.location.href='index.html'">👤 ENTRAR</button>
+        </header>
+
+        <!-- 2. SEÇÃO MANIFESTO: COMO TUDO COMEÇOU -->
+        <h2 class="section-divider" id="projeto">COMO NASCEU A IDEIA</h2>
+        <section class="tour-section">
+            <div class="tour-glass-panel">
+                <div class="manifesto-container">
+                    <div class="manifesto-text">
+                        <h2>RESGATANDO A ARTE ARTESANAL</h2>
+                        <p>O <strong>Mundo da Animação</strong> nasceu de um desejo profundo de reviver, proteger e fortalecer uma das vertentes mais mágicas, puras e nostálgicas do cinema: o <strong>Stop Motion</strong>.</p>
+                        <p>Na era dos efeitos digitais ultrarrealistas e das inteligências artificiais, a paciência e o toque humano de moldar um boneco de argila e fotografá-lo quadro a quadro vem perdendo espaço no mercado. Nós surgimos para provar que a resistência artística resiste e encanta gerações!</p>
+                        <p>Este portal é um ecossistema seguro projetado para transformar curiosos em realizadores. Aqui você entenderá que não precisa de um estúdio de Hollywood para dar vida às suas histórias – apenas de uma boa ideia, persistência e as técnicas certas.</p>
+                    </div>
+                    <div class="manifesto-media">
+                        <div class="idea-frame">
+                            <span>💡</span>
+                            <strong>O PROPÓSITO DO PORTAL</strong><br>
+                            Conectar mentes criativas, disponibilizar laboratórios práticos de esqueletos articulados (rigs) e receitas de massinha industrial, e oferecer um mural público para o seu portfólio digital ganhar o mundo!
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. SEÇÃO DO CARROSSEL: BASTIDORES DO PORTAL -->
+        <h2 class="section-divider" id="galeria">O QUE VOCÊ VAI ENCONTRAR</h2>
+        <section class="tour-section">
+            <div class="tour-glass-panel">
+                <div class="tour-carousel-box">
+                    <button class="tour-arrow-btn" onclick="mudarCard(-1)">&lt;</button>
+                    
+                    <div class="tour-cards-grid">
+                        <div class="tour-feature-card">
+                            <div class="tour-card-img" style="background-image: url('assets/card1.png');"></div>
+                            <h3>Laboratório Prático</h3>
+                            <p>Tutoriais caseiros para montar esqueletos articulados de arame e receitas perfeitas de massinhas.</p>
+                        </div>
+                        <div class="tour-feature-card">
+                            <div class="tour-card-img" style="background-image: url('assets/card2.png');"></div>
+                            <h3>Desafios Mensais</h3>
+                            <p>Participe de maratonas criativas e colabs quadro a quadro com temas misteriosos e divertidos.</p>
+                        </div>
+                        <div class="tour-feature-card">
+                            <div class="tour-card-img" style="background-image: url('assets/card3.png');"></div>
+                            <h3>Mural do Aluno</h3>
+                            <p>Suas pequenas sequências fotográficas ganham um espaço vivo de exibição pública na galeria.</p>
+                        </div>
+                    </div>
+                    
+                    <button class="tour-arrow-btn" onclick="mudarCard(1)">&gt;</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. SEÇÃO FAQ: SEGURANÇA E TRANSPARÊNCIA DOS DADOS -->
+        <h2 class="section-divider" id="faq">DÚVIDAS FREQUENTES</h2>
+        <section class="tour-section" style="padding-bottom: 120px;">
+            <div class="tour-glass-panel">
+                <div class="faq-tour-container">
+                    
+                    <div class="faq-tour-accordion">
+                        <div class="faq-tour-item">
+                            <button class="faq-tour-question" onclick="toggleFaqTour(this)">
+                                Para que serve o meu e-mail no cadastro? <span>+</span>
+                            </button>
+                            <div class="faq-tour-answer">
+                                <p>Seu e-mail é utilizado exclusivamente como login de segurança para que o sistema consiga salvar o progresso das suas lições, registrar as anotações do seu Diário de Bordo interno e validar a emissão do seu certificado digital.</p>
+                            </div>
+                        </div>
+
+                        <div class="faq-tour-item">
+                            <button class="faq-tour-question" onclick="toggleFaqTour(this)">
+                                Preciso de câmeras profissionais para começar? <span>+</span>
+                            </button>
+                            <div class="faq-tour-answer">
+                                <p>De forma alguma! Nosso intuito é o cinema de resgate artesanal. Você aprenderá a trancar a iluminação e dominar a física sequencial usando o seu próprio celular e materiais escolares simples.</p>
+                            </div>
+                        </div>
+
+                        <div class="faq-tour-item">
+                            <button class="faq-tour-question" onclick="toggleFaqTour(this)">
+                                O portal vende ou distribui meus dados? <span>+</span>
+                            </button>
+                            <div class="faq-tour-answer">
+                                <p>Nunca! Nosso ecossistema respeita integralmente a privacidade dos criadores. Seus dados cadastrais ficam encriptados em ambiente seguro e são usados apenas para a sua experiência de navegação e portfólio interno.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="cta-tour-block">
+                        <h3>PRONTO PARA SE JUNTAR AO PORTAL?</h3>
+                        <p>O Mundo da Animação é totalmente gratuito e feito por apaixonados pela arte quadro a quadro. Proteja seus frames e dê vida às suas marionetes hoje mesmo!</p>
+                        <!-- MUDANÇA CRUCIAL: Adicionado o '?registrar=true' para avisar a página inicial que o modal deve abrir sozinho -->
+                        <button class="btn-tour-yellow" onclick="window.location.href='index.html?registrar=true'">CRIAR MINHA CONTA AGORA ⚡</button>
+
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- RODAPÉ INTEGRADO -->
+        <footer class="main-footer-clean">
+            <div class="footer-left">© 2026 <span>STOP_MOTION</span> | Todos os direitos reservados.</div>
+            <div class="footer-right">
+                <a href="mailto:contato@stopmotion.com.br" class="footer-email">contato@stopmotion.com.br</a>
+            </div>
+        </footer>
+
+    </div> <!-- FIM DO #main-site -->
+
+    <script>
+        function toggleFaqTour(button) {
+            const item = button.parentElement;
+            if (item.classList.contains('active')) {
+                item.classList.remove('active');
+            } else {
+                document.querySelectorAll('.faq-tour-item').forEach(i => i.classList.remove('active'));
+                item.classList.add('active');
+            }
+        }
+
+        let cardIndex = 0;
+        const cards = document.querySelectorAll('.tour-feature-card');
+
+        function atualizarGradeCards() {
+            if (window.innerWidth > 768) {
+                cards.forEach(card => card.style.display = 'block');
+                return;
+            }
+            cards.forEach((card, index) => {
+                card.style.display = index === cardIndex ? 'block' : 'none';
+            });
+        }
+
+        function mudarCard(direcao) {
+            cardIndex += direcao;
+            if (cardIndex >= cards.length) cardIndex = 0;
+            if (cardIndex < 0) cardIndex = cards.length - 1;
+            atualizarGradeCards();
+        }
+
+        atualizarGradeCards();
+        window.addEventListener('resize', atualizarGradeCards);
+    </script>
+</body>
+</html>

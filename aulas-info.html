@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mundo da Animação - Conheça o Curso</title>
+    <!-- Importa as mesmas fontes góticas da capa -->
+    <link rel="preconnect" href="https://googleapis.com">
+    <link rel="preconnect" href="https://gstatic.com" crossorigin>
+    <link href="https://googleapis.com/css2?family=Cinzel:wght@400;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        /* ==========================================================================
+           ESTILIZAÇÃO INTERNA DA VITRINE GÓTICA DE AULAS
+           ========================================================================== */
+        :root {
+            --bg-dark: #07050a;
+            --panel-dark: rgba(18, 11, 23, 0.45);
+            --border-purple: rgba(166, 93, 242, 0.25);
+            --accent-purple: #a65df2;
+            --accent-orange: #ff9d00;
+            --text-light: #ffffff;
+            --text-muted: #958d9c;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            font-family: 'Montserrat', sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+            /* Fundo com efeito de paralaxe sutil */
+            background-image: linear-gradient(rgba(7, 5, 10, 0.8), rgba(7, 5, 10, 0.9)), url('assets/fundo_principal.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        h2, h3, h4, .logo { font-family: 'Cinzel', serif; letter-spacing: 1px; }
+
+        /* Sombra de cinema nas bordas da tela */
+        .vignette {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle, transparent 40%, rgba(0, 0, 0, 0.85) 100%);
+            pointer-events: none; z-index: 999;
+        }
+
+        /* Cabeçalho da página de info */
+        .classroom-header {
+            background: #07040a;
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-purple);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.8);
+            position: relative; z-index: 10;
+        }
+
+        .badge-live {
+            background: rgba(166, 93, 242, 0.15);
+            padding: 4px 10px;
+            border: 1px solid var(--accent-purple);
+            border-radius: 4px;
+            color: var(--purple-hover);
+            font-size: 0.7rem; font-weight: bold; letter-spacing: 1px;
+            display: inline-block; margin-bottom: 4px;
+        }
+
+        .classroom-header h2 { font-size: 1.1rem; color: #ffffff; }
+
+        .btn-back {
+            color: var(--text-light); text-decoration: none; font-size: 0.8rem;
+            border: 1px solid var(--border-purple); padding: 8px 18px; border-radius: 6px;
+            transition: all 0.3s; background: rgba(166, 93, 242, 0.05); font-weight: bold;
+        }
+        .btn-back:hover { background-color: var(--accent-purple); box-shadow: 0 0 15px rgba(166, 93, 242, 0.4); }
+
+        /* Layout em Duas Colunas */
+        .classroom-container {
+            display: flex; max-width: 1400px; margin: 30px auto; gap: 30px; padding: 0 20px;
+            position: relative; z-index: 10;
+        }
+
+        /* Sidebar de Módulos (Esquerda) */
+        .sidebar-chapters {
+            width: 350px; background: var(--panel-dark); border: 1px solid var(--border-purple);
+            border-radius: 12px; padding: 20px; display: flex; flex-direction: column;
+            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+        }
+
+        .sidebar-chapters h3 {
+            font-size: 0.85rem; color: var(--text-muted); letter-spacing: 2px;
+            margin-bottom: 15px; border-bottom: 1px solid var(--border-purple); padding-bottom: 8px;
+        }
+
+        .chapters-list { display: flex; flex-direction: column; gap: 12px; }
+
+        .module-box {
+            background: rgba(5, 3, 8, 0.4); border: 1px solid var(--border-purple);
+            border-radius: 8px; overflow: hidden; transition: 0.3s;
+        }
+
+        .module-title {
+            padding: 12px 15px; background: rgba(166, 93, 242, 0.05); font-size: 0.8rem;
+            color: var(--accent-purple); cursor: pointer; display: flex;
+            justify-content: space-between; align-items: center; font-weight: bold;
+        }
+        .module-title:hover { background: rgba(166, 93, 242, 0.15); }
+
+        .arrow-icon { font-size: 0.65rem; transition: transform 0.3s; }
+        .module-box.fechado .arrow-icon { transform: rotate(-90deg); }
+
+        .module-lessons {
+            display: flex; flex-direction: column; transition: max-height 0.3s ease-out;
+            max-height: 500px; overflow: hidden;
+        }
+        .module-box.fechado .module-lessons { max-height: 0; }
+
+        .lesson-item {
+            padding: 12px 20px; font-size: 0.75rem; color: #c9bfae; cursor: pointer;
+            border-top: 1px dashed rgba(166, 93, 242, 0.15); transition: all 0.2s;
+        }
+        .lesson-item:hover { background: rgba(166, 93, 242, 0.05); color: #fff; padding-left: 24px; }
+        .lesson-item.active {
+            background: rgba(166, 93, 242, 0.1); color: var(--purple-hover);
+            font-weight: bold; border-left: 4px solid var(--accent-purple);
+        }
+
+
+        /* ==========================================================================
+           ÁREA CENTRAL DO PLAYER E ABAS INTERATIVAS
+           ========================================================================== */
+        .main-player-area {
+            flex: 1; display: flex; flex-direction: column; gap: 20px;
+        }
+
+        .video-theater {
+            width: 100%; aspect-ratio: 16 / 9; background: #000;
+            border: 4px solid rgba(166, 93, 242, 0.2); border-radius: 12px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8); overflow: hidden;
+        }
+
+        .video-placeholder {
+            width: 100%; height: 100%; display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            background: linear-gradient(135deg, #120b17, #050307);
+            color: var(--text-muted); text-align: center; padding: 20px; position: relative;
+        }
+
+        .play-icon-center {
+            font-size: 3.5rem; color: rgba(166, 93, 242, 0.5); margin-bottom: 15px;
+            transition: all 0.3s ease; cursor: pointer;
+        }
+        .video-placeholder:hover .play-icon-center {
+            color: var(--purple-hover); transform: scale(1.1);
+            text-shadow: 0 0 15px rgba(166, 93, 242, 0.6);
+        }
+
+        .video-placeholder h3 { color: #fff; font-size: 1.4rem; margin-bottom: 8px; }
+        .video-placeholder p { font-size: 0.85rem; color: var(--purple-hover); font-weight: 600; }
+
+        /* ABAS INTERATIVAS */
+        .tabs-section {
+            width: 100%; background: var(--panel-dark); border: 1px solid var(--border-purple);
+            border-radius: 12px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+        }
+
+        .tabs-header { display: flex; background: rgba(10, 6, 15, 0.6); border-bottom: 1px dashed var(--border-purple); }
+
+        .tab-btn {
+            background: transparent; border: none; color: var(--text-muted);
+            font-family: inherit; padding: 15px 25px; font-size: 0.8rem;
+            cursor: pointer; transition: all 0.2s; letter-spacing: 1px; font-weight: 600;
+        }
+        .tab-btn:hover { color: #fff; background: rgba(166, 93, 242, 0.02); }
+        .tab-btn.active {
+            color: var(--purple-hover); background: rgba(166, 93, 242, 0.08);
+            font-weight: bold; border-bottom: 3px solid var(--accent-purple);
+        }
+
+        .tabs-content { padding: 25px; min-height: 150px; }
+        .tab-pane { display: none; }
+        .tab-pane.active { display: block; }
+
+        #tab-detalhes p { font-size: 0.9rem; line-height: 1.6; color: #c9bfae; text-align: justify; }
+
+        .download-list { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+        .download-list a { color: var(--accent-orange); text-decoration: none; font-size: 0.85rem; font-weight: 600; }
+        .download-list a:hover { text-decoration: underline; color: #fff; }
+
+        .diary-textarea {
+            width: 100%; height: 100px; background: #050307; border: 1px dashed var(--border-purple);
+            border-radius: 6px; padding: 12px; color: #fff; font-family: inherit; font-size: 0.85rem;
+            resize: none; outline: none;
+        }
+        .diary-textarea:focus { border-color: var(--accent-purple); box-shadow: 0 0 10px rgba(166, 93, 242, 0.2); }
+    </style>
+</head>
+<body>
+
+    <div class="vignette"></div>
+
+    <!-- CABEÇALHO DA PÁGINA DE VITRINE -->
+    <header class="classroom-header">
+        <div class="course-info">
+            <span class="badge-live">CONHEÇA O PORTAL</span>
+            <h2>Mestres do Stop Motion: Da Massinha ao Cinema</h2>
+        </div>
+        <a href="index.html" class="btn-back">⬅ VOLTAR AO INÍCIO</a>
+    </header>
+
+    <div class="classroom-container">
+        
+        <!-- BARRA LATERAL: CRONOGRAMA DE MÓDULOS -->
+        <aside class="sidebar-chapters">
+            <h3>CONTEÚDO DO CURSO</h3>
+            <div class="chapters-list">
+                
+                <!-- MÓDULO 1 -->
+                <div class="module-box">
+                    <div class="module-title" onclick="toggleModulo(this)">
+                        <span>📌 Módulo 1: Fundamentos Básicos</span>
+                        <span class="arrow-icon">▼</span>
+                    </div>
+                    <div class="module-lessons">
+                        <div class="lesson-item active" onclick="carregarAula('O Segredo dos 24 Frames', 'Nesta aula de introdução, você entenderá a física por trás do movimento simulado e como o cérebro humano processa a ilusão de vida em objetos estáticos baseando-se nos bastidores reais do filme Coraline.')">
+                            <span>🎬 1.1 O Segredo dos 24 Frames</span>
+                        </div>
+                        <div class="lesson-item" onclick="carregarAula('Equipamentos Necessários', 'Conheça as ferramentas essenciais para montar seu estúdio caseiro, softwares recomendados para captura industriais e o maquinário utilizado nas grandes produções.')">
+                            <span>🎥 1.2 Equipamentos Necessários</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- MÓDULO 2 -->
+                <div class="module-box">
+                    <div class="module-title" onclick="toggleModulo(this)">
+                        <span>📌 Módulo 2: O Rig e a Marionete</span>
+                        <span class="arrow-icon">▼</span>
+                    </div>
+                    <div class="module-lessons">
+                        <div class="lesson-item" onclick="carregarAula('Modelagem de Personagens', 'Aprenda técnicas profissionais de modelagem tridimensional, construção de esqueletos articulados de arame e silicone, e texturização de tecidos reais.')">
+                            <span>🤖 2.1 Modelagem de Personagens</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- MÓDULO 3 -->
+                <div class="module-box">
+                    <div class="module-title" onclick="toggleModulo(this)">
+                        <span>📌 Módulo 3: Iluminação e Edição</span>
+                        <span class="arrow-icon">▼</span>
+                    </div>
+                    <div class="module-lessons">
+                        <div class="lesson-item" onclick="carregarAula('Dominando a Luz Estática', 'O maior vilão do Stop Motion é a variação de luz (flicker). Aprenda a trancar as configurações de exposição da câmera e isolar completamente a iluminação do seu set.')">
+                            <span>💡 3.1 Dominando a Luz Estática</span>
+                        </div>
+                        <div class="lesson-item" onclick="carregarAula('Pós-Produção e Efeitos', 'Descubra como exportar sua sequência de fotos em alta resolução, aplicar máscaras digitais para apagar os arames de sustentação dos rigs e sincronizar a sonorização de diálogos.')">
+                            <span>✂️ 3.2 Pós-Produção e Efeitos</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </aside>
+        <!-- ÁREA CENTRAL DE ESTUDOS (PLAYER E DETALHES) -->
+        <main class="main-player-area">
+            
+            <!-- Player de Vídeo Cinema Simulador -->
+            <div class="video-theater">
+                <div class="video-placeholder">
+                    <div class="play-icon-center">▶</div>
+                    <h3 id="video-title-display">O Segredo dos 24 Frames</h3>
+                    <p>FALTA POUCO! Faça o login no portal para liberar a reprodução de vídeo completa.</p>
+                </div>
+            </div>
+
+            <!-- SEÇÃO DE DETALHES EM ABAS INTERATIVAS -->
+            <section class="tabs-section">
+                <div class="tabs-header">
+                    <button class="tab-btn active" onclick="switchTab('detalhes')">📋 Detalhes da Aula</button>
+                    <button class="tab-btn" onclick="switchTab('downloads')">📂 Materiais (.PDF)</button>
+                    <button class="tab-btn" onclick="switchTab('anotacoes')">✍️ Meu Diário de Bordo</button>
+                </div>
+                
+                <div class="tabs-content">
+                    <!-- Aba 1: Descrição da Aula -->
+                    <div id="tab-detalhes" class="tab-pane active">
+                        <p id="lesson-desc">Nesta aula de introdução, você entenderá a física por trás do movimento simulado e como o cérebro humano processa a ilusão de vida em objetos estáticos baseando-se nos bastidores reais do filme Coraline.</p>
+                    </div>
+
+                    <!-- Aba 2: Lista de Materiais e Downloads -->
+                    <div id="tab-downloads" class="tab-pane">
+                        <ul class="download-list">
+                            <li>📄 <a href="#">Cronograma de Frames por Segundo (Guia Rápido).pdf</a></li>
+                            <li>📄 <a href="#">Lista de Materiais de Escultura e Massinhas Recomendadas.pdf</a></li>
+                            <li>📄 <a href="#">Ementa Completa e Cronograma de Atividades do Portal.pdf</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Aba 3: Caixa de Texto Interativa -->
+                    <div id="tab-anotacoes" class="tab-pane">
+                        <textarea class="diary-textarea" placeholder="Crie sua conta para poder salvar seus insights técnicos de animação diretamente no painel..."></textarea>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+    </div> <!-- FIM DA div .classroom-container -->
+
+    <!-- JAVASCRIPT DE INTERATIVIDADE DA VITRINE DE AULAS -->
+    <script>
+        // Carrega os textos e descrições de cada aula na tela central
+        function carregarAula(tituloAula, descricaoAula) {
+            document.getElementById('video-title-display').innerText = tituloAula;
+            document.getElementById('lesson-desc').innerText = descricaoAula;
+
+            // Remove o destaque visual antigo e aplica apenas na lição clicada
+            document.querySelectorAll('.lesson-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            event.currentTarget.classList.add('active');
+        }
+
+        // Abre e fecha os módulos em efeito sanfona
+        function toggleModulo(elementoTitulo) {
+            const moduloBox = elementoTitulo.parentElement;
+            moduloBox.classList.toggle('fechado');
+        }
+
+        // Alterna entre os conteúdos das abas inferiores
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-pane').forEach(pane => {
+                pane.classList.remove('active');
+            });
+
+            event.currentTarget.classList.add('active');
+            document.getElementById('tab-' + tabId).classList.add('active');
+        }
+    </script>
+</body>
+</html>

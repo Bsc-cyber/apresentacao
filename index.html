@@ -12,7 +12,7 @@
 </head>
 <body>
 
-    <!-- 1. TELA DE CONTAGEM REGRESSIVA ORIGINAL -->
+    <!-- 1. TELA DE CONTAGEM REGRESSIVA ORIGINAL (EXIBIDA APENAS NA PRIMEIRA VISITA) -->
     <div id="countdown-screen">
         <div class="film-grain"></div>
         <div class="projector-lines"></div>
@@ -22,10 +22,10 @@
         </div>
     </div>
 
-    <!-- 2. LAYOUT DO SITE PRINCIPAL (REVELADO APÓS A CONTAGEM) -->
+    <!-- 2. LAYOUT DO SITE PRINCIPAL (REVELADO APÓS A CONTAGEM OU PULADO PELA MEMÓRIA) -->
     <div id="main-site">
 
-        <!-- EFETIO EXTRA: Três camadas de neve sutil flutuando em velocidades diferentes -->
+        <!-- EFEITO CINEMATOGRÁFICO: Camadas de neve sutil flutuando ao fundo -->
         <div class="snow layer1"></div>
         <div class="snow layer2"></div>
         <div class="snow layer3"></div>
@@ -36,16 +36,16 @@
             <nav class="nav-menu">
                 <a href="#" class="active">INÍCIO</a>
                 <a href="aulas-info.html">COMO FUNCIONAM AS AULAS</a>
-                <a href="#">COMUNIDADE</a>
-                <a href="#">DÚVIDAS FREQUENTES</a>
+                <a href="saiba-mais.html">COMUNIDADE</a>
+                <a href="saiba-mais.html#faq">DÚVIDAS FREQUENTES</a>
             </nav>
             <button class="btn-login-nav" onclick="abrirLogin()">👤 LOGIN</button>
         </header>
 
-        <!-- CONTAINER PRINCIPAL HERO (LIMPO E SEM POLUIÇÃO VISUAL) -->
+        <!-- CONTAINER PRINCIPAL HERO (DIVIDIDO EM COLUNAS LATERAIS) -->
         <main class="hero-section-clean">
             
-            <!-- COLUNA DA ESQUERDA: TEXTOS PRINCIPAIS E BOTÕES DE AÇÃO -->
+            <!-- COLUNA DA ESQUERDA: TEXTOS PRINCIPAIS E BOTÃO DE AÇÃO -->
             <div class="hero-left-content">
                 <span class="intro-tag">★ SEU PORTAL PARA DAR VIDA ÀS SUAS IDEIAS</span>
                 <h1 class="main-title-clean">MUNDO DA <span class="title-purple">ANIMAÇÃO</span></h1>
@@ -55,33 +55,22 @@
                     Descubra a física por trás dos 24 quadros por segundo e faça parte do nosso ecossistema criativo.
                 </p>
 
-                <!-- Linha com os dois botões principais limpos, direcionados e animados -->
+                <!-- Linha com o botão solo profissional e de alta conversão -->
                 <div class="action-buttons-container">
-                    <!-- Botão direcionando para a ementa de aulas -->
-                    <button class="btn-action-purple" onclick="window.location.href='aulas-info.html'">
-                        <span class="icon-btn">▶️</span>
+                    <button class="btn-action-purple" onclick="window.location.href='saiba-mais.html'">
                         <div class="text-btn-wrapper">
-                            <strong>SAIBA MAIS</strong>
-                            <small>Explore as aulas</small>
-                        </div>
-                    </button>
-
-                    <button class="btn-action-outline" onclick="abrirLogin()">
-                        <span class="icon-btn">👥</span>
-                        <div class="text-btn-wrapper">
-                            <strong>ENTRAR NA COMUNIDADE</strong>
-                            <small>Conecte-se com criadores</small>
+                            <strong>SAIBA MAIS SOBRE ESSA INICIATIVA</strong>
                         </div>
                     </button>
                 </div>
             </div>
 
-            <!-- COLUNA DA DIREITA TOTALMENTE VAZIA (LIBERA A VISÃO DA PERSONAGEM) -->
+            <!-- COLUNA DA DIREITA DEIXADA TOTALMENTE VAZIA PARA REVELAR OS PERSONAGENS -->
             <div class="hero-right-content"></div>
 
         </main>
 
-        <!-- SEÇÃO DA BASE: OS 4 BLOCOS INFORMATIVOS EM LINHA FLUTUANTE COMPACTA ROXA -->
+        <!-- SEÇÃO DA BASE: OS 4 BLOCOS INFORMATIVOS EM LINHA FLUTUANTE ROXA -->
         <section class="footer-info-row">
             <div class="info-block-item">
                 <div class="info-block-icon">▶️</div>
@@ -142,18 +131,12 @@
             <div class="footer-left">© 2026 <span>STOP_MOTION</span> | Todos os direitos reservados.</div>
             <div class="footer-right">
                 <a href="mailto:contato@stopmotion.com.br" class="footer-email">contato@stopmotion.com.br</a>
-                <div class="footer-social-icons">
-                    <a href="#">📹</a>
-                    <a href="#">📸</a>
-                    <a href="#">💬</a>
-                    <a href="#">👤</a>
-                </div>
             </div>
         </footer>
 
     </div> <!-- FIM DO #main-site -->
 
-    <!-- LÓGICA SCRIPT INTERATIVA -->
+    <!-- LÓGICA SCRIPT INTERATIVA COM SISTEMA DE MEMÓRIA DE VISITA -->
     <script>
         function irParaMenu() { window.location.href = "home.html"; }
         function abrirLogin() { document.getElementById('login-modal').classList.add('active'); }
@@ -162,6 +145,32 @@
         window.onclick = function(event) {
             const modal = document.getElementById('login-modal');
             if (event.target == modal) { fecharLogin(); }
+        }
+
+        // Verifica se o botão de cadastro vindo da outra tela foi acionado
+        function checarParametroCadastro() {
+            const URLParametros = new URLSearchParams(window.location.search);
+            if (URLParametros.get('registrar') === 'true') {
+                abrirLogin();
+            }
+        }
+
+        // CONTROLADOR INTELIGENTE: Pula a abertura se o usuário já estiver navegando no site
+        window.onload = function() {
+            const telaContagem = document.getElementById('countdown-screen');
+            const sitePrincipal = document.getElementById('main-site');
+
+            if (sessionStorage.getItem('aberturaExibida') === 'true') {
+                if (telaContagem) telaContagem.style.display = 'none';
+                if (sitePrincipal) {
+                    sitePrincipal.style.opacity = '1';
+                    sitePrincipal.style.animation = 'none';
+                }
+            } else {
+                sessionStorage.setItem('aberturaExibida', 'true');
+            }
+
+            checarParametroCadastro();
         }
     </script>
 </body>
