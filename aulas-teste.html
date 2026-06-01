@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StopArt - Sala de Aula Experimental</title>
+    <!-- CONEXÃO PURA: Vincula diretamente a sua folha de estilos externa home.css -->
+    <link rel="stylesheet" href="home.css">
+    <!-- Fontes do Google -->
+    <link rel="preconnect" href="https://googleapis.com">
+    <link rel="preconnect" href="https://gstatic.com" crossorigin>
+    <link href="https://googleapis.com/css2?family=Cinzel:wght@400;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* CONTAINER PRINCIPAL: SIDEBAR ESQUERDA FIXA + MOLDURA DE CINEMA UNIFICADA */
+        .workspace-theater-symmetric {
+            display: grid;
+            grid-template-columns: 310px 1fr;
+            gap: 25px;
+            width: 100%;
+            max-width: 1440px;
+            margin: 25px auto 0 auto;
+            position: relative;
+        }
+
+        /* BARRA LATERAL FIXA NA EXTREMA ESQUERDA */
+        .theater-left-sidebar-paycom {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            background: rgba(14, 8, 22, 0.9);
+            border: 1px solid var(--border-purple);
+            padding: 20px 15px;
+            border-radius: 12px;
+            z-index: 80;
+            height: 600px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+            box-sizing: border-box;
+        }
+        
+        /* BOTÕES FORMATO BANNER ESCRITOS NO MENU ESQUERDO */
+        .tab-trigger-btn {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(166, 93, 242, 0.2);
+            color: #bfaecf;
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: 'Cinzel', serif;
+            font-size: 0.7rem;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+            text-align: left;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .tab-trigger-btn:hover, .tab-trigger-btn.active {
+            background: var(--neon-purple);
+            color: #000;
+            box-shadow: 0 0 12px rgba(166, 93, 242, 0.4);
+            border-color: var(--neon-purple);
+        }
+
+        /* BANCA DE VÍDEOS RETRÁTIL ACCORDION */
+        .sidebar-embedded-playlist-zone {
+            display: none;
+            flex-direction: column;
+            gap: 8px;
+            overflow-y: auto;
+            max-height: 340px;
+            margin-top: 5px;
+            padding: 8px 5px;
+            border-left: 1px dashed rgba(166, 93, 242, 0.3);
+            margin-left: 10px;
+            animation: expandirGotica 0.25s ease-out;
+        }
+        @keyframes expandirGotica { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* MOLDURA DE CINEMA UNIFICADA ROXO VINTAGE */
+        .theater-integrated-cinema-box {
+            display: flex;
+            flex-direction: column;
+            background: rgba(14, 8, 22, 0.9);
+            border: 1px solid var(--border-purple);
+            border-radius: 12px;
+            padding: 20px;
+            height: 600px;
+            box-shadow: 0 20px 45px rgba(0,0,0,0.8);
+            box-sizing: border-box;
+        }
+        .cinema-integrated-header { text-align: left; border-bottom: 1px solid rgba(166, 93, 242, 0.15); padding-bottom: 12px; margin-bottom: 15px; }
+        .cinema-integrated-header h2 { font-family: 'Cinzel', serif; font-size: 1.25rem; color: #fff; letter-spacing: 0.5px; }
+        .cinema-integrated-header p { font-size: 0.78rem; color: var(--text-muted); margin-top: 5px; line-height: 1.4; }
+
+        .theater-center-player-stage { flex: 1; width: 100%; background: #000; border-radius: 6px; border: 1px solid rgba(166, 93, 242, 0.1); overflow: hidden; }
+        .theater-center-player-stage iframe { width: 100%; height: 100%; border: none; display: block; }
+
+        /* JANELAS FLUTUANTES ARRASTÁVEIS */
+        .draggable-sliding-panel { position: absolute; width: 440px; background: rgba(14, 8, 22, 0.98); border: 2px solid var(--border-purple); border-radius: 8px; box-shadow: 0 15px 40px rgba(0,0,0,0.9); z-index: 200; display: none; flex-direction: column; padding: 0; overflow: hidden; min-width: 280px; min-height: 180px; }
+        .panel-drag-handle-bar { background: rgba(26, 16, 47, 0.95); padding: 12px 15px; border-bottom: 1px solid rgba(166,93,242,0.2); display: flex; justify-content: space-between; align-items: center; cursor: move; user-select: none; }
+        .panel-drag-handle-bar h4 { font-family: 'Cinzel', serif; font-size: 0.75rem; color: var(--neon-hover); pointer-events: none; }
+        .btn-close-panel { background: #ff3e3e; color: #fff; border: none; padding: 2px 8px; font-size: 0.65rem; font-weight: bold; border-radius: 4px; cursor: pointer; }
+
+        .panel-body-content { padding: 15px; flex: 1; display: flex; flex-direction: column; position: relative; width: 100%; height: 100%; box-sizing: border-box; }
+        .panel-textarea-notes { width: 100%; height: 100%; min-height: 180px; background: rgba(0, 0, 0, 0.5); border: 1px solid rgba(166, 93, 242, 0.2); border-radius: 4px; padding: 12px; color: #fff; font-family: 'Montserrat', sans-serif; font-size: 0.8rem; resize: none; outline: none; box-sizing: border-box; }
+        
+        .pdf-demo-shield { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 5; background: transparent; }
+        .pdf-frame-wrapper { width: 100%; height: 380px; background: #110a1c; position: relative; flex: 1; overflow: hidden; border-radius: 4px; }
+        .pdf-frame-wrapper iframe { width: 100%; height: 100%; border: none; display: block; }
+
+        .window-resize-handle-corner { position: absolute; bottom: 0; right: 0; width: 14px; height: 14px; background: linear-gradient(135deg, transparent 30%, var(--border-purple) 30%, var(--border-purple) 50%, var(--neon-purple) 50%); cursor: se-resize; z-index: 250; }
+
+        /* LINHAS DA PLAYLIST SIDEBAR */
+        .lesson-track-row { display: flex; gap: 10px; background: rgba(255,255,255,0.01); border: 1px solid rgba(255,255,255,0.03); padding: 8px; border-radius: 6px; cursor: pointer; transition: 0.2s; align-items: center; }
+        .lesson-track-row:hover { background: rgba(166, 93, 242, 0.08); border-color: rgba(166, 93, 242, 0.2); }
+        .lesson-track-row.active { background: rgba(166, 93, 242, 0.12); border-color: var(--neon-purple); }
+        .lesson-track-row.locked-state { opacity: 0.35; }
+        .lock-badge { font-size: 0.85rem; color: var(--accent-yellow); }
+        .thumb-lesson-mini { width: 40px; aspect-ratio: 16/9; background: #110a1c; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 0.55rem; }
+        .meta-lesson-mini h5 { font-size: 0.65rem; color: #fff; font-weight: 600; margin-bottom: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 140px; }
+        .meta-lesson-mini small { font-size: 0.52rem; color: var(--text-muted); }
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR PADRONIZADA COM OS OUTROS BOTÕES DO PORTAL -->
+    <header class="dash-header">
+        <div class="logo" style="cursor:pointer;" onclick="voltarParaHomeSemContagem()">StopArt<span>TESTE</span></div>
+        <nav class="header-center-nav">
+            <!-- BOTÃO SAIR CORRIGIDO: Totalmente integrado como link de texto idêntico aos outros -->
+            <a href="#" onclick="voltarParaHomeSemContagem()">SAIR DA SALA</a>
+            <a href="#" class="active">AULAS EXPERIMENTAIS</a>
+            <a href="#" onclick="bloquearNavegacao()"> MENU </a>
+            <a href="#" onclick="bloquearNavegacao()">SALAS DE JOGOS</a>
+            <a href="#" onclick="bloquearNavegacao()">ESTÚDIO</a>
+        </nav>
+        <div class="header-user-zone">
+            <!-- BOTÃO INSCREVER CORRIGIDO: Limpo e idêntico ao layout original gótico -->
+            <button onclick="window.location.href='index.html?pularContagem=true'" style="background:var(--neon-purple); color:#000; font-family:'Cinzel'; font-size:0.68rem; font-weight:bold; border:none; padding:8px 16px; border-radius:4px; cursor:pointer; box-shadow: 0 0 15px rgba(166,93,242,0.4);">QUERO ME INSCREVER</button>
+        </div>
+    </header>
+
+    <main class="dash-main-content" style="padding: 20px 30px;">
+        <div class="workspace-theater-symmetric">
+            
+            <!-- SIDEBAR COMPLETA NA EXTREMA ESQUERDA -->
+            <div class="theater-left-sidebar-paycom">
+                <button class="tab-trigger-btn" id="trigger-playlist" onclick="alternarMenuSanfonaPlaylist()">
+                    <span>🎞️ BANCA DE VÍDEOS</span>
+                    <span id="sanfona-arrow-indicator" style="font-size: 0.6rem; color: var(--neon-hover);">▼</span>
+                </button>
+
+                <!-- PLAYLIST EMBUTIDA -->
+                <div class="sidebar-embedded-playlist-zone" id="playlist-container-track"></div>
+
+                <button class="tab-trigger-btn" id="trigger-apostila" onclick="alternarPainelFlutuante('apostila')">
+                    <span>📚 APOSTILA EM PDF</span>
+                </button>
+                
+                <button class="tab-trigger-btn" id="trigger-anotacoes" onclick="alternarPainelFlutuante('anotacoes')">
+                    <span>📝 BLOCO DE NOTAS</span>
+                </button>
+            </div>
+
+            <!-- TEATRO DE CINEMA INTEGRADO ROXO VINTAGE -->
+            <div class="theater-integrated-cinema-box">
+                <div class="cinema-integrated-header">
+                    <h2 id="video-title">1. STOP MOTION para iniciantes - AULA COMPLETA</h2>
+                    <p id="video-desc">Aprenda de forma definitiva a mágica do cinema em miniatura! Abra as ferramentas ao lado para estender sua experiência de estudos.</p>
+                </div>
+                <div class="theater-center-player-stage">
+                    <iframe id="main-video-frame" src="https://youtube.com" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                </div>
+            </div>
+
+            <!-- JANELA FLUTUANTE 1: APOSTILA PDF -->
+            <div class="draggable-sliding-panel" id="panel-apostila" style="top: 140px; left: 360px; width: 440px; height: 500px;">
+                <div class="panel-drag-handle-bar">
+                    <h4 id="pdf-file-name-label">📚 MATERIAL COMPLEMENTAR</h4>
+                    <button class="btn-close-panel" onclick="fecharPainelEspecifico('apostila')">✕</button>
+                </div>
+                <div style="color: var(--accent-yellow); font-size: 0.58rem; font-weight: bold; background: rgba(0,0,0,0.5); padding: 6px 12px; text-align: left;">🔒 DOWNLOAD BLOQUEADO (MODO DEMO)</div>
+                <div class="panel-body-content" style="padding: 10px;">
+                    <div class="pdf-frame-wrapper">
+                        <div class="pdf-demo-shield" onclick="avisarDownloadProibido()"></div>
+                        <iframe id="pdf-embed-viewer-frame" src="assets/aula1_introducao.pdf#toolbar=0&navpanes=0&scrollbar=0"></iframe>
+                    </div>
+                    <div class="window-resize-handle-corner"></div>
+                </div>
+            </div>
+
+            <!-- JANELA FLUTUANTE 2: BLOCO DE NOTAS -->
+            <div class="draggable-sliding-panel" id="panel-anotacoes" style="top: 320px; left: 840px; width: 380px; height: 280px;">
+                <div class="panel-drag-handle-bar">
+                    <h4>📝 BLOCO DE NOTAS INTERATIVO</h4>
+                    <button class="btn-close-panel" onclick="fecharPainelEspecifico('anotacoes')">✕</button>
+                </div>
+                <div class="panel-body-content">
+                    <textarea class="panel-textarea-notes" id="student-notepad" placeholder="Faça suas anotações importantes aqui livremente..."></textarea>
+                    <div style="font-size: 0.6rem; color: #5df2a6; margin-top: 5px; text-align: right;" id="save-status-label">● Notas salvas automaticamente</div>
+                    <div class="window-resize-handle-corner"></div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="dash-footer-row">
+        <div>© 2026 <span>StopArt</span> | Todos os direitos reservados.</div>
+    </footer>
+    <!-- JAVASCRIPT: BANCO DE DADOS PROTEGIDO E GERADOR DE PLAYLIST (PARTE 1 DE 2) -->
+    <!-- JAVASCRIPT REVISADO COM AVISO DIRETO NOS VÍDEOS RESTRITOS -->
+    <script>
+        let tempoSalvarDebounce = null;
+
+        const playlistAulasCurso = [
+            {
+                titulo: "1. STOP MOTION para iniciantes - AULA COMPLETA",
+                descricao: "Aprenda de forma definitiva a mágica do cinema em miniatura! Abra as ferramentas complementares ao lado para estender sua experiência de estudos.",
+                youtubeId: "BVhMcTFOGKw", 
+                pdfUrl: "assets/aula1_introducao.pdf#toolbar=0&navpanes=0&scrollbar=0",
+                pdfNome: "Fundamentos do Stop Motion.pdf",
+                podeVer: true
+            },
+            {
+                titulo: "2. A Arte das Marionetes e Esqueletos (Bastidores de ParaNorman)",
+                descricao: "Aproveite a sua segunda lição experimental liberada! Entenda os eixos e articulações mecânicas dos bonecos físicos góticos.",
+                youtubeId: "iS0wB696F6E", 
+                pdfUrl: "assets/aula1_introducao.pdf#toolbar=0&navpanes=0", 
+                pdfNome: "Ficha Técnica de Esqueletos.pdf",
+                podeVer: true
+            },
+            {
+                titulo: "3. Iluminação Gótica e Sombras (Bastidores de A Noiva Cadáver)",
+                descricao: "Módulo Restrito! Faça sua inscrição gratuita no portal StopArt para desbloquear esta lição de iluminação.",
+                youtubeId: "v8b9AkaX3_0", 
+                pdfUrl: "assets/aula1_introducao.pdf#toolbar=0",
+                pdfNome: "Manual de Estúdio Gótico.pdf",
+                podeVer: false
+            },
+            {
+                titulo: "4. Captura de Frames e Ritmo (Bastidores O Estranho Mundo de Jack)",
+                descricao: "Módulo Restrito! Faça sua inscrição gratuita no portal StopArt para desbloquear esta lição de ritmo analógico.",
+                youtubeId: "vS-k2D_o6_I", 
+                pdfUrl: "assets/aula1_introducao.pdf#toolbar=0",
+                pdfNome: "Tabela de Arcos e Timing.pdf",
+                podeVer: false
+            },
+            {
+                titulo: "5. Montagem, Efeitos e Som (Bastidores de A Fuga das Galinhas)",
+                descricao: "Módulo Restrito! Faça sua inscrição gratuita no portal StopArt para desbloquear esta lição de sincronia sonora.",
+                youtubeId: "K1X9z33ZlyM", 
+                pdfUrl: "assets/aula1_introducao.pdf#toolbar=0",
+                pdfNome: "Guia de Lip Sync e Áudio.pdf",
+                podeVer: false
+            },
+            {
+                titulo: "6. Criação de Cenários de Argila (Bastidores de Wallace & Gromit)",
+                descricao: "Módulo Restrito! Faça sua inscrição gratuita no portal StopArt para desbloquear esta lição de escultura.",
+                youtubeId: "BVwN6L_1mE4",
+                pdfUrl: "assets/aula1_introducao.pdf#toolbar=0",
+                pdfNome: "Escultura de Ambientes.pdf",
+                podeVer: false
+            },
+            {
+                titulo: "7. Movimentação de Câmera e Eixos (Bastidores de Frankenweenie)",
+                descricao: "Módulo Restrito! Faça sua inscrição gratuita no portal StopArt para desbloquear esta lição de trilhos mecânicos.",
+                youtubeId: "mXwGv29-Rj4",
+                pdfUrl: "assets/aula1_introducao.pdf#toolbar=0",
+                pdfNome: "Movimentos de Eixo RAW.pdf",
+                podeVer: false
+            },
+            {
+                titulo: "8. Efeitos Especiais na Prática (Bastidores de Kubo)",
+                descricao: "Módulo Restrito! Faça sua inscrição gratuita no portal StopArt para desbloquear esta lição de chroma key.",
+                youtubeId: "3m0Vv5Xis_A",
+                pdfUrl: "assets/aula1_introducao.pdf#toolbar=0",
+                pdfNome: "Chroma Key e Escala.pdf",
+                podeVer: false
+            },
+            {
+                titulo: "9. Sincronia Labial de Personagens (Bastidores de Shaun o Carneiro)",
+                descricao: "Módulo Restrito! Faça sua inscrição gratuita no portal StopArt para desbloquear esta lição de expressões faciais.",
+                youtubeId: "S_7H5_I_Dfk",
+                pdfUrl: "assets/aula1_introducao.pdf#toolbar=0",
+                pdfNome: "Fonetização por Quadros.pdf",
+                podeVer: false
+            },
+            {
+                titulo: "10. Renderização e Exportação Final (James e O Pêssego Gigante)",
+                descricao: "Módulo Restrito! Faça sua inscrição gratuita no portal StopArt para desbloquear esta lição de encerramento master.",
+                youtubeId: "r-jG8vT60R8",
+                pdfUrl: "assets/aula1_introducao.pdf#toolbar=0",
+                pdfNome: "Manual do Diretor - Master.pdf",
+                podeVer: false
+            }
+        ];
+
+        function construirPlaylistLateral() {
+            const track = document.getElementById('playlist-container-track');
+            track.innerHTML = '';
+            playlistAulasCurso.forEach(function(aula, i) {
+                const el = document.createElement('div');
+                el.className = 'lesson-track-row ' + (i === 0 ? 'active' : '') + ' ' + (!aula.podeVer ? 'locked-state' : '');
+                el.id = 'card-aula-index-' + i;
+                el.setAttribute('onclick', 'testarEAccionarAula(' + i + ')');
+                el.innerHTML = `
+                    <div class="thumb-lesson-mini" id="mini-thumb-${i}">${!aula.podeVer ? '🔒' : '🎥'}</div>
+                    <div class="meta-lesson-mini" style="text-align: left;">
+                        <h5>${aula.titulo.split(' (')}</h5>
+                        <small>${aula.podeVer ? 'Grátis • Liberada' : 'Requer Matrícula'}</small>
+                    </div>
+                    ${!aula.podeVer ? `<div class="lock-badge" id="mini-lock-${i}">🔒</div>` : ''}
+                `;
+                track.appendChild(el);
+            });
+        }
+        // ACIONADOR REVERSÍVEL DO MENU SANFONA (ACCORDION) DA PLAYLIST
+        function alternarMenuSanfonaPlaylist() {
+            const playlistZone = document.getElementById('playlist-container-track');
+            const botaoGatilho = document.getElementById('trigger-playlist');
+            const indicadorSeta = document.getElementById('sanfona-arrow-indicator');
+            const abrindoAgora = playlistZone.style.display !== 'flex';
+
+            if (abrindoAgora) {
+                playlistZone.style.display = 'flex';
+                if(botaoGatilho) botaoGatilho.classList.add('active');
+                if(indicadorSeta) indicadorSeta.innerText = '▲';
+            } else {
+                playlistZone.style.display = 'none';
+                if(botaoGatilho) botaoGatilho.classList.remove('active');
+                if(indicadorSeta) indicadorSeta.innerText = '▼';
+            }
+        }
+
+        // MOTOR DE ARRASTE LIVRE (DRAG AND DROP) PARA AS JANELAS FLUTUANTES
+        function tornarPainelArrastavel(elementoPainel) {
+            let alcaMover = elementoPainel.querySelector('.panel-drag-handle-bar');
+            let posXAnterior = 0, posYAnterior = 0, posXAtual = 0, posYAtual = 0;
+
+            if (alcaMover) { alcaMover.onmousedown = iniciarArrasteMouse; } 
+            else { elementoPainel.onmousedown = iniciarArrasteMouse; }
+
+            function iniciarArrasteMouse(e) {
+                if (e.target.classList.contains('window-resize-handle-corner')) return;
+                e = e || window.event; e.preventDefault();
+                posXAnterior = e.clientX; posYAnterior = e.clientY;
+                document.onmouseup = pararArrasteMouse;
+                document.onmousemove = arrastarPainelAtivo;
+                document.querySelectorAll('.draggable-sliding-panel').forEach(p => p.style.zIndex = 200);
+                elementoPainel.style.zIndex = 210;
+            }
+
+            function arrastarPainelAtivo(e) {
+                e = e || window.event; e.preventDefault();
+                posXAtual = posXAnterior - e.clientX;
+                posYAtual = posYAnterior - e.clientY;
+                posXAnterior = e.clientX;
+                posYAnterior = e.clientY;
+                elementoPainel.style.top = (elementoPainel.offsetTop - posYAtual) + "px";
+                elementoPainel.style.left = (elementoPainel.offsetLeft - posXAtual) + "px";
+            }
+
+            function pararArrasteMouse() { document.onmouseup = null; document.onmousemove = null; }
+        }
+
+        // MOTOR DE REDIMENSIONAMENTO LIVRE (RESIZE WINDOW PELO CANTINHO)
+        function activarRedimensionamentoJanela(elementoPainel) {
+            let alcaEscala = elementoPainel.querySelector('.window-resize-handle-corner');
+            if (!alcaEscala) return;
+
+            alcaEscala.onmousedown = function(e) {
+                e.preventDefault(); e.stopPropagation();
+                let larguraInicial = elementoPainel.offsetWidth;
+                let alturaInicial = elementoPainel.offsetHeight;
+                let startX = e.clientX;
+                let startY = e.clientY;
+
+                function doResize(ev) {
+                    let novaLargura = larguraInicial + (ev.clientX - startX);
+                    let novaAltura = alturaInicial + (ev.clientY - startY);
+                    if (novaLargura > 280) elementoPainel.style.width = novaLargura + "px";
+                    if (novaAltura > 180) elementoPainel.style.height = novaAltura + "px";
+                }
+
+                function stopResize() {
+                    document.removeEventListener('mousemove', doResize);
+                    document.removeEventListener('mouseup', stopResize);
+                }
+
+                document.addEventListener('mousemove', doResize);
+                document.addEventListener('mouseup', stopResize);
+            };
+        }
+
+        // CONTROLADOR DE EXIBIÇÃO DE CAIXAS LATERAIS
+        function alternarPainelFlutuante(idPainel) {
+            const painel = document.getElementById('panel-' + idPainel);
+            const botao = document.getElementById('trigger-' + idPainel);
+            
+            if (painel.style.display === 'flex') {
+                fecharPainelEspecifico(idPainel);
+            } else {
+                painel.style.display = 'flex';
+                if(botao) botao.classList.add('active');
+                tornarPainelArrastavel(painel);
+                ativarRedimensionamentoJanela(painel);
+            }
+        }
+
+        function fecharPainelEspecifico(idPainel) {
+            const painel = document.getElementById('panel-' + idPainel);
+            if(painel) painel.style.display = 'none';
+            const botao = document.getElementById('trigger-' + idPainel);
+            if(botao) botao.classList.remove('active');
+        }
+
+        // CORREÇÃO PEDIDA: Apenas um aviso informativo idêntico ao do PDF (A pessoa continua na sala)
+        function testarEAccionarAula(index) {
+            const dados = playlistAulasCurso[index];
+            if (!dados.podeVer) {
+                alert("🔒 INSCRIÇÃO REQUERIDA\n\nEste curso de Stop Motion é 100% GRATUITO! Para remover estes cadeados e assistir às 10 aulas completas, realize sua inscrição clicando no botão roxo 'QUERO ME INSCREVER' no topo superior direito!");
+            } else { 
+                trocarAulaExibida(index); 
+            }
+        }
+
+        function trocarAulaExibida(index) {
+            const aula = playlistAulasCurso[index];
+            document.getElementById('main-video-frame').src = "https://youtube.com" + aula.youtubeId + "?controls=1&rel=0&modestbranding=1";
+            document.getElementById('pdf-embed-viewer-frame').src = aula.pdfUrl;
+            document.getElementById('video-title').innerText = aula.titulo;
+            document.getElementById('video-desc').innerText = aula.descricao;
+            document.getElementById('pdf-file-name-label').innerText = "📚 " + aula.pdfNome.toUpperCase();
+
+            for (let i = 0; i < 10; i++) {
+                const row = document.getElementById('card-aula-index-' + i);
+                if (row) { if (i === index) row.classList.add('active'); else row.classList.remove('active'); }
+            }
+        }
+
+        function voltarParaHomeSemContagem() {
+            window.location.href = 'index.html?pularContagem=falsoApenasNavegacao';
+        }
+
+        function carregarNotasDoAluno() {
+            const notas = localStorage.getItem('stopart_notas_demo_scalable_v5');
+            if (notas) document.getElementById('student-notepad').value = notas;
+        }
+
+        function salvarNotasAutomatico() {
+            const texto = document.getElementById('student-notepad').value;
+            const label = document.getElementById('save-status-label');
+            if(label) { label.style.display = 'block'; label.innerText = "⏳ Digitando..."; }
+
+            clearTimeout(tempoSalvarDebounce);
+            tempoSalvarDebounce = setTimeout(function() {
+                localStorage.setItem('stopart_notas_demo_scalable_v5', texto);
+                if(label) label.innerText = "● Notas salvas automaticamente!";
+            }, 800);
+        }
+
+        function avisarDownloadProibido() {
+            alert("🔒 INSCRIÇÃO REQUERIDA\n\nEste curso é gratuito! Para liberar a impressão e os downloads originais das apostilas, faça o seu cadastro clicando no botão 'QUERO ME INSCREVER' no menu superior!");
+        }
+
+        function bloquearNavegacao() {
+            alert("🛑 ACESSO RESTRITO\n\nVocê está na Sala de Demonstração! Para desbloquear o seu perfil completo e acessar o Menu Principal, a Sala de Jogos ou o Estúdio, faça sua matrícula gratuita clicando no botão roxo du cabeçalho!");
+        }
+
+        construirPlaylistLateral();
+        carregarNotasDoAluno();
+        trocarAulaExibida(0);
+    </script>
+</body>
+</html>

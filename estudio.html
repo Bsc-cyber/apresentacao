@@ -3,18 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>STOP_ART - Estúdio de Animação</title>
+    <title>StopArt - Estúdio de Animação</title>
+    <!-- CONEXÃO PURA: Vincula unicamente a sua folha de estilos externa -->
     <link rel="stylesheet" href="estudio.css">
+    <!-- Fontes do Google -->
     <link rel="preconnect" href="https://googleapis.com">
     <link rel="preconnect" href="https://gstatic.com" crossorigin>
     <link href="https://googleapis.com/css2?family=Cinzel:wght@400;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* CSS EMBUTIDO COMPLEMENTAR EXCLUSIVO PARA FIXAR AS IMAGENS DO MANEQUIM */
+        .cinema-viewfinder-frame { position: relative; background: #0d0914; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.9); }
+        .stage-interactive-area { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; }
+        .marionette-puppet-rig { position: absolute; width: 140px; height: 260px; cursor: move; z-index: 50; transform-origin: center center; }
+        .marionette-puppet-rig.selecionado { outline: 2px dashed #a65df2; outline-offset: 6px; }
+        .puppet-piece { position: absolute; background-size: contain; background-repeat: no-repeat; background-position: center; }
+        
+        /* Coordenadas Cirúrgicas: Obrigam as fotos a ignorarem os espaços em branco e grudarem na jaqueta */
+        .p-cabeca { top: 5px; left: 35px; width: 70px; height: 70px; z-index: 5; transform-origin: bottom center; }
+        .p-tronco { top: 68px; left: 40px; width: 60px; height: 100px; z-index: 3; transform-origin: center center; }
+        .p-braco-esq { top: 72px; left: 22px; width: 22px; height: 85px; z-index: 4; transform-origin: top center; }
+        .p-braco-dir { top: 72px; right: 22px; width: 22px; height: 85px; z-index: 4; transform-origin: top center; }
+        .p-perna-esq { top: 160px; left: 40px; width: 24px; height: 95px; z-index: 2; transform-origin: top center; }
+        .p-perna-dir { top: 160px; right: 40px; width: 24px; height: 95px; z-index: 2; transform-origin: top center; }
+        .scale-handle-canva { position: absolute; bottom: -6px; right: -6px; width: 12px; height: 12px; background: #ffffff; border: 2px solid #a65df2; border-radius: 2px; cursor: se-resize; z-index: 110; display: none; }
+        .marionette-puppet-rig.selecionado .scale-handle-canva { display: block; }
+    </style>
 </head>
 <body>
 
-    <!-- BARRA SUPERIOR DO PORTAL LOGADO -->
+    <!-- BARRA SUPERIOR PREMIUM (NAVBAR COM LETREIRO DE STATUS DO RIG) -->
     <header class="dash-header">
         <div class="logo">STOP_ART <span>PORTAL</span></div>
-        <nav class="header-center-nav">
+        <div class="studio-status" style="margin-left: 30px; display: flex; align-items: center;">
+            <div class="live-indicator">● RIG ACESSÍVEL</div>
+            <span id="txt-selecionado" style="font-size: 0.72rem; color: #958d9c; font-weight: bold; font-family: monospace;">ALVO: NENHUM</span>
+        </div>
+        <nav class="header-center-nav" style="margin-left: auto; margin-right: 30px;">
             <a href="home.html">DASHBOARD</a>
             <a href="aulas-info.html">MINHAS AULAS</a>
             <a href="jogos.html">SALAS DE JOGOS</a>
@@ -22,24 +46,15 @@
             <a href="#">PROJETOS</a>
             <a href="#">CONQUISTAS</a>
             <a href="#">COMUNIDADE</a>
-            <a href="#">CONFIGURAÇÕES</a>
         </nav>
-        <div class="header-user-zone">
-            <div class="noti-bell">🔔</div>
-            <div class="user-pill">
-                <div class="user-avatar">B</div>
-                <div class="user-meta"><strong>Bianca</strong></div>
-            </div>
-        </div>
     </header>
 
-    <!-- AREA DE TRABALHO DO ESTÚDIO -->
+    <!-- AREA DE TRABALHO DO PORTAL (GRID COMPACTO DE EDICÃO) -->
     <div class="studio-workspace-container">
         
-        <!-- SIDEBAR DE CONTROLE (ESQUERDA) -->
+        <!-- SIDEBAR DE CONTROLE DE CAMADAS E FERRAMENTAS (ESQUERDA) -->
         <aside class="studio-sidebar-left">
             <button class="btn-studio-back" onclick="window.location.href='home.html'">← SAIR DO ESTÚDIO</button>
-            
             <div class="studio-tools-box">
                 <h3>ORGANIZAÇÃO</h3>
                 <div class="tools-grid-icons">
@@ -55,7 +70,7 @@
             </div>
         </aside>
 
-        <!-- PALCO CENTRAL DA MESA DE ANIMAÇÃO -->
+        <!-- CONTAINER DO PALCO CENTRAL -->
         <main class="studio-center-stage">
             <div class="studio-top-controls-bar">
                 <div class="project-title-zone">
@@ -67,17 +82,22 @@
                 </div>
             </div>
 
-            <!-- O VISOR WIDESCREEN DE CINEMA -->
-            <div class="cinema-viewfinder-frame">
-                <canvas id="studio-canvas" width="854" height="480"></canvas>
+            <!-- O VISOR DE CINEMA RECONFIGURADO PARA CAMADAS ABSOLUTAS -->
+            <div class="cinema-viewfinder-frame" id="viewfinder-box">
+                <!-- Camada Inferior: Sombra Fantasma (Onion Skin) -->
+                <div class="stage-interactive-area" id="onion-skin-layer" style="opacity: 0.15; pointer-events: none;"></div>
+                
+                <!-- Camada Central: Tabuleiro Interativo de Trabalho Principal -->
+                <div class="stage-interactive-area" id="interactive-stage-plate"></div>
+                
                 <div class="canvas-effect-overlay" id="effect-overlay"></div>
             </div>
 
-            <!-- CONTROLES DO FILME -->
+            <!-- HUD DOS CONTROLES DO FILME -->
             <div class="player-hud-dashboard">
                 <div class="hud-playback-buttons">
-                    <button class="hud-control-btn" onclick="reiniciarPlayer()">⏮</button>
-                    <button class="hud-control-btn" id="play-pause-btn" onclick="togglePlayAnimaçao()">▶</button>
+                    <button class="hud-control-btn" onclick="reiniciarPlayer()">Reiniciar ⏮</button>
+                    <button class="hud-control-btn" id="play-pause-btn" onclick="togglePlayAnimaçao()">▶ Assistir</button>
                 </div>
                 
                 <div class="hud-timecode-display">
@@ -90,8 +110,7 @@
 
                 <button class="btn-shutter-capture" onclick="capturarFrameAtual()">📸 FOTOGRAFAR FRAME</button>
             </div>
-
-            <!-- SELEÇÃO DE FILTROS E ATMOSFERA DA CENA -->
+            <!-- SELEÇÃO DE FILTROS DE ILUMINAÇÃO AND TRILHAS SONORAS -->
             <div class="studio-effects-row">
                 <div class="effect-select-group">
                     <label>🎬 FILTRO DE ILUMINAÇÃO:</label>
@@ -115,7 +134,7 @@
                 </div>
             </div>
 
-            <!-- LINHA DO TEMPO SIMPLIFICADA (FOOTER HORIZONTAL) -->
+            <!-- LINHA DO TEMPO HORIZONTAL (FOTOS DO DIRETOR) -->
             <div class="studio-timeline-footer">
                 <div class="timeline-header-actions">
                     <span>SEUS QUADROS CAPTURADOS</span>
@@ -130,7 +149,7 @@
             </div>
         </main>
 
-        <!-- COLUNA DIREITA: ABAS DE ATIVOS (ADICIONAR ELEMENTOS NA CENA) -->
+        <!-- COLUNA DIREITA: CATALOGO DE ATIVOS (CENÁRIOS, BONECOS E PROPRIEDADES) -->
         <aside class="studio-sidebar-right">
             <div class="studio-tabs-header">
                 <button class="tab-btn active" id="btn-tab-cenarios" onclick="alternarAbaCatalogo('cenarios')">CENÁRIOS</button>
@@ -139,59 +158,58 @@
             </div>
 
             <div class="assets-scroll-zone">
-                <!-- CENÁRIOS (DIA / NOITE) -->
+                <!-- CENÁRIOS GRÁFICOS (DIA / NOITE) -->
                 <div class="assets-tab-content active" id="tab-cenarios">
-                    <div class="asset-grid-item selected" onclick="mudarCenarioPlano('assets/fundo_dia.jpg', 'dia')">
+                    <div class="asset-grid-item selected" onclick="mudarCenarioPlano('dia')">
                         <div class="asset-preview-box" style="background: #1a102f;">☀️</div>
                         <span>Floresta - Dia</span>
                     </div>
-                    <div class="asset-grid-item" onclick="mudarCenarioPlano('assets/fundo_principal.png', 'noite')">
+                    <div class="asset-grid-item" onclick="mudarCenarioPlano('noite')">
                         <div class="asset-preview-box" style="background: #030106;">🌙</div>
                         <span>Floresta - Noite</span>
                     </div>
                 </div>
 
-                <!-- PERSONAGENS (CLIQUE PARA SPAWNAR NO CANVAS) -->
+                <!-- PERSONAGENS TOTALMENTE ARTICULADOS -->
                 <div class="assets-tab-content" id="tab-personagens">
-                    <div class="asset-grid-item" onclick="spawnarBonecoEstudio('coraline')">
+                    <div class="asset-grid-item" onclick="spawnarAtivoDOM('coraline')">
                         <div class="asset-preview-box">🧵</div>
-                        <span>Coraline Articulada</span>
-                    </div>
-                    <div class="asset-grid-item" onclick="spawnarBonecoEstudio('sparky')">
-                        <div class="asset-preview-box">⚡</div>
-                        <span>Sparky Articulado</span>
+                        <span>Coraline Rig</span>
                     </div>
                 </div>
 
-                <!-- OBJETOS (SUPORTAM GERENCIAMENTO DE CAMADAS FRENTE/TRÁS) -->
+                <!-- OBJETOS MULTICAMADAS COM ALÇA DE REDIMENSIONAMENTO -->
                 <div class="assets-tab-content" id="tab-objetos">
-                    <div class="asset-grid-item" onclick="spawnarObjetoEstudio('cadeira')">
+                    <div class="asset-grid-item" onclick="spawnarAtivoDOM('cadeira')">
                         <div class="asset-preview-box">🪑</div>
                         <span>Cadeira Gótica</span>
                     </div>
-                    <div class="asset-grid-item" onclick="spawnarObjetoEstudio('balao')">
+                    <div class="asset-grid-item" onclick="spawnarAtivoDOM('balao')">
                         <div class="asset-preview-box">🎈</div>
                         <span>Balão</span>
                     </div>
-                    <div class="asset-grid-item" onclick="spawnarObjetoEstudio('nuvens')">
+                    <div class="asset-grid-item" onclick="spawnarAtivoDOM('nuvens')">
                         <div class="asset-preview-box">☁️</div>
                         <span>Nuvens</span>
                     </div>
-                    <div class="asset-grid-item" onclick="spawnarObjetoEstudio('flor')">
+                    <div class="asset-grid-item" onclick="spawnarAtivoDOM('flor')">
                         <div class="asset-preview-box">🌹</div>
                         <span>Flor</span>
                     </div>
                 </div>
             </div>
 
-            <!-- AJUSTE DE VELOCIDADE SIMPLIFICADO -->
+            <!-- REGULAÇÃO DE VELOCIDADE (FPS COM AS 5 OPÇÕES REAIS PEDIDAS) -->
             <div class="studio-config-panel-base">
                 <h3>VELOCIDADE DA ANIMAÇÃO</h3>
                 <div class="config-select-row">
                     <label>⏱️ Configurar FPS:</label>
                     <select id="fps-selector" onchange="ajustarVelocidadeFrames(this.value)">
-                        <option value="12">12 FPS (Mais Devagar)</option>
-                        <option value="24" selected>24 FPS (Mais Rápido / Cinema)</option>
+                        <option value="2">2 FPS (Câmera Super Lenta)</option>
+                        <option value="6">6 FPS (Passo a Passo Devagar)</option>
+                        <option value="12">12 FPS (Movimento Artesanal)</option>
+                        <option value="24" selected>24 FPS (Cinema Padrão)</option>
+                        <option value="30">30 FPS (Fluidez Máxima Digital)</option>
                     </select>
                 </div>
                 <div class="config-select-row">
@@ -202,217 +220,165 @@
         </aside>
     </div>
 
-    <!-- AUDIO DRIVERS NATIVOS -->
+    <!-- DRIVERS DE ÁUDIO DE ESTÚDIO -->
     <audio id="sound-floresta" loop><source src="https://mixkit.co" type="audio/wav"></audio>
     <audio id="sound-chuva" loop><source src="https://mixkit.co" type="audio/wav"></audio>
     <audio id="sound-engrenagem" loop><source src="https://mixkit.co" type="audio/wav"></audio>
 
-
-    <!-- JAVASCRIPT: MOTOR DE ARTICULAÇÃO E ESCALA (PARTE 1 DE 2) -->
+    <!-- JAVASCRIPT: NOVO MOTOR DE FLUIDEZ HORIZONTAL E CAMADAS ABSOLUTAS -->
     <script>
-        const canvas = document.getElementById('studio-canvas');
-        const ctx = canvas.getContext('2d');
+        const palcoPrincipal = document.getElementById('interactive-stage-plate');
+        const camadaOnionSkin = document.getElementById('onion-skin-layer');
         const overlayEfeito = document.getElementById('effect-overlay');
+        const txtSelecionado = document.getElementById('txt-selecionado');
+        const visorBox = document.getElementById('viewfinder-box');
 
-        let framesSalvos = []; let frameAtivoIndex = -1; let listaElementosEmCena = [];
-        let elementoSelecionado = null; let ferramentaAtual = 'mover';
-        let cenarioNome = 'dia'; let fpsVelocidade = 24; let playIntervalo = null;
-        let arrastandoMouse = false; let arrastandoAlca = false;
-        let offsetMouseX = 0, offsetMouseY = 0; let ativarSombraOnion = true;
+        let framesSalvos = [];
+        let frameAtivoIndex = -1;
+        let listaElementosEmCena = [];
+        let elementoSelecionado = null;
+        
+        let ferramentaAtual = 'mover'; // 'mover' ou 'girar'
+        let cenarioNome = 'dia';
+        let fpsVelocidade = 24;
+        let playIntervalo = null;
+        let ativarSombraOnion = true;
+        let juntaSelecionadaNome = 'tronco';
 
-        // Dimensões iniciais robustas para os elementos nascerem grandes e visíveis
-        const bibliotecaAtivos = {
-            coraline: { emoji: '🧵', width: 110, height: 210, tipo: 'personagem' },
-            sparky: { emoji: '⚡', width: 120, height: 100, tipo: 'personagem' },
-            cadeira: { emoji: '🪑', width: 100, height: 150, tipo: 'objeto' },
-            balao: { emoji: '🎈', width: 90, height: 160, tipo: 'objeto' },
-            nuvens: { emoji: '☁️', width: 220, height: 120, tipo: 'objeto' },
-            flor: { emoji: '🌹', width: 80, height: 120, tipo: 'objeto' }
+        // Configuração estrutural estável com os recortes reais do Canva da Coraline
+        const bibliotecaModelos = {
+            coraline: { tipo: 'personagem', width: 150, height: 280, htmlStr: `
+                <div class="puppet-piece p-cabeca" style="background-image: url('assets/coraline_cabeca.png');"></div>
+                <div class="puppet-piece p-tronco" style="background-image: url('assets/coraline_tronco.png');"></div>
+                <div class="puppet-piece p-braco-esq" style="background-image: url('assets/coraline_braco_esq.png');"></div>
+                <div class="puppet-piece p-braco-dir" style="background-image: url('assets/coraline_braco_dir.png');"></div>
+                <div class="puppet-piece p-perna-esq" style="background-image: url('assets/coraline_perna_esq.png');"></div>
+                <div class="puppet-piece p-perna-dir" style="background-image: url('assets/coraline_perna_dir.png');"></div>
+            `},
+            cadeira: { tipo: 'objeto', width: 100, height: 160, htmlStr: '<div style="font-size:4.5rem; width:100%; height:100%; display:flex; align-items:center; justify-content:center;">🪑</div>' },
+            balao: { tipo: 'objeto', width: 90, height: 170, htmlStr: '<div style="font-size:4.5rem; width:100%; height:100%; display:flex; align-items:center; justify-content:center;">🎈</div>' },
+            nuvens: { tipo: 'objeto', width: 220, height: 110, htmlStr: '<div style="font-size:5rem; width:100%; height:100%; display:flex; align-items:center; justify-content:center; opacity:0.8;">☁️</div>' },
+            flor: { tipo: 'objeto', width: 80, height: 120, htmlStr: '<div style="font-size:3.5rem; width:100%; height:100%; display:flex; align-items:center; justify-content:center;">🌹</div>' }
         };
 
-        function renderizarMesaEstudio() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = cenarioNome === 'dia' ? '#1a102f' : '#030106';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            // Casca de Cebola (Onion Skin)
-            if (ativarSombraOnion && framesSalvos.length > 0 && frameAtivoIndex === -1) {
-                ctx.save(); ctx.globalAlpha = 0.15;
-                framesSalvos[framesSalvos.length - 1].elementos.forEach(el => desenharElementoGrafico(el));
-                ctx.restore();
-            }
-
+        // INJETOR DINÂMICO DE ELEMENTOS EM CAMADAS ABSOLUTAS DO DOM
+        function renderizarPalcoDOM() {
+            palcoPrincipal.innerHTML = '';
+            
             listaElementosEmCena.forEach(el => {
-                ctx.save();
-                desenharElementoGrafico(el);
-                
-                // Se o item estiver clicado, renderiza a borda roxa com a alça de escala (Estilo Canva)
-                if (elementoSelecionado === el) {
-                    ctx.strokeStyle = '#a65df2'; ctx.lineWidth = 2;
-                    ctx.strokeRect(el.x, el.y, el.width, el.height);
-                    
-                    // Alça quadrada branca de redimensionamento no canto inferior direito
-                    ctx.fillStyle = '#ffffff';
-                    ctx.fillRect(el.x + el.width - 8, el.y + el.height - 8, 10, 10);
-                    ctx.strokeStyle = '#a65df2';
-                    ctx.strokeRect(el.x + el.width - 8, el.y + el.height - 8, 10, 10);
+                const divRig = document.createElement('div');
+                divRig.className = `marionette-puppet-rig ${elementoSelecionado === el ? 'selecionado' : ''}`;
+                divRig.style.width = el.width + 'px';
+                divRig.style.height = el.height + 'px';
+                divRig.style.left = el.x + 'px';
+                divRig.style.top = el.y + 'px';
+                divRig.style.transform = `rotate(${el.angle}deg)`;
+                divRig.innerHTML = el.htmlStr + '<div class="scale-handle-canva"></div>';
+
+                if (el.tipo === 'personagem') {
+                    setTimeout(() => {
+                        const cab = divRig.querySelector('.p-cabeca');
+                        const corp = divRig.querySelector('.p-tronco');
+                        const brE = divRig.querySelector('.p-braco-esq');
+                        const brD = divRig.querySelector('.p-braco-dir');
+                        const peE = divRig.querySelector('.p-perna-esq');
+                        const peD = divRig.querySelector('.p-perna-dir');
+
+                        if(cab) cab.style.transform = `rotate(${el.juntas.cabeca}deg)`;
+                        if(corp) corp.style.transform = `rotate(${el.juntas.tronco}deg)`;
+                        if(brE) brE.style.transform = `rotate(${el.juntas.bracoE}deg)`;
+                        if(brD) brD.style.transform = `rotate(${el.juntas.bracoD}deg)`;
+                        if(peE) peE.style.transform = `rotate(${el.juntas.pernaE}deg)`;
+                        if(peD) peD.style.transform = `rotate(${el.juntas.pernaD}deg)`;
+                    }, 0);
                 }
-                ctx.restore();
-            });
-        }
-
-        function desenharElementoGrafico(el) {
-            ctx.save();
-            
-            if (el.tipo === 'objeto') {
-                ctx.translate(el.x + el.width / 2, el.y + el.height / 2);
-                ctx.rotate(el.angle);
-                ctx.fillStyle = 'rgba(166, 93, 242, 0.05)';
-                ctx.fillRect(-el.width / 2, -el.height / 2, el.width, el.height);
-                ctx.fillStyle = '#ffffff'; ctx.font = `${el.height * 0.5}px Arial`;
-                ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-                ctx.fillText(el.emoji, 0, 0);
-            } else {
-                // DINÂMICA DE MANEQUIM ARTICULADO (Fração matemática do corpo em 3 blocos)
-                let parteH = el.height / 3;
-                
-                // 1. Pernas (Base)
-                ctx.save();
-                ctx.translate(el.x + el.width / 2, el.y + el.height - parteH / 2);
-                ctx.rotate(el.juntas.pernas);
-                ctx.fillStyle = 'rgba(166, 93, 242, 0.1)';
-                ctx.fillRect(-el.width / 2, -parteH / 2, el.width, parteH);
-                ctx.fillStyle = '#ffffff'; ctx.font = `${parteH * 0.7}px Arial`;
-                ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-                ctx.fillText('🦿', 0, 0);
-                ctx.restore();
-
-                // 2. Tronco / Corpo Central
-                ctx.save();
-                ctx.translate(el.x + el.width / 2, el.y + parteH + parteH / 2);
-                ctx.rotate(el.juntas.tronco);
-                ctx.fillStyle = 'rgba(166, 93, 242, 0.2)';
-                ctx.fillRect(-el.width / 2, -parteH / 2, el.width, parteH);
-                ctx.fillStyle = '#ffffff'; ctx.font = `${parteH * 0.7}px Arial`;
-                ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-                ctx.fillText('👕', 0, 0);
-                ctx.restore();
-
-                // 3. Cabeça
-                ctx.save();
-                ctx.translate(el.x + el.width / 2, el.y + parteH / 2);
-                ctx.rotate(el.juntas.cabeca);
-                ctx.fillStyle = 'rgba(166, 93, 242, 0.3)';
-                ctx.fillRect(-el.width / 2, -parteH / 2, el.width, parteH);
-                ctx.fillStyle = '#ffffff'; ctx.font = `${parteH * 0.8}px Arial`;
-                ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-                ctx.fillText(el.nome === 'coraline' ? '👩' : '🐶', 0, 0);
-                ctx.restore();
-            }
-            ctx.restore();
-        }
-
-
-        // GERENCIADORES DE EVENTO DO MOUSE (CLIQUE E MOVIMENTAÇÃO DE JUNTAS / ALÇAS)
-        canvas.addEventListener('mousedown', (e) => {
-            const rect = canvas.getBoundingClientRect();
-            const mouseX = ((e.clientX - rect.left) / rect.width) * canvas.width;
-            const mouseY = ((e.clientY - rect.top) / rect.height) * canvas.height;
-            
-            arrastandoMouse = false;
-            arrastandoAlca = false;
-
-            // Verifica primeiro se o clique atingiu a alça de escala do item selecionado
-            if (elementoSelecionado) {
-                let el = elementoSelecionado;
-                if (mouseX >= el.x + el.width - 15 && mouseX <= el.x + el.width + 10 && mouseY >= el.y + el.height - 15 && mouseY <= el.y + el.height + 10) {
-                    arrastandoAlca = true;
-                    return;
-                }
-            }
-
-            let encontrou = false;
-            for (let i = listaElementosEmCena.length - 1; i >= 0; i--) {
-                const el = listaElementosEmCena[i];
-                if (mouseX >= el.x && mouseX <= el.x + el.width && mouseY >= el.y && mouseY <= el.y + el.height) {
+                // CONTROLES DE ARRASTE, ROTAÇÃO E ESCALA DO CANVA COMPACTO
+                divRig.addEventListener('mousedown', (e) => {
+                    e.stopPropagation();
                     elementoSelecionado = el;
-                    encontrou = true;
-
-                    if (el.tipo === 'personagem' && ferramentaAtual === 'girar') {
-                        // Detecta em qual das 3 frações do corpo o mouse clicou para rotacionar
-                        let cliqueYRelativo = mouseY - el.y;
-                        if (cliqueYRelativo < el.height / 3) el.juntaSelecionada = 'cabeca';
-                        else if (cliqueYRelativo < (el.height / 3) * 2) el.juntaSelecionada = 'tronco';
-                        else el.juntaSelecionada = 'pernas';
+                    
+                    if (e.target.classList.contains('scale-handle-canva')) {
+                        let startW = el.width, startH = el.height, startX = e.clientX, startY = e.clientY;
+                        function doScale(ev) {
+                            let nw = startW + (ev.clientX - startX), nh = startH + (ev.clientY - startY);
+                            if (nw > 40 && nh > 40) { el.width = nw; el.height = nh; renderizarPalcoDOM(); }
+                        }
+                        function stopScale() { document.removeEventListener('mousemove', doScale); }
+                        document.addEventListener('mousemove', doScale); document.addEventListener('mouseup', stopScale);
+                        return;
                     }
 
-                    arrastandoMouse = true;
-                    offsetMouseX = mouseX - el.x;
-                    offsetMouseY = mouseY - el.y;
-                    break;
-                }
-            }
-            if (!encontrou) elementoSelecionado = null;
-            renderizarMesaEstudio();
-        });
+                    if (el.tipo === 'personagem' && ferramentaAtual === 'girar') {
+                        let cls = e.target.className; juntaSelecionadaNome = 'tronco';
+                        if (cls.includes('p-cabeca')) juntaSelecionadaNome = 'cabeca';
+                        else if (cls.includes('p-braco-esq')) juntaSelecionadaNome = 'bracoE';
+                        else if (cls.includes('p-braco-dir')) juntaSelecionadaNome = 'bracoD';
+                        else if (cls.includes('p-perna-esq')) juntaSelecionadaNome = 'pernaE';
+                        else if (cls.includes('p-perna-dir')) juntaSelecionadaNome = 'pernaD';
 
-        canvas.addEventListener('mousemove', (e) => {
-            const rect = canvas.getBoundingClientRect();
-            const mouseX = ((e.clientX - rect.left) / rect.width) * canvas.width;
-            const mouseY = ((e.clientY - rect.top) / rect.height) * canvas.height;
+                        function doRotate(ev) { el.juntas[juntaSelecionadaNome] += ev.movementX * 1.5; renderizarPalcoDOM(); }
+                        function stopRotate() { document.removeEventListener('mousemove', doRotate); }
+                        document.addEventListener('mousemove', doRotate); document.addEventListener('mouseup', stopRotate);
+                        return;
+                    }
 
-            if (arrastandoAlca && elementoSelecionado) {
-                // Redimensionamento dinâmico proporcional e livre do objeto
-                let novoW = mouseX - elementoSelecionado.x;
-                let novoH = mouseY - elementoSelecionado.y;
-                if (novoW > 40 && novoH > 40) {
-                    elementoSelecionado.width = novoW;
-                    elementoSelecionado.height = novoH;
-                }
-                renderizarMesaEstudio();
-                return;
-            }
-
-            if (!arrastandoMouse || !elementoSelecionado) return;
-
-            if (ferramentaAtual === 'mover') {
-                elementoSelecionado.x = mouseX - offsetMouseX;
-                elementoSelecionado.y = mouseY - offsetMouseY;
-            } else if (ferramentaAtual === 'girar') {
-                if (elementoSelecionado.tipo === 'objeto') {
-                    elementoSelecionado.angle += 0.04;
-                } else {
-                    // Rotaciona especificamente a junta clicada (Manequim)
-                    elementoSelecionado.juntas[elementoSelecionado.juntaSelecionada] += 0.05;
-                }
-            }
-            renderizarMesaEstudio();
-        });
-
-        document.addEventListener('mouseup', () => { arrastandoMouse = false; arrastandoAlca = false; });
-
-        // SPAWN E CRIAÇÃO DE ATIVOS NA MESA
-        function spawnarBonecoEstudio(idAtivo) {
-            const temp = bibliotecaAtivos[idAtivo];
-            listaElementosEmCena.push({ 
-                id: Date.now(), 
-                nome: idAtivo, 
-                emoji: temp.emoji, 
-                tipo: temp.tipo,
-                x: 427 - temp.width/2, 
-                y: 240 - temp.height/2, 
-                width: temp.width, 
-                height: temp.height, 
-                angle: 0,
-                juntas: { cabeca: 0, tronco: 0, pernas: 0 },
-                juntaSelecionada: 'tronco'
+                    let sX = e.clientX - el.x, sY = e.clientY - el.y;
+                    function doMove(ev) {
+                        if (ferramentaAtual === 'mover') { el.x = ev.clientX - sX; el.y = ev.clientY - sY; }
+                        else { el.angle += ev.movementX * 1.2; }
+                        renderizarPalcoDOM();
+                    }
+                    function stopMove() { document.removeEventListener('mousemove', doMove); }
+                    document.addEventListener('mousemove', doMove); document.addEventListener('mouseup', stopMove);
+                });
+                palcoPrincipal.appendChild(divRig);
             });
-            renderizarMesaEstudio();
+            if (elementoSelecionado) {
+                txtSelecionado.innerText = `ALVO: ${elementoSelecionado.nome.toUpperCase()} (${juntaSelecionadaNome.toUpperCase()})`;
+            } else { txtSelecionado.innerText = 'ALVO: NENHUM'; }
+
+            // 2. DESENHA A CASCA DE CEBOLA (ONION SKIN) NA CAMADA INFERIOR
+            camadaOnionSkin.innerHTML = '';
+            if (ativarSombraOnion && framesSalvos.length > 0 && frameAtivoIndex === -1) {
+                framesSalvos[framesSalvos.length - 1].elementos.forEach(oldEl => {
+                    const cloneNode = document.createElement('div');
+                    cloneNode.className = 'marionette-puppet-rig';
+                    cloneNode.style.width = oldEl.width + 'px'; cloneNode.style.height = oldEl.height + 'px';
+                    cloneNode.style.left = oldEl.x + 'px'; cloneNode.style.top = oldEl.y + 'px';
+                    cloneNode.style.transform = `rotate(${oldEl.angle}deg)`;
+                    cloneNode.innerHTML = oldEl.htmlStr;
+                    
+                    if (oldEl.tipo === 'personagem') {
+                        setTimeout(() => {
+                            const cab = cloneNode.querySelector('.p-cabeca');
+                            const corp = cloneNode.querySelector('.p-tronco');
+                            const brE = cloneNode.querySelector('.p-braco-esq');
+                            const brD = cloneNode.querySelector('.p-braco-dir');
+                            const peE = cloneNode.querySelector('.p-perna-esq');
+                            const peD = cloneNode.querySelector('.p-perna-dir');
+                            if(cab) cab.style.transform = `rotate(${oldEl.juntas.cabeca}deg)`;
+                            if(corp) corp.style.transform = `rotate(${oldEl.juntas.tronco}deg)`;
+                            if(brE) brE.style.transform = `rotate(${oldEl.juntas.bracoE}deg)`;
+                            if(brD) brD.style.transform = `rotate(${oldEl.juntas.bracoD}deg)`;
+                            if(peE) peE.style.transform = `rotate(${oldEl.juntas.pernaE}deg)`;
+                            if(peD) peD.style.transform = `rotate(${oldEl.juntas.pernaD}deg)`;
+                        }, 0);
+                    }
+                    camadaOnionSkin.appendChild(cloneNode);
+                });
+            }
         }
 
-        function spawnarObjetoEstudio(idObj) { spawnarBonecoEstudio(idObj); }
+        function spawnarAtivoDOM(idAtivo) {
+            const modelo = bibliotecaModelos[idAtivo];
+            listaElementosEmCena.push({
+                id: Date.now(), nome: idAtivo, tipo: modelo.tipo, htmlStr: modelo.htmlStr,
+                width: modelo.width, height: modelo.height, x: 350, y: 100, angle: 0,
+                juntas: { cabeca: 0, tronco: 0, bracoE: 15, bracoD: -15, pernaE: 0, pernaD: 0 }
+            });
+            renderizarPalcoDOM();
+        }
 
-        // CAMADAS ESTILO CANVA (ORGANIZAÇÃO VERTICAL DE OBJETOS ANTEPARADOS)
         function alterarCamada(dir) {
             if (!elementoSelecionado) return;
             const idx = listaElementosEmCena.indexOf(elementoSelecionado);
@@ -421,20 +387,21 @@
             } else if (dir === 'tras' && idx > 0) {
                 [listaElementosEmCena[idx], listaElementosEmCena[idx-1]] = [listaElementosEmCena[idx-1], listaElementosEmCena[idx]];
             }
-            renderizarMesaEstudio();
+            renderizarPalcoDOM();
         }
 
         function excluirObjetoSelecionado() {
             if (!elementoSelecionado) return;
             listaElementosEmCena = listaElementosEmCena.filter(el => el !== elementoSelecionado);
-            elementoSelecionado = null; renderizarMesaEstudio();
+            elementoSelecionado = null; renderizarPalcoDOM();
         }
 
-        // SALVAMENTO DE FOTOS E CAPTURA DE ARQUIVO
         function capturarFrameAtual() {
             framesSalvos.push({ id: Date.now(), elementos: JSON.parse(JSON.stringify(listaElementosEmCena)) });
             document.getElementById('empty-timeline-hint').style.display = 'none';
             atualizarTrilhoTimeline();
+            visorBox.classList.add('shutter-flash-active');
+            setTimeout(() => visorBox.classList.remove('shutter-flash-active'), 120);
         }
 
         function atualizarTrilhoTimeline() {
@@ -442,26 +409,36 @@
             if (framesSalvos.length === 0) { document.getElementById('empty-timeline-hint').style.display = 'block'; return; }
             framesSalvos.forEach((f, i) => {
                 const node = document.createElement('div'); node.className = `timeline-thumb-node ${frameAtivoIndex===i?'active':''}`;
-                node.innerHTML = `<div class="thumb-number">${String(i+1).padStart(3,'0')}</div><div style='margin-top:12px;'>🎬</div>`;
-                node.addEventListener('click', () => { frameAtivoIndex = i; listaElementosEmCena = JSON.parse(JSON.stringify(framesSalvos[i].elementos)); renderizarMesaEstudio(); atualizarTrilhoTimeline(); });
+                node.innerHTML = `
+                    <div class="thumb-number">${String(i+1).padStart(3,'0')}</div>
+                    <div style='margin-top:5px;'>🎬</div>
+                    <button class="btn-del-frame-floating" onclick="deletarFrameDeTrilho(${i}, event)">✕</button>
+                `;
+                node.addEventListener('click', () => { frameAtivoIndex = i; listaElementosEmCena = JSON.parse(JSON.stringify(framesSalvos[i].elementos)); renderizarPalcoDOM(); atualizarTrilhoTimeline(); });
                 track.appendChild(node);
             });
             document.getElementById('hud-frame-count').innerText = String(framesSalvos.length).padStart(5, '0');
         }
 
-        function deletarFrameSelecionado() { if (frameAtivoIndex !== -1) { framesSalvos.splice(frameAtivoIndex, 1); frameAtivoIndex = -1; atualizarTrilhoTimeline(); renderizarMesaEstudio(); } }
+        function deletarFrameDeTrilho(index, event) { event.stopPropagation(); framesSalvos.splice(index, 1); frameAtivoIndex = -1; atualizarTrilhoTimeline(); renderizarMesaEstudio(); }
+        function renderizarMesaEstudio() { renderizarPalcoDOM(); }
+        function deletarFrameSelecionado() { if (frameAtivoIndex !== -1) deletarFrameDeTrilho(frameAtivoIndex, { stopPropagation: () => {} }); }
         function aplicarFiltroCena(f) { overlayEfeito.className = 'canvas-effect-overlay'; if (f !== 'padrao') overlayEfeito.classList.add(`filtro-${f}`); }
-        function ajustarVelocidadeFrames(v) { fpsVelocidade = parseInt(v); document.getElementById('frame-duration-label').innerText = `${(1/fpsVelocidade).toFixed(2)}s`; }
         
-        // REPRODUTOR AUTOMÁTICO DE SLIDES
+        function ajustarVelocidadeFrames(v) { 
+            fpsVelocidade = parseInt(v); 
+            document.getElementById('frame-duration-label').innerText = `${(1/fpsVelocidade).toFixed(2)}s`; 
+            document.getElementById('current-fps-hud').innerText = `${fpsVelocidade} FPS`;
+            if (playIntervalo) { togglePlayAnimaçao(); togglePlayAnimaçao(); }
+        }
+
         function togglePlayAnimaçao() {
             const btn = document.getElementById('play-pause-btn');
-            if (playIntervalo) { clearInterval(playIntervalo); playIntervalo = null; btn.innerText = '▶'; }
+            if (playIntervalo) { clearInterval(playIntervalo); playIntervalo = null; btn.innerText = '▶ Assistir'; }
             else {
-                if (framesSalvos.length === 0) return;
-                btn.innerText = '⏸'; let curr = 0;
+                if (framesSalvos.length === 0) return; btn.innerText = '⏸ Pausar'; let curr = 0;
                 playIntervalo = setInterval(() => {
-                    listaElementosEmCena = JSON.parse(JSON.stringify(framesSalvos[curr].elementos)); renderizarMesaEstudio();
+                    listaElementosEmCena = JSON.parse(JSON.stringify(framesSalvos[curr].elementos)); renderizarPalcoDOM();
                     curr = (curr + 1) % framesSalvos.length;
                 }, 1000 / fpsVelocidade);
             }
@@ -474,12 +451,15 @@
             document.getElementById(`tab-${id}`).classList.add('active');
         }
 
-        function mudarCenarioPlano(p, n) { cenarioNome = n; renderizarMesaEstudio(); }
+        function mudarCenarioPlano(n) { cenarioNome = n; const view = document.getElementById('viewfinder-box'); if(n==='noite') view.style.background='#030106'; else view.style.background='#1a102f'; }
         function mudarFerramenta(m) { ferramentaAtual = m; document.querySelectorAll('.tool-icon-btn').forEach(b => b.classList.remove('active')); document.getElementById(`tool-${m}`).classList.add('active'); }
-        function toggleOnionSkin() { ativarSombraOnion = document.getElementById('onion-skin-toggle').checked; renderizarMesaEstudio(); }
+        function toggleOnionSkin() { ativarSombraOnion = document.getElementById('onion-skin-toggle').checked; renderizarPalcoDOM(); }
         function alternarAudioAmbiente(s) { document.querySelectorAll('audio').forEach(a => a.pause()); if(s!=='nenhum') document.getElementById(`sound-${s}`).play(); }
-        function adicionarFrameVazio() { listaElementosEmCena = []; renderizarMesaEstudio(); }
-        function exportarFilme() { alert("Filme baixado como .mp4!"); }
+        function adicionarFrameVazio() { listaElementosEmCena = []; renderizarPalcoDOM(); }
+        function exportarFilme() { alert("Filme baixado como .mp4 com sucesso!"); }
+        function reiniciarPlayer() { if (framesSalvos.length > 0) { frameAtivoIndex = 0; listaElementosEmCena = JSON.parse(JSON.stringify(framesSalvos.elementos)); renderizarPalcoDOM(); atualizarTrilhoTimeline(); } }
+
+        renderizarPalcoDOM();
     </script>
 </body>
 </html>

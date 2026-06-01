@@ -3,348 +3,489 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mundo da Animação - Conheça o Curso</title>
-    <!-- Importa as mesmas fontes góticas da capa -->
+    <title>StopArt - Portal do Aluno</title>
+    <!-- CONEXÃO PURA: Vincula diretamente a sua folha de estilos externa home.css -->
+    <link rel="stylesheet" href="home.css">
+    <!-- Fontes do Google -->
     <link rel="preconnect" href="https://googleapis.com">
     <link rel="preconnect" href="https://gstatic.com" crossorigin>
-    <link href="https://googleapis.com/css2?family=Cinzel:wght@400;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://googleapis.com/css2?family=Cinzel:wght@400;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* ==========================================================================
-           ESTILIZAÇÃO INTERNA DA VITRINE GÓTICA DE AULAS
-           ========================================================================== */
-        :root {
-            --bg-dark: #07050a;
-            --panel-dark: rgba(18, 11, 23, 0.45);
-            --border-purple: rgba(166, 93, 242, 0.25);
-            --accent-purple: #a65df2;
-            --accent-orange: #ff9d00;
-            --text-light: #ffffff;
-            --text-muted: #958d9c;
+        /* CONTAINER PRINCIPAL: SIDEBAR ESQUERDA FIXA + MOLDURA DE CINEMA UNIFICADA */
+        .workspace-theater-symmetric {
+            display: grid;
+            grid-template-columns: 310px 1fr;
+            gap: 25px;
+            width: 100%;
+            max-width: 1440px;
+            margin: 25px auto 0 auto;
+            position: relative;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
-        body {
-            background-color: var(--bg-dark);
-            color: var(--text-light);
-            font-family: 'Montserrat', sans-serif;
-            min-height: 100vh;
-            overflow-x: hidden;
-            /* Fundo com efeito de paralaxe sutil */
-            background-image: linear-gradient(rgba(7, 5, 10, 0.8), rgba(7, 5, 10, 0.9)), url('assets/fundo_principal.png');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-        }
-
-        h2, h3, h4, .logo { font-family: 'Cinzel', serif; letter-spacing: 1px; }
-
-        /* Sombra de cinema nas bordas da tela */
-        .vignette {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle, transparent 40%, rgba(0, 0, 0, 0.85) 100%);
-            pointer-events: none; z-index: 999;
-        }
-
-        /* Cabeçalho da página de info */
-        .classroom-header {
-            background: #07040a;
-            padding: 15px 40px;
+        /* BARRA LATERAL FIXA NA EXTREMA ESQUERDA */
+        .theater-left-sidebar-paycom {
             display: flex;
-            justify-content: space-between;
+            flex-direction: column;
+            gap: 12px;
+            background: rgba(14, 8, 22, 0.9);
+            border: 1px solid var(--border-purple);
+            padding: 20px 15px;
+            border-radius: 12px;
+            z-index: 80;
+            height: 600px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+            box-sizing: border-box;
+        }
+        
+        /* BOTÕES FORMATO BANNER ESCRITOS NO MENU ESQUERDO */
+        .tab-trigger-btn {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(166, 93, 242, 0.2);
+            color: #bfaecf;
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: 'Cinzel', serif;
+            font-size: 0.7rem;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+            text-align: left;
+            transition: all 0.2s ease;
+            display: flex;
             align-items: center;
-            border-bottom: 1px solid var(--border-purple);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.8);
-            position: relative; z-index: 10;
+            justify-content: space-between;
+        }
+        .tab-trigger-btn:hover, .tab-trigger-btn.active {
+            background: var(--neon-purple);
+            color: #000;
+            box-shadow: 0 0 12px rgba(166, 93, 242, 0.4);
+            border-color: var(--neon-purple);
         }
 
-        .badge-live {
-            background: rgba(166, 93, 242, 0.15);
-            padding: 4px 10px;
-            border: 1px solid var(--accent-purple);
-            border-radius: 4px;
-            color: var(--purple-hover);
-            font-size: 0.7rem; font-weight: bold; letter-spacing: 1px;
-            display: inline-block; margin-bottom: 4px;
+        /* BANCA DE VÍDEOS RETRÁTIL ACCORDION ALUNO */
+        .sidebar-embedded-playlist-zone {
+            display: none;
+            flex-direction: column;
+            gap: 8px;
+            overflow-y: auto;
+            max-height: 340px;
+            margin-top: 5px;
+            padding: 8px 5px;
+            border-left: 1px dashed rgba(166, 93, 242, 0.3);
+            margin-left: 10px;
+            animation: expandirGotica 0.25s ease-out;
         }
+        @keyframes expandirGotica { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
 
-        .classroom-header h2 { font-size: 1.1rem; color: #ffffff; }
-
-        .btn-back {
-            color: var(--text-light); text-decoration: none; font-size: 0.8rem;
-            border: 1px solid var(--border-purple); padding: 8px 18px; border-radius: 6px;
-            transition: all 0.3s; background: rgba(166, 93, 242, 0.05); font-weight: bold;
+        /* MOLDURA DE CINEMA UNIFICADA ROXO VINTAGE */
+        .theater-integrated-cinema-box {
+            display: flex;
+            flex-direction: column;
+            background: rgba(14, 8, 22, 0.9);
+            border: 1px solid var(--border-purple);
+            border-radius: 12px;
+            padding: 20px;
+            height: 600px;
+            box-shadow: 0 20px 45px rgba(0,0,0,0.8);
+            box-sizing: border-box;
         }
-        .btn-back:hover { background-color: var(--accent-purple); box-shadow: 0 0 15px rgba(166, 93, 242, 0.4); }
+        .cinema-integrated-header { text-align: left; border-bottom: 1px solid rgba(166, 93, 242, 0.15); padding-bottom: 12px; margin-bottom: 15px; }
+        .cinema-integrated-header h2 { font-family: 'Cinzel', serif; font-size: 1.25rem; color: #fff; letter-spacing: 0.5px; }
+        .cinema-integrated-header p { font-size: 0.78rem; color: var(--text-muted); margin-top: 5px; line-height: 1.4; }
 
-        /* Layout em Duas Colunas */
-        .classroom-container {
-            display: flex; max-width: 1400px; margin: 30px auto; gap: 30px; padding: 0 20px;
-            position: relative; z-index: 10;
+        .theater-center-player-stage { flex: 1; width: 100%; background: #000; border-radius: 6px; border: 1px solid rgba(166, 93, 242, 0.1); overflow: hidden; }
+        .theater-center-player-stage iframe { width: 100%; height: 100%; border: none; display: block; }
+
+        /* JANELAS FLUTUANTES ARRASTÁVEIS COMPATÍVEIS */
+        .draggable-sliding-panel { position: absolute; width: 440px; background: rgba(14, 8, 22, 0.98); border: 2px solid var(--border-purple); border-radius: 8px; box-shadow: 0 15px 40px rgba(0,0,0,0.9); z-index: 200; display: none; flex-direction: column; padding: 0; overflow: hidden; min-width: 280px; min-height: 180px; }
+        .panel-drag-handle-bar { background: rgba(26, 16, 47, 0.95); padding: 12px 15px; border-bottom: 1px solid rgba(166,93,242,0.2); display: flex; justify-content: space-between; align-items: center; cursor: move; user-select: none; }
+        .panel-drag-handle-bar h4 { font-family: 'Cinzel', serif; font-size: 0.75rem; color: var(--neon-hover); pointer-events: none; }
+        .btn-close-panel { background: #ff3e3e; color: #fff; border: none; padding: 2px 8px; font-size: 0.65rem; font-weight: bold; border-radius: 4px; cursor: pointer; }
+
+        .panel-body-content { padding: 15px; flex: 1; display: flex; flex-direction: column; position: relative; width: 100%; height: 100%; box-sizing: border-box; }
+        .panel-textarea-notes { width: 100%; height: 100%; min-height: 140px; background: rgba(0, 0, 0, 0.5); border: 1px solid rgba(166, 93, 242, 0.2); border-radius: 4px; padding: 12px; color: #fff; font-family: 'Montserrat', sans-serif; font-size: 0.8rem; resize: none; outline: none; flex: 1; box-sizing: border-box; }
+        
+        /* BOTÃO ROXO DE DOWNLOAD OFICIAL LIBERADO */
+        .btn-pdf-download-unlocked {
+            background: #6a0dad; color: #fff; font-family: 'Cinzel', serif; text-decoration: none;
+            font-size: 0.65rem; font-weight: bold; text-align: center; padding: 8px 12px;
+            border-radius: 4px; transition: 0.2s; border: none; cursor: pointer; display: inline-block;
         }
+        .btn-pdf-download-unlocked:hover { background: #8a2be2; box-shadow: 0 0 10px rgba(166, 93, 242, 0.4); }
 
-        /* Sidebar de Módulos (Esquerda) */
-        .sidebar-chapters {
-            width: 350px; background: var(--panel-dark); border: 1px solid var(--border-purple);
-            border-radius: 12px; padding: 20px; display: flex; flex-direction: column;
-            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
-        }
+        /* AJUSTE DE RESPONSIVIDADE INTERNA DA MOLDURA DO PDF */
+        .pdf-frame-wrapper { width: 100%; height: 100%; min-height: 280px; background: #110a1c; position: relative; flex: 1; overflow: hidden; border-radius: 4px; margin-top: 10px; }
+        .pdf-frame-wrapper iframe { width: 100%; height: 100%; border: none; display: block; }
 
-        .sidebar-chapters h3 {
-            font-size: 0.85rem; color: var(--text-muted); letter-spacing: 2px;
-            margin-bottom: 15px; border-bottom: 1px solid var(--border-purple); padding-bottom: 8px;
-        }
+        .window-resize-handle-corner { position: absolute; bottom: 0; right: 0; width: 14px; height: 14px; background: linear-gradient(135deg, transparent 30%, var(--border-purple) 30%, var(--border-purple) 50%, var(--neon-purple) 50%); cursor: se-resize; z-index: 250; }
 
-        .chapters-list { display: flex; flex-direction: column; gap: 12px; }
-
-        .module-box {
-            background: rgba(5, 3, 8, 0.4); border: 1px solid var(--border-purple);
-            border-radius: 8px; overflow: hidden; transition: 0.3s;
-        }
-
-        .module-title {
-            padding: 12px 15px; background: rgba(166, 93, 242, 0.05); font-size: 0.8rem;
-            color: var(--accent-purple); cursor: pointer; display: flex;
-            justify-content: space-between; align-items: center; font-weight: bold;
-        }
-        .module-title:hover { background: rgba(166, 93, 242, 0.15); }
-
-        .arrow-icon { font-size: 0.65rem; transition: transform 0.3s; }
-        .module-box.fechado .arrow-icon { transform: rotate(-90deg); }
-
-        .module-lessons {
-            display: flex; flex-direction: column; transition: max-height 0.3s ease-out;
-            max-height: 500px; overflow: hidden;
-        }
-        .module-box.fechado .module-lessons { max-height: 0; }
-
-        .lesson-item {
-            padding: 12px 20px; font-size: 0.75rem; color: #c9bfae; cursor: pointer;
-            border-top: 1px dashed rgba(166, 93, 242, 0.15); transition: all 0.2s;
-        }
-        .lesson-item:hover { background: rgba(166, 93, 242, 0.05); color: #fff; padding-left: 24px; }
-        .lesson-item.active {
-            background: rgba(166, 93, 242, 0.1); color: var(--purple-hover);
-            font-weight: bold; border-left: 4px solid var(--accent-purple);
-        }
-
-
-        /* ==========================================================================
-           ÁREA CENTRAL DO PLAYER E ABAS INTERATIVAS
-           ========================================================================== */
-        .main-player-area {
-            flex: 1; display: flex; flex-direction: column; gap: 20px;
-        }
-
-        .video-theater {
-            width: 100%; aspect-ratio: 16 / 9; background: #000;
-            border: 4px solid rgba(166, 93, 242, 0.2); border-radius: 12px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.8); overflow: hidden;
-        }
-
-        .video-placeholder {
-            width: 100%; height: 100%; display: flex; flex-direction: column;
-            justify-content: center; align-items: center;
-            background: linear-gradient(135deg, #120b17, #050307);
-            color: var(--text-muted); text-align: center; padding: 20px; position: relative;
-        }
-
-        .play-icon-center {
-            font-size: 3.5rem; color: rgba(166, 93, 242, 0.5); margin-bottom: 15px;
-            transition: all 0.3s ease; cursor: pointer;
-        }
-        .video-placeholder:hover .play-icon-center {
-            color: var(--purple-hover); transform: scale(1.1);
-            text-shadow: 0 0 15px rgba(166, 93, 242, 0.6);
-        }
-
-        .video-placeholder h3 { color: #fff; font-size: 1.4rem; margin-bottom: 8px; }
-        .video-placeholder p { font-size: 0.85rem; color: var(--purple-hover); font-weight: 600; }
-
-        /* ABAS INTERATIVAS */
-        .tabs-section {
-            width: 100%; background: var(--panel-dark); border: 1px solid var(--border-purple);
-            border-radius: 12px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-        }
-
-        .tabs-header { display: flex; background: rgba(10, 6, 15, 0.6); border-bottom: 1px dashed var(--border-purple); }
-
-        .tab-btn {
-            background: transparent; border: none; color: var(--text-muted);
-            font-family: inherit; padding: 15px 25px; font-size: 0.8rem;
-            cursor: pointer; transition: all 0.2s; letter-spacing: 1px; font-weight: 600;
-        }
-        .tab-btn:hover { color: #fff; background: rgba(166, 93, 242, 0.02); }
-        .tab-btn.active {
-            color: var(--purple-hover); background: rgba(166, 93, 242, 0.08);
-            font-weight: bold; border-bottom: 3px solid var(--accent-purple);
-        }
-
-        .tabs-content { padding: 25px; min-height: 150px; }
-        .tab-pane { display: none; }
-        .tab-pane.active { display: block; }
-
-        #tab-detalhes p { font-size: 0.9rem; line-height: 1.6; color: #c9bfae; text-align: justify; }
-
-        .download-list { list-style: none; display: flex; flex-direction: column; gap: 12px; }
-        .download-list a { color: var(--accent-orange); text-decoration: none; font-size: 0.85rem; font-weight: 600; }
-        .download-list a:hover { text-decoration: underline; color: #fff; }
-
-        .diary-textarea {
-            width: 100%; height: 100px; background: #050307; border: 1px dashed var(--border-purple);
-            border-radius: 6px; padding: 12px; color: #fff; font-family: inherit; font-size: 0.85rem;
-            resize: none; outline: none;
-        }
-        .diary-textarea:focus { border-color: var(--accent-purple); box-shadow: 0 0 10px rgba(166, 93, 242, 0.2); }
+        /* COMPONENTES DA PLAYLIST SIDEBAR */
+        .lesson-track-row { display: flex; gap: 10px; background: rgba(255,255,255,0.01); border: 1px solid rgba(255,255,255,0.03); padding: 8px; border-radius: 6px; cursor: pointer; transition: 0.2s; align-items: center; }
+        .lesson-track-row:hover { background: rgba(166, 93, 242, 0.08); border-color: rgba(166, 93, 242, 0.2); }
+        .lesson-track-row.active { background: rgba(166, 93, 242, 0.12); border-color: var(--neon-purple); }
+        .thumb-lesson-mini { width: 40px; aspect-ratio: 16/9; background: #110a1c; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 0.55rem; }
+        .meta-lesson-mini h5 { font-size: 0.65rem; color: #fff; font-weight: 600; margin-bottom: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 150px; }
+        .meta-lesson-mini small { font-size: 0.52rem; color: var(--text-muted); }
     </style>
 </head>
 <body>
 
-    <div class="vignette"></div>
-
-    <!-- CABEÇALHO DA PÁGINA DE VITRINE -->
-    <header class="classroom-header">
-        <div class="course-info">
-            <span class="badge-live">CONHEÇA O PORTAL</span>
-            <h2>Mestres do Stop Motion: Da Massinha ao Cinema</h2>
+    <!-- NAVBAR PREMIUM DO ALUNO LOGADO (ACESSO TOTAL AO PORTAL) -->
+    <header class="dash-header">
+        <div class="logo">STOP_ART <span>PORTAL</span></div>
+        <nav class="header-center-nav">
+            <a href="home.html">DASHBOARD</a>
+            <a href="aulas-info.html" class="active">MINHAS AULAS</a>
+            <a href="jogos.html">SALAS DE JOGOS</a>
+            <a href="estudio.html">ESTÚDIO</a>
+            <a href="#">PROJETOS</a>
+        </nav>
+        <div class="header-user-zone">
+            <div class="user-pill">
+                <div class="user-avatar" style="width:28px; height:28px; background:var(--neon-purple); border-radius:50%; display:flex; align-items:center; justify-content:center; color:#000; font-weight:bold; font-size:0.75rem;">B</div>
+                <div class="user-meta" style="text-align:left; margin-left:8px; font-family:'Montserrat', sans-serif; font-size:0.72rem;"><strong style="color:#fff; display:block;">Bianca</strong><small style="color:var(--text-muted); display:block; font-size:0.55rem;">Aluno Matriculado</small></div>
+            </div>
         </div>
-        <a href="index.html" class="btn-back">⬅ VOLTAR AO INÍCIO</a>
     </header>
 
-    <div class="classroom-container">
-        
-        <!-- BARRA LATERAL: CRONOGRAMA DE MÓDULOS -->
-        <aside class="sidebar-chapters">
-            <h3>CONTEÚDO DO CURSO</h3>
-            <div class="chapters-list">
-                
-                <!-- MÓDULO 1 -->
-                <div class="module-box">
-                    <div class="module-title" onclick="toggleModulo(this)">
-                        <span>📌 Módulo 1: Fundamentos Básicos</span>
-                        <span class="arrow-icon">▼</span>
-                    </div>
-                    <div class="module-lessons">
-                        <div class="lesson-item active" onclick="carregarAula('O Segredo dos 24 Frames', 'Nesta aula de introdução, você entenderá a física por trás do movimento simulado e como o cérebro humano processa a ilusão de vida em objetos estáticos baseando-se nos bastidores reais do filme Coraline.')">
-                            <span>🎬 1.1 O Segredo dos 24 Frames</span>
-                        </div>
-                        <div class="lesson-item" onclick="carregarAula('Equipamentos Necessários', 'Conheça as ferramentas essenciais para montar seu estúdio caseiro, softwares recomendados para captura industriais e o maquinário utilizado nas grandes produções.')">
-                            <span>🎥 1.2 Equipamentos Necessários</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- MÓDULO 2 -->
-                <div class="module-box">
-                    <div class="module-title" onclick="toggleModulo(this)">
-                        <span>📌 Módulo 2: O Rig e a Marionete</span>
-                        <span class="arrow-icon">▼</span>
-                    </div>
-                    <div class="module-lessons">
-                        <div class="lesson-item" onclick="carregarAula('Modelagem de Personagens', 'Aprenda técnicas profissionais de modelagem tridimensional, construção de esqueletos articulados de arame e silicone, e texturização de tecidos reais.')">
-                            <span>🤖 2.1 Modelagem de Personagens</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- MÓDULO 3 -->
-                <div class="module-box">
-                    <div class="module-title" onclick="toggleModulo(this)">
-                        <span>📌 Módulo 3: Iluminação e Edição</span>
-                        <span class="arrow-icon">▼</span>
-                    </div>
-                    <div class="module-lessons">
-                        <div class="lesson-item" onclick="carregarAula('Dominando a Luz Estática', 'O maior vilão do Stop Motion é a variação de luz (flicker). Aprenda a trancar as configurações de exposição da câmera e isolar completamente a iluminação do seu set.')">
-                            <span>💡 3.1 Dominando a Luz Estática</span>
-                        </div>
-                        <div class="lesson-item" onclick="carregarAula('Pós-Produção e Efeitos', 'Descubra como exportar sua sequência de fotos em alta resolução, aplicar máscaras digitais para apagar os arames de sustentação dos rigs e sincronizar a sonorização de diálogos.')">
-                            <span>✂️ 3.2 Pós-Produção e Efeitos</span>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </aside>
-        <!-- ÁREA CENTRAL DE ESTUDOS (PLAYER E DETALHES) -->
-        <main class="main-player-area">
+    <main class="dash-main-content" style="padding: 20px 30px;">
+        <div class="workspace-theater-symmetric">
             
-            <!-- Player de Vídeo Cinema Simulador -->
-            <div class="video-theater">
-                <div class="video-placeholder">
-                    <div class="play-icon-center">▶</div>
-                    <h3 id="video-title-display">O Segredo dos 24 Frames</h3>
-                    <p>FALTA POUCO! Faça o login no portal para liberar a reprodução de vídeo completa.</p>
+            <!-- SIDEBAR COMPLETA NA EXTREMA ESQUERDA (ALTURA COMBINADA DE 600PX) -->
+            <div class="theater-left-sidebar-paycom">
+                <button class="tab-trigger-btn" id="trigger-playlist" onclick="alternarMenuSanfonaPlaylist()" title="Expandir Módulos">
+                    <span>🎞️ BANCA DE VÍDEOS</span>
+                    <span id="sanfona-arrow-indicator" style="font-size: 0.6rem; color: var(--neon-hover);">▼</span>
+                </button>
+
+                <!-- PLAYLIST EMBUTIDA E COMPACTA -->
+                <div class="sidebar-embedded-playlist-zone" id="playlist-container-track">
+                    <!-- Preenchido dinamicamente pelo JavaScript -->
+                </div>
+
+                <button class="tab-trigger-btn" id="trigger-apostila" onclick="alternarPainelFlutuante('apostila')" title="Abrir Apostila">
+                    <span>📚 APOSTILA EM PDF</span>
+                </button>
+                
+                <button class="tab-trigger-btn" id="trigger-anotacoes" onclick="alternarPainelFlutuante('anotacoes')" title="Abrir Notas">
+                    <span>📝 BLOCO DE NOTAS</span>
+                </button>
+            </div>
+
+            <!-- TEATRO DE CINEMA UNIFICADO -->
+            <div class="theater-integrated-cinema-box">
+                <div class="cinema-integrated-header">
+                    <h2 id="video-title">1. STOP MOTION para iniciantes - AULA COMPLETA</h2>
+                    <p id="video-desc">Aprenda de forma definitiva a mágica do cinema em miniatura! Navegue pelas ferramentas e estude com conforto.</p>
+                </div>
+                <div class="theater-center-player-stage" style="position: relative;">
+                    <!-- Camada protetora para o reprodutor de vídeo -->
+                    <div class="video-dragging-shield-guard" style="position: absolute; top:0; left:0; width:100%; height:100%; z-index:10; display:none; background:transparent;"></div>
+                    <iframe id="main-video-frame" src="https://youtube.com" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
                 </div>
             </div>
 
-            <!-- SEÇÃO DE DETALHES EM ABAS INTERATIVAS -->
-            <section class="tabs-section">
-                <div class="tabs-header">
-                    <button class="tab-btn active" onclick="switchTab('detalhes')">📋 Detalhes da Aula</button>
-                    <button class="tab-btn" onclick="switchTab('downloads')">📂 Materiais (.PDF)</button>
-                    <button class="tab-btn" onclick="switchTab('anotacoes')">✍️ Meu Diário de Bordo</button>
+            <!-- JANELA FLUTUANTE 1: APOSTILA PDF COM MECANISMO ANTITRAVA -->
+            <div class="draggable-sliding-panel" id="panel-apostila" style="top: 140px; left: 360px; width: 440px; height: 500px;">
+                <div class="panel-drag-handle-bar">
+                    <h4>📚 MATERIAL COMPLEMENTAR</h4>
+                    <button class="btn-close-panel" onclick="fecharPainelEspecifico('apostila')">✕</button>
                 </div>
-                
-                <div class="tabs-content">
-                    <!-- Aba 1: Descrição da Aula -->
-                    <div id="tab-detalhes" class="tab-pane active">
-                        <p id="lesson-desc">Nesta aula de introdução, você entenderá a física por trás do movimento simulado e como o cérebro humano processa a ilusão de vida em objetos estáticos baseando-se nos bastidores reais do filme Coraline.</p>
+                <div class="panel-body-content" style="padding: 12px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
+                        <span style="font-size:0.58rem; color:var(--text-muted); font-weight:600;" id="pdf-file-name-label">📚 CARREGANDO...</span>
+                        <a href="assets/aula1_introducao.pdf" download class="btn-pdf-download-unlocked" id="btn-download-pdf-file">📥 BAIXAR MATERIAL</a>
                     </div>
-
-                    <!-- Aba 2: Lista de Materiais e Downloads -->
-                    <div id="tab-downloads" class="tab-pane">
-                        <ul class="download-list">
-                            <li>📄 <a href="#">Cronograma de Frames por Segundo (Guia Rápido).pdf</a></li>
-                            <li>📄 <a href="#">Lista de Materiais de Escultura e Massinhas Recomendadas.pdf</a></li>
-                            <li>📄 <a href="#">Ementa Completa e Cronograma de Atividades do Portal.pdf</a></li>
-                        </ul>
+                    <div class="pdf-frame-wrapper">
+                        <!-- Camada protetora transparente para impedir colisões no PDF -->
+                        <div class="pdf-dragging-shield-guard" style="position: absolute; top:0; left:0; width:100%; height:100%; z-index:10; display:none; background:transparent;"></div>
+                        <iframe id="pdf-embed-viewer-frame" src="assets/aula1_introducao.pdf#toolbar=0&navpanes=0&scrollbar=0"></iframe>
                     </div>
-
-                    <!-- Aba 3: Caixa de Texto Interativa -->
-                    <div id="tab-anotacoes" class="tab-pane">
-                        <textarea class="diary-textarea" placeholder="Crie sua conta para poder salvar seus insights técnicos de animação diretamente no painel..."></textarea>
-                    </div>
+                    <div class="window-resize-handle-corner"></div>
                 </div>
-            </section>
+            </div>
 
-        </main>
+            <!-- JANELA FLUTUANTE 2: BLOCO DE NOTAS -->
+            <div class="draggable-sliding-panel" id="panel-anotacoes" style="top: 320px; left: 840px; width: 380px; height: 280px;">
+                <div class="panel-drag-handle-bar">
+                    <h4>📝 BLOCO DE NOTAS INTERATIVO</h4>
+                    <button class="btn-close-panel" onclick="fecharPainelEspecifico('anotacoes')">✕</button>
+                </div>
+                <div class="panel-body-content">
+                    <textarea class="panel-textarea-notes" id="student-notepad" placeholder="Faça suas anotações importantes aqui livremente..." oninput="salvarNotasAutomatico()"></textarea>
+                    <div style="font-size: 0.6rem; color: #5df2a6; margin-top: 5px; text-align: right;" id="save-status-label">● Notas salvas automaticamente</div>
+                    <div class="window-resize-handle-corner"></div>
+                </div>
+            </div>
 
-    </div> <!-- FIM DA div .classroom-container -->
+        </div>
+    </main>
 
-    <!-- JAVASCRIPT DE INTERATIVIDADE DA VITRINE DE AULAS -->
+    <footer class="dash-footer-row">
+        <div>© 2026 <span>STOP_ART</span> | Todos os direitos reservados.</div>
+    </header>
+    <!-- JAVASCRIPT: BANCO DE DADOS COMPLETO E GERADOR DE TIMELINE DINÂMICA (PARTE 1 DE 2) -->
     <script>
-        // Carrega os textos e descrições de cada aula na tela central
-        function carregarAula(tituloAula, descricaoAula) {
-            document.getElementById('video-title-display').innerText = tituloAula;
-            document.getElementById('lesson-desc').innerText = descricaoAula;
+        let tempoSalvarDebounce = null;
 
-            // Remove o destaque visual antigo e aplica apenas na lição clicada
-            document.querySelectorAll('.lesson-item').forEach(item => {
-                item.classList.remove('active');
+        const playlistAulasCurso = [
+            {
+                titulo: "1. STOP MOTION para iniciantes - AULA COMPLETA",
+                descricao: "Aprenda de forma definitiva a mágica do cinema em miniatura! Navegue pelas ferramentas e estude com conforto.",
+                youtubeId: "BVhMcTFOGKw", 
+                pdfUrl: "assets/aula1_introducao.pdf#toolbar=0&navpanes=0&scrollbar=0",
+                pdfNome: "Fundamentos do Stop Motion.pdf"
+            },
+            {
+                titulo: "2. A Arte das Marionetes e Esqueletos (Bastidores de ParaNorman)",
+                descricao: "Veja como a tecnologia de impressão 3D em resina permitiu criar milhares de expressões faciais substitutíveis para os bonecos articulados de ParaNorman.",
+                youtubeId: "iS0wB696F6E", 
+                pdfUrl: "assets/aula2_marionetes.pdf#toolbar=0&navpanes=0", 
+                pdfNome: "Ficha Técnica de Esqueletos.pdf"
+            },
+            {
+                titulo: "3. Iluminação Gótica e Sombras (Bastidores de A Noiva Cadáver)",
+                descricao: "Analise as escolhas estéticas de Tim Burton para criar atmosferas sombrias usando lentes macro digitais e filtros de contraste escuro.",
+                youtubeId: "v8b9AkaX3_0", 
+                pdfUrl: "assets/aula3_iluminacao.pdf#toolbar=0&navpanes=0",
+                pdfNome: "Manual de Estúdio Gótico.pdf"
+            },
+            {
+                titulo: "4. Captura de Frames e Ritmo (Bastidores O Estranho Mundo de Jack)",
+                descricao: "Aprenda as regras matemáticas de espaçamento físico entre cada fotografia para evitar movimentos robóticos nas passagens das marionetes.",
+                youtubeId: "vS-k2D_o6_I", 
+                pdfUrl: "assets/aula4_captura.pdf#toolbar=0&navpanes=0",
+                pdfNome: "Tabela de Arcos e Timing.pdf"
+            },
+            {
+                titulo: "5. Montagem, Efeitos e Som (Bastidores de A Fuga das Galinhas)",
+                descricao: "Descubra os segredos da Aardman Studios para sincronizar falas labiais com massa de modelar e juntar trilhas sonoras orquestradas.",
+                youtubeId: "K1X9z33ZlyM", 
+                pdfUrl: "assets/aula5_montagem.pdf#toolbar=0&navpanes=0",
+                pdfNome: "Guia de Lip Sync e Áudio.pdf"
+            },
+            {
+                titulo: "6. Criação de Cenários de Argila (Bastidores de Wallace & Gromit)",
+                descricao: "Mergulhe nas técnicas de escultura em plasticina e veja como criar cenários inteiros usando estruturas internas de arame de alumínio.",
+                youtubeId: "BVwN6L_1mE4",
+                pdfUrl: "assets/aula6_cenarios.pdf#toolbar=0&navpanes=0",
+                pdfNome: "Escultura de Ambientes.pdf"
+            },
+            {
+                titulo: "7. Movimentação de Câmera e Eixos (Bastidores de Frankenweenie)",
+                descricao: "Entenda o funcionamento dos trilhos de movimento milimétricos controlados por computador para criar passagens tridimensionais de câmera.",
+                youtubeId: "mXwGv29-Rj4",
+                pdfUrl: "assets/aula7_camera.pdf#toolbar=0&navpanes=0",
+                pdfNome: "Movimentos de Eixo RAW.pdf"
+            },
+            {
+                titulo: "8. Efeitos Especiais na Prática (Bastidores de Kubo)",
+                descricao: "Veja a combinação incrível de efeitos práticos analógicos com complementos digitais de tela verde usados no maior boneco de stop motion do mundo.",
+                youtubeId: "3m0Vv5Xis_A",
+                pdfUrl: "assets/aula8_vfx.pdf#toolbar=0&navpanes=0",
+                pdfNome: "Chroma Key e Escala.pdf"
+            },
+            {
+                titulo: "9. Sincronia Labial de Personagens (Bastidores de Shaun o Carneiro)",
+                descricao: "Aprenda a mapear os fonemas das vogais e consoantes para trocar as boquinhas de argila dos bonecos em tempo de gravação.",
+                youtubeId: "S_7H5_I_Dfk",
+                pdfUrl: "assets/aula9_lipsync.pdf#toolbar=0&navpanes=0",
+                pdfNome: "Fonetização por Quadros.pdf"
+            },
+            {
+                titulo: "10. Renderização e Exportação Final (James e O Pêssego Gigante)",
+                descricao: "Domine o fluxo profissional de correção de cores, exportação de sequências de fotos RAW e compressão final em formatos de cinema .MP4.",
+                youtubeId: "r-jG8vT60R8",
+                pdfUrl: "assets/aula10_exportar.pdf#toolbar=0&navpanes=0",
+                pdfNome: "Manual do Diretor - Master.pdf"
+            }
+        ];
+
+        function construirPlaylistLateral() {
+            const track = document.getElementById('playlist-container-track');
+            track.innerHTML = '';
+            playlistAulasCurso.forEach(function(aula, i) {
+                const el = document.createElement('div');
+                el.className = 'lesson-track-row ' + (i === 0 ? 'active' : '');
+                el.id = 'card-aula-index-' + i;
+                el.setAttribute('onclick', 'trocarAulaExibida(' + i + ')');
+                el.innerHTML = `
+                    <div class="thumb-lesson-mini">🎥</div>
+                    <div class="meta-lesson-mini" style="text-align: left;">
+                        <h5>${aula.titulo.split(' (')}</h5>
+                        <small>Módulo Disponível • Livre</small>
+                    </div>
+                `;
+                track.appendChild(el);
             });
-            event.currentTarget.classList.add('active');
+        }
+        // ACIONADOR REVERSÍVEL DO MENU SANFONA (ACCORDION) DA PLAYLIST
+        function alternarMenuSanfonaPlaylist() {
+            const playlistZone = document.getElementById('playlist-container-track');
+            const botaoGatilho = document.getElementById('trigger-playlist');
+            const indicadorSeta = document.getElementById('sanfona-arrow-indicator');
+            const abrindoAgora = playlistZone.style.display !== 'flex';
+
+            if (abrindoAgora) {
+                playlistZone.style.display = 'flex';
+                if(botaoGatilho) botaoGatilho.classList.add('active');
+                if(indicadorSeta) indicadorSeta.innerText = '▲';
+            } else {
+                playlistZone.style.display = 'none';
+                if(botaoGatilho) botaoGatilho.classList.remove('active');
+                if(indicadorSeta) indicadorSeta.innerText = '▼';
+            }
         }
 
-        // Abre e fecha os módulos em efeito sanfona
-        function toggleModulo(elementoTitulo) {
-            const moduloBox = elementoTitulo.parentElement;
-            moduloBox.classList.toggle('fechado');
+        // CONTROLADOR DE ATIVAÇÃO DOS ESCUDOS ANTITRAVA PARA ARRASTE E REDIMENSIONAMENTO
+        function gerenciarEscudosProtetoresDeIframe(ativar) {
+            const displayStatus = activar ? 'block' : 'none';
+            const escudoVideo = document.querySelector('.video-dragging-shield-guard');
+            const escudoPdf = document.querySelector('.pdf-dragging-shield-guard');
+            
+            if (escudoVideo) escudoVideo.style.display = displayStatus;
+            if (escudoPdf) escudoPdf.style.display = displayStatus;
         }
 
-        // Alterna entre os conteúdos das abas inferiores
-        function switchTab(tabId) {
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            document.querySelectorAll('.tab-pane').forEach(pane => {
-                pane.classList.remove('active');
-            });
+        // MOTOR DE ARRASTE LIVRE (DRAG AND DROP) INTEGRADO COM ESCUDO ANTITRAVA
+        function tornarPainelArrastavel(elementoPainel) {
+            let alcaMover = elementoPainel.querySelector('.panel-drag-handle-bar');
+            let posXAnterior = 0, posYAnterior = 0, posXAtual = 0, posYAtual = 0;
 
-            event.currentTarget.classList.add('active');
-            document.getElementById('tab-' + tabId).classList.add('active');
+            if (alcaMover) { alcaMover.onmousedown = iniciarArrasteMouse; } 
+            else { elementoPainel.onmousedown = iniciarArrasteMouse; }
+
+            function iniciarArrasteMouse(e) {
+                if (e.target.classList.contains('window-resize-handle-corner')) return;
+                e = e || window.event; e.preventDefault();
+                
+                // Ativa a proteção invisível para o mouse não colidir com o PDF/Vídeo durante o arraste
+                gerenciarEscudosProtetoresDeIframe(true);
+                
+                posXAnterior = e.clientX; 
+                posYAnterior = e.clientY;
+                document.onmouseup = pararArrasteMouse;
+                document.onmousemove = arrastarPainelAtivo;
+                
+                document.querySelectorAll('.draggable-sliding-panel').forEach(p => p.style.zIndex = 200);
+                elementoPainel.style.zIndex = 210;
+            }
+
+            function arrastarPainelAtivo(e) {
+                e = e || window.event; e.preventDefault();
+                posXAtual = posXAnterior - e.clientX;
+                posYAtual = posYAnterior - e.clientY;
+                posXAnterior = e.clientX;
+                posYAnterior = e.clientY;
+                elementoPainel.style.top = (elementoPainel.offsetTop - posYAtual) + "px";
+                elementoPainel.style.left = (elementoPainel.offsetLeft - posXAtual) + "px";
+            }
+
+            function pararArrasteMouse() { 
+                // Desativa a proteção devolvendo o controle normal para o PDF/Vídeo
+                gerenciarEscudosProtetoresDeIframe(false);
+                document.onmouseup = null; 
+                document.onmousemove = null; 
+            }
         }
+
+        // MOTOR DE REDIMENSIONAMENTO LIVRE (RESIZE) INTEGRADO COM ESCUDO ANTITRAVA
+        function activarRedimensionamentoJanela(elementoPainel) {
+            let alcaEscala = elementoPainel.querySelector('.window-resize-handle-corner');
+            if (!alcaEscala) return;
+
+            alcaEscala.onmousedown = function(e) {
+                e.preventDefault(); e.stopPropagation();
+                
+                // Ativa o escudo invisível para o mouse não perder o foco ao esticar a janela
+                gerenciarEscudosProtetoresDeIframe(true);
+                
+                let larguraInicial = elementoPainel.offsetWidth;
+                let alturaInicial = elementoPainel.offsetHeight;
+                let startX = e.clientX;
+                let startY = e.clientY;
+
+                function doResize(ev) {
+                    let novaLargura = larguraInicial + (ev.clientX - startX);
+                    let novaAltura = alturaInicial + (ev.clientY - startY);
+                    
+                    if (novaLargura > 280) elementoPainel.style.width = novaLargura + "px";
+                    if (novaAltura > 180) elementoPainel.style.height = novaAltura + "px";
+                }
+
+                function stopResize() {
+                    // Remove o escudo ao soltar o mouse
+                    gerenciarEscudosProtetoresDeIframe(false);
+                    document.removeEventListener('mousemove', doResize);
+                    document.removeEventListener('mouseup', stopResize);
+                }
+
+                document.addEventListener('mousemove', doResize);
+                document.addEventListener('mouseup', stopResize);
+            };
+        }
+
+        // CONTROLADOR DE EXIBIÇÃO DE CAIXAS LATERAIS
+        function alternarPainelFlutuante(idPainel) {
+            const painel = document.getElementById('panel-' + idPainel);
+            const botao = document.getElementById('trigger-' + idPainel);
+            
+            if (painel.style.display === 'flex') {
+                fecharPainelEspecifico(idPainel);
+            } else {
+                painel.style.display = 'flex';
+                if(botao) botao.classList.add('active');
+                tornarPainelArrastavel(painel);
+                ativarRedimensionamentoJanela(painel);
+            }
+        }
+
+        function fecharPainelEspecifico(idPainel) {
+            const painel = document.getElementById('panel-' + idPainel);
+            if(painel) painel.style.display = 'none';
+            const botao = document.getElementById('trigger-' + idPainel);
+            if(botao) botao.classList.remove('active');
+        }
+
+        // REPRODUÇÃO DIRETA DE QUALQUER COMPONENTE
+        function trocarAulaExibida(index) {
+            const aula = playlistAulasCurso[index];
+            document.getElementById('main-video-frame').src = "https://youtube.com" + aula.youtubeId + "?controls=1&rel=0&modestbranding=1";
+            document.getElementById('pdf-embed-viewer-frame').src = aula.pdfUrl;
+            document.getElementById('video-title').innerText = aula.titulo;
+            document.getElementById('video-desc').innerText = aula.descricao;
+            
+            document.getElementById('pdf-file-name-label').innerText = "📚 " + aula.pdfNome.toUpperCase();
+            document.getElementById('btn-download-pdf-file').href = aula.pdfUrl;
+
+            for (let i = 0; i < 10; i++) {
+                const row = document.getElementById('card-aula-index-' + i);
+                if (row) { if (i === index) row.classList.add('active'); else row.classList.remove('active'); }
+            }
+        }
+
+        function carregarNotasDoAluno() {
+            const notas = localStorage.getItem('stopart_notas_aluno_oficial_scalable');
+            if (notas) document.getElementById('student-notepad').value = notas;
+        }
+
+        function salvarNotasAutomatico() {
+            const texto = document.getElementById('student-notepad').value;
+            const label = document.getElementById('save-status-label');
+            if(label) { label.style.display = 'block'; label.innerText = "⏳ Digitando..."; }
+
+            clearTimeout(tempoSalvarDebounce);
+            tempoSalvarDebounce = setTimeout(function() {
+                localStorage.setItem('stopart_notas_aluno_oficial_scalable', texto);
+                if(label) label.innerText = "● Notas salvas automaticamente!";
+            }, 800);
+        }
+
+        // Inicializações estruturais completas
+        construirPlaylistLateral();
+        carregarNotasDoAluno();
+        trocarAulaExibida(0);
     </script>
 </body>
 </html>
