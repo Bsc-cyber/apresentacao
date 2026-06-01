@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StopArt Cine - Universo ParaNorman</title>
+    <style>
+        /* ==========================================================================
+           1. RESET & BASE CINEMATOGRÁFICA
+           ========================================================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #06020b;
+            color: #e5dbf1;
+            background-image: radial-gradient(circle at 50% -20%, #2b1347 0%, #06020b 70%);
+            overflow-x: hidden;
+            padding-bottom: 80px;
+        }
+
+        header {
+            padding: 20px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(6, 2, 11, 0.85);
+            backdrop-filter: blur(10px);
+            border-bottom: 2px dashed rgba(174, 123, 255, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo-art {
+            font-size: 1.5rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+            color: #fff;
+            text-shadow: 0 0 10px #ae7bff, 0 0 20px #ae7bff;
+        }
+
+        .btn-voltar {
+            color: #00ffcc;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            padding: 10px 20px;
+            border: 1px solid #00ffcc;
+            border-radius: 50px;
+            box-shadow: inset 0 0 10px rgba(0, 255, 204, 0.2);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .btn-voltar:hover {
+            color: #06020b;
+            background: #00ffcc;
+            box-shadow: 0 0 20px #00ffcc;
+            transform: scale(1.08);
+        }
+
+        .main-container {
+            max-width: 950px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.8s forwards ease-out;
+        }
+
+        @keyframes fadeInUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* ==========================================================================
+           2. INGRESSO FINO E ESTICADO NA LARGURA MÁXIMA
+           ========================================================================== */
+        .ticket-wrapper {
+            perspective: 1000px;
+            margin-bottom: 60px;
+            width: 100%;
+        }
+
+        .cinema-ticket {
+            background: #fff;
+            color: #1a0d29;
+            border-radius: 20px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            transform-style: preserve-3d;
+            transition: transform 0.1s ease;
+        }
+
+        .cinema-ticket::before, .cinema-ticket::after {
+            content: '';
+            position: absolute;
+            top: 75%;
+            width: 36px;
+            height: 36px;
+            background: #06020b;
+            border-radius: 50%;
+            z-index: 10;
+        }
+        .cinema-ticket::before { left: -18px; }
+        .cinema-ticket::after { right: -18px; }
+
+        .ticket-poster-area {
+            height: 240px;
+            position: relative;
+            overflow: hidden;
+            background: #000;
+        }
+
+        .ticket-poster-area img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center 25%;
+            filter: brightness(0.8);
+        }
+
+        .ticket-movie-title {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(11, 5, 18, 0.95));
+            padding: 20px 35px;
+        }
+
+        .ticket-movie-title h1 {
+            font-size: 3.8rem;
+            color: #00ffcc;
+            text-transform: uppercase;
+            font-style: italic;
+            font-weight: 900;
+            letter-spacing: 2px;
+            text-shadow: 3px 3px 0px #311155, 0 0 15px rgba(0, 255, 204, 0.5);
+        }
+
+        .ticket-tagline {
+            color: #ff3e6c;
+            font-size: 0.95rem;
+            font-weight: 700;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+        }
+
+        .ticket-body {
+            padding: 35px;
+            background: #fdfaf6;
+            border-top: 4px dashed #1a0d29;
+        }
+
+        .ticket-conversinha {
+            font-size: 1.05rem;
+            line-height: 1.6;
+            margin-bottom: 25px;
+            color: #3b2d4c;
+            font-weight: 500;
+        }
+
+        .ticket-info-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            border-top: 1px solid rgba(0,0,0,0.08);
+            padding-top: 25px;
+        }
+
+        .ticket-meta-box {
+            border-left: 3px solid #ff3e6c;
+            padding-left: 10px;
+        }
+
+        .ticket-meta-box label {
+            display: block;
+            font-size: 0.68rem;
+            text-transform: uppercase;
+            color: #8c76a5;
+            font-weight: bold;
+        }
+
+        .ticket-meta-box span {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #1a0d29;
+        }
+
+        .ticket-footer-barcode {
+            background: #fdfaf6;
+            padding: 10px 40px 25px;
+            text-align: center;
+            border-top: 2px dashed rgba(0,0,0,0.12);
+        }
+
+        .barcode-mock {
+            height: 40px;
+            background: linear-gradient(to right, 
+                #000 0% 3%, transparent 3% 5%, #000 5% 12%, transparent 12% 14%,
+                #000 14% 18%, transparent 18% 22%, #000 22% 32%, transparent 32% 34%,
+                #000 34% 38%, transparent 38% 44%, #000 44% 48%, transparent 48% 55%,
+                #000 55% 70%, transparent 70% 72%, #000 72% 82%, transparent 82% 85%, #000 85% 100%
+            );
+            opacity: 0.85;
+            margin-bottom: 8px;
+        }
+
+        /* ==========================================================================
+           3. TITULOS E CARROSSEL PELÍCULA 35MM
+           ========================================================================== */
+        .section-title {
+            font-size: 1.8rem;
+            margin: 50px 0 25px;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border-left: 6px solid #ff3e6c;
+            padding-left: 15px;
+        }
+
+        .filmstrip-container {
+            background: #111;
+            padding: 15px 0;
+            border-top: 10px dashed #252525;
+            border-bottom: 10px dashed #252525;
+            border-radius: 8px;
+            position: relative;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.8);
+        }
+
+        .carousel-view {
+            position: relative;
+            width: 100%;
+            height: 440px;
+            overflow: hidden;
+        }
+
+        .carousel-track {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .carousel-slide {
+            min-width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .carousel-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .carousel-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(6, 2, 11, 0.95) 0%, rgba(6, 2, 11, 0.3) 100%);
+            padding: 30px;
+        }
+
+        .carousel-overlay h4 { font-size: 1.3rem; color: #00ffcc; margin-bottom: 5px; }
+
+        .carousel-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 62, 108, 0.8);
+            border: none;
+            color: white;
+            width: 45px;
+            height: 45px;
+            cursor: pointer;
+            border-radius: 50%;
+            font-size: 1.3rem;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .arrow-left { left: 15px; }
+        .arrow-right { right: 15px; }
+
+        /* ==========================================================================
+           4. GRID DE 10 SEGREDOS COM IMAGENS LOCALIZADAS
+           ========================================================================== */
+        .curiosidades-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .critica-card {
+            background: rgba(26, 13, 41, 0.45);
+            border: 1px solid rgba(174, 123, 255, 0.12);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .critica-card:hover {
+            border-color: #00ffcc;
+            background: rgba(26, 13, 41, 0.75);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 255, 204, 0.15);
+        }
+
+        .card-img-wrapper {
+            width: 100%;
+            height: 220px; /* Deixei um tiquinho mais alto pro enquadramento ficar perfeito */
+            overflow: hidden;
+            background: #11071c;
+            border-bottom: 1px solid rgba(174, 123, 255, 0.15);
+        }
+
+        .card-img-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Preenche tudo e some com o fundo roxo */
+            object-position: top center; /* MÁGICA: Alinha pelo topo da foto pra não cortar a cabeça! */
+            transition: transform 0.4s;
+        }
+
+
+        .critica-card:hover .card-img-wrapper img {
+            transform: scale(1.05);
+        }
+
+        .card-content {
+            padding: 20px;
+            flex-grow: 1;
+        }
+
+        .rating-stars { color: #ffb703; margin-bottom: 10px; font-size: 0.9rem; }
+        .critica-card h4 { color: #fff; font-size: 1.1rem; margin-bottom: 8px; }
+        .critica-card p { color: #bfaecf; line-height: 1.5; font-size: 0.9rem; }
+
+        .video-box-centered {
+            background: #11071c;
+            border: 8px solid #1a0d29;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 500px;
+            height: 400px;
+            margin: 0 auto;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+        }
+        .video-box-centered iframe { width: 100%; height: 100%; border: none; }
+
+        @media (max-width: 768px) {
+            .ticket-info-grid { grid-template-columns: repeat(2, 1fr); }
+            .ticket-movie-title h1 { font-size: 2.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-art">🎬 STOPART CINE</div>
+        <a href="home.html" class="btn-voltar">← Sair da Sala</a>
+    </header>
+
+    <div class="main-container">
+
+        <!-- Ingresso Ajustado: Mesma largura dos elementos debaixo e mais fino -->
+        <div class="ticket-wrapper reveal">
+            <div class="cinema-ticket" id="parallaxTicket">
+                
+                <div class="ticket-poster-area">
+                    <img src="img/paranorman/paranorman-banner.jpg" alt="ParaNorman Universo">
+                    <div class="ticket-movie-title">
+                        <h1>ParaNorman</h1>
+                        <div class="ticket-tagline">Você não vira herói sendo normal</div>
+                    </div>
+                </div>
+
+                <div class="ticket-body">
+                    <p class="ticket-conversinha">
+                        Ei, prepare a pipoca! Você sabia que o Norman consegue bater um papo super de boa com os mortos? Pois é! Enquanto toda a cidade acha o coitado uma figura esquisita, ele se torna a última barreira física entre os vivos e uma horda de zumbis furiosos despertados por uma antiga maldição de bruxa de 300 anos atrás! 🧟‍♂️✨
+                    </p>
+                    
+                    <div class="ticket-info-grid">
+                        <div class="ticket-meta-box">
+                            <label>Estúdio Criador</label>
+                            <span>Laika Studios</span>
+                        </div>
+                        <div class="ticket-meta-box">
+                            <label>Técnica de Arte</label>
+                            <span>Stop-Motion 3D</span>
+                        </div>
+                        <div class="ticket-meta-box">
+                            <label>Tempo de Suor</label>
+                            <span>+3 Anos de Luta</span>
+                        </div>
+                        <div class="ticket-meta-box">
+                            <label>Aclamação</label>
+                            <span>Indicado ao Oscar</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ticket-footer-barcode">
+                    <div class="barcode-mock"></div>
+                    <small style="letter-spacing: 4px; font-weight: bold; font-size: 0.65rem; color: #555;">CINE-STOPART-2012-NORMAN</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Carrossel de Cenas com Caminhos Locais Corrigidos -->
+        <section class="reveal">
+            <h2 class="section-title"> behind the scenes </h2>
+            <div class="filmstrip-container">
+                <button class="carousel-arrow arrow-left" onclick="changeSlide(-1)">❮</button>
+                <button class="carousel-arrow arrow-right" onclick="changeSlide(1)">❯</button>
+                
+                <div class="carousel-view">
+                    <div class="carousel-track" id="movieTrack">
+                        <div class="carousel-slide">
+                            <img src="img/paranorman/paranorman-cenario-maquete.jpg" alt="Maquete Sets">
+                            <div class="carousel-overlay">
+                                <h4>Maquetes e Cenários em Escala Real</h4>
+                                <p>Toda a cidade de Blithe Hollow foi erguida fisicamente em galpões gigantes. Cada minúsculo tijolo recebeu pintura texturizada individual!</p>
+                            </div>
+                        </div>
+                        <div class="carousel-slide">
+                            <img src="img/paranorman/paranorman-bastidores-luz.jpg" alt="Luzes Teatro">
+                            <div class="carousel-overlay">
+                                <h4>Efeitos Práticos de Iluminação Teatral</h4>
+                                <p>Toda a luz verde fantasmagórica do filme é real! Mini spots de LED foram embutidos nos cenários físicos para criar o clima enevoado de terror.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Player do YouTube Centralizado e Menor -->
+        <section class="reveal">
+            <h2 class="section-title" style="border-left-color: #00ffcc;">🎬 Play nos Bastidores Oficiais</h2>
+            <div class="video-box-centered">
+                <iframe src="https://youtube.com" 
+                        title="ParaNorman Behind the Scenes" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                        referrerpolicy="strict-origin-when-cross-origin" 
+                        allowfullscreen>
+                </iframe>
+            </div>
+        </section>
+
+        <!-- Grade com Exatamente 10 Segredos Incríveis -->
+        <section class="reveal">
+            <h2 class="section-title" style="border-left-color: #ae7bff;">💡 10 Segredos Inacreditáveis de produção!</h2>
+            <div class="curiosidades-grid">
+                
+                <!-- Segredo 1 -->
+                <div class="critica-card">
+                    <div class="card-img-wrapper">
+                        <img src="img/paranorman/segredo-cabelo-norman.jpg" alt="Cabelo Norman">
+                    </div>
+                    <div class="card-content">
+                        <div class="rating-stars">⭐⭐⭐⭐⭐</div>
+                        <h4>1. Cabelo Humano Real!</h4>
+                        <p>O cabelo espetado do Norman foi feito com fios de cabelo humano real costurados à mão! Usaram arames de cobre internos revestidos de gel médico ultra-forte para mantê-lo congelado no ar.</p>
+                    </div>
+                </div>
+
+                <!-- Segredo 2 -->
+                <div class="critica-card">
+                    <div class="card-img-wrapper">
+                        <img src="img/paranorman/segredo-impressao-3d.jpg" alt="Expressões 3D">
+                    </div>
+                    <div class="card-content">
+                        <div class="rating-stars">⭐⭐⭐⭐⭐</div>
+                        <h4>2. Revolução Industrial 3D</h4>
+                        <p>Foi o primeiro longa da história a usar impressoras 3D coloridas de poeira de gesso para criar rostos. O Norman tinha 8.800 peças de expressões que se encaixavam na cabeça usando mini-ímãs!</p>
+                    </div>
+                </div>
+
+                <!-- Segredo 3 -->
+                <div class="critica-card">
+                    <div class="card-img-wrapper">
+                        <img src="img/paranorman/segredo-alta-costura.jpg" alt="Roupas Mini">
+                    </div>
+                    <div class="card-content">
+                        <div class="rating-stars">⭐⭐⭐⭐⭐</div>
+                        <h4>3. Alta Costura sob o Microscópio</h4>
+                        <p>Roupas normais ficariam duras e sem caimento nos bonecos. A equipe fiou linhas especiais finíssimas e usou agulhas cirúrgicas para costurar calças e jaquetas proporcionais à miniatura.</p>
+                    </div>
+                </div>
+
+                <!-- Segredo 4 -->
+                <div class="critica-card">
+                    <div class="card-img-wrapper">
+                        <img src="img/paranorman/segredo-pele-zumbi.jpg" alt="Zumbis Arte">
+                    </div>
+                    <div class="card-content">
+                        <div class="rating-stars">⭐⭐⭐⭐⭐</div>
+                        <h4>4. Pele de Silicone Fantasmagórica</h4>
+                        <p>Para os zumbis parecerem secos e antigos, os designers misturaram pó de silicone com texturas de marshmallow queimado e látex líquido para dar aquele efeito de pele rasgando.</p>
+                    </div>
+                </div>
+
+                <!-- Segredo 5 -->
+                <div class="critica-card">
+                    <div class="card-img-wrapper">
+                        <img src="img/paranorman/segredo-armadura-metal.jpg" alt="Esqueleto Interno">
+                    </div>
+                    <div class="card-content">
+                        <div class="rating-stars">⭐⭐⭐⭐⭐</div>
+                        <h4>5. Esqueletos Mecânicos Secretos</h4>
+                        <p>Por dentro de cada boneco há uma "armadura" articulada feita de juntas de metal cirúrgico de esferas. Isso garante que o boneco não saia da posição milimétrica enquanto a foto é batida.</p>
+                    </div>
+                </div>
+                <!-- Segredos 6 a 10 (Dinâmicos Sem Imagem para Equilíbrio) -->
+                <div class="critica-card">
+                    <div class="card-content">
+                        <div class="rating-stars">⭐⭐⭐⭐⭐</div>
+                        <h4>6. Maratona de Lentidão</h4>
+                        <p>A paciência é surreal: uma semana inteira de trabalho de um animador em um set isolado e escuro rendia apenas de 3 a 4 segundos de gravação para o filme final!</p>
+                    </div>
+                </div>
+
+                <div class="critica-card">
+                    <div class="card-content">
+                        <div class="rating-stars">⭐⭐⭐⭐⭐</div>
+                        <h4>7. Carros com Suspensão Real</h4>
+                        <p>A icônica van usada pelos adolescentes no filme tinha pneus de borracha infláveis reais e pequenas molas de metal na suspensão para tremer realisticamente a cada frame.</p>
+                    </div>
+                </div>
+
+                <div class="critica-card">
+                    <div class="card-content">
+                        <div class="rating-stars">⭐⭐⭐⭐⭐</div>
+                        <h4>8. Cenários de Papelão Nobre</h4>
+                        <p>As folhas das árvores de Blithe Hollow foram cortadas a laser uma a uma em folhas finas de cartolina importada e presas aos galhos por micro arames maleáveis.</p>
+                    </div>
+                </div>
+
+                <div class="critica-card">
+                    <div class="card-content">
+                        <div class="rating-stars">⭐⭐⭐⭐⭐</div>
+                        <h4>9. Sons Orgânicos</h4>
+                        <p>Para os barulhos dos passos dos zumbis arrastando os pés, os dubladores de efeitos andaram sobre sacos de areia molhada e cascas de ovos triturados no estúdio de áudio.</p>
+                    </div>
+                </div>
+
+                <div class="critica-card">
+                    <div class="card-content">
+                        <div class="rating-stars">⭐⭐⭐⭐⭐</div>
+                        <h4>10. 32 Meses de Flash</h4>
+                        <p>O filme demorou mais de 3 anos de produção contínua, batendo milhões de fotos digitais brutas com câmeras DSLR profissionais adaptadas antes da montagem final de cinema.</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </div>
+
+    <!-- Scripts de Interação (Parallax 3D e Carrossel) -->
+    <script>
+        // EFEITO MOUSE PARALLAX 3D
+        const ticket = document.getElementById('parallaxTicket');
+        if(ticket) {
+            ticket.addEventListener('mousemove', (e) => {
+                const rect = ticket.getBoundingClientRect();
+                const rotateX = ((e.clientY - rect.top) / rect.height - 0.5) * -12;
+                const rotateY = ((e.clientX - rect.left) / rect.width - 0.5) * 12;
+                ticket.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.01)`;
+            });
+            ticket.addEventListener('mouseleave', () => { ticket.style.transform = 'rotateX(0deg) rotateY(0deg) scale(1)'; });
+        }
+
+        // CONTROLE DO CARROSSEL
+        let indexAtivo = 0;
+        const totalSlides = document.querySelectorAll('.carousel-slide').length;
+        const trilhaDoCarrossel = document.getElementById('movieTrack');
+
+        function changeSlide(direcao) {
+            indexAtivo += direcao;
+            if (indexAtivo >= totalSlides) indexAtivo = 0;
+            if (indexAtivo < 0) indexAtivo = totalSlides - 1;
+            trilhaDoCarrossel.style.transform = `translateX(-${indexAtivo * 100}%)`;
+        }
+        setInterval(() => { changeSlide(1); }, 6000);
+    </script>
+</body>
+</html>
