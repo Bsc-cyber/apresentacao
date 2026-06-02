@@ -3,463 +3,754 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StopArt - Estúdio de Animação</title>
-    <!-- CONEXÃO PURA: Vincula unicamente a sua folha de estilos externa -->
-    <link rel="stylesheet" href="estudio.css">
-    <!-- Fontes do Google -->
-    <link rel="preconnect" href="https://googleapis.com">
-    <link rel="preconnect" href="https://gstatic.com" crossorigin>
-    <link href="https://googleapis.com/css2?family=Cinzel:wght@400;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>Stop Motion Portal - Estúdio Interativo Profissional</title>
     <style>
-        /* CSS EMBUTIDO COMPLEMENTAR EXCLUSIVO PARA FIXAR AS IMAGENS DO MANEQUIM */
-        .cinema-viewfinder-frame { position: relative; background: #0d0914; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.9); }
-        .stage-interactive-area { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; }
-        .marionette-puppet-rig { position: absolute; width: 140px; height: 260px; cursor: move; z-index: 50; transform-origin: center center; }
-        .marionette-puppet-rig.selecionado { outline: 2px dashed #a65df2; outline-offset: 6px; }
-        .puppet-piece { position: absolute; background-size: contain; background-repeat: no-repeat; background-position: center; }
+        /* ==========================================================================
+           PARTE 1: RESET DE ESTILOS E CHASSIS DO APP (CSS)
+           ========================================================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #08070b;
+            color: #e0e0e0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #0d0c12;
+            padding: 10px 30px;
+            border-bottom: 1px solid #1c1a24;
+        }
+
+        .logo {
+            font-weight: bold;
+            color: #fff;
+            letter-spacing: 1px;
+            font-size: 14px;
+        }
+        .logo span { color: #8b5cf6; }
+
+        .menu a {
+            color: #8c8a9e;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        .menu a.active, .menu a:hover {
+            color: #a78bfa;
+            border-bottom: 2px solid #a78bfa;
+            padding-bottom: 5px;
+        }
+
+        .user-profile { display: flex; align-items: center; gap: 10px; }
+        .avatar { width: 32px; height: 32px; background-color: #ff79c6; border-radius: 50%; }
+        .user-info { display: flex; flex-direction: column; font-size: 11px; }
+        .user-info .name { color: #fff; font-weight: bold; }
+        .user-info .role { color: #6b7280; }
+
+        .app-container {
+            display: grid;
+            grid-template-columns: 250px 1fr 290px;
+            gap: 15px;
+            padding: 15px;
+            flex: 1;
+        }
+
+        aside {
+            background-color: #0f0e15;
+            border: 1px solid #1c1a24;
+            border-radius: 8px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .section-title {
+            font-size: 11px;
+            color: #6c6a85;
+            font-weight: bold;
+            margin: 15px 0 8px 0;
+            letter-spacing: 0.5px;
+        }
+        /* ==========================================================================
+           PARTE 2: ESTILOS CSS - FERRAMENTAS PROFISSIONAIS E PALCO DE EDIÇÃO
+           ========================================================================== */
+        .btn-new-project {
+            width: 100%;
+            background-color: #6d28d9;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 5px;
+            transition: 0.2s;
+        }
+        .btn-new-project:hover { background-color: #5b21b6; }
         
-        /* Coordenadas Cirúrgicas: Obrigam as fotos a ignorarem os espaços em branco e grudarem na jaqueta */
-        .p-cabeca { top: 5px; left: 35px; width: 70px; height: 70px; z-index: 5; transform-origin: bottom center; }
-        .p-tronco { top: 68px; left: 40px; width: 60px; height: 100px; z-index: 3; transform-origin: center center; }
-        .p-braco-esq { top: 72px; left: 22px; width: 22px; height: 85px; z-index: 4; transform-origin: top center; }
-        .p-braco-dir { top: 72px; right: 22px; width: 22px; height: 85px; z-index: 4; transform-origin: top center; }
-        .p-perna-esq { top: 160px; left: 40px; width: 24px; height: 95px; z-index: 2; transform-origin: top center; }
-        .p-perna-dir { top: 160px; right: 40px; width: 24px; height: 95px; z-index: 2; transform-origin: top center; }
-        .scale-handle-canva { position: absolute; bottom: -6px; right: -6px; width: 12px; height: 12px; background: #ffffff; border: 2px solid #a65df2; border-radius: 2px; cursor: se-resize; z-index: 110; display: none; }
-        .marionette-puppet-rig.selecionado .scale-handle-canva { display: block; }
+        .btn-back { background: none; border: none; color: #8c8a9e; cursor: pointer; font-size: 12px; text-align: left; }
+
+        .project-list { list-style: none; max-height: 150px; overflow-y: auto; }
+        .project-item { display: flex; align-items: center; gap: 10px; padding: 8px; border-radius: 6px; margin-bottom: 5px; cursor: pointer; border: 1px solid transparent; }
+        .project-item.active { background-color: #1c1929; border: 1px solid #4c1d95; }
+        .project-item .thumb { width: 40px; height: 40px; background-color: #2e2a47; border-radius: 4px; }
+        .p-name { font-size: 12px; color: #fff; font-weight: 500; }
+        .p-time { font-size: 10px; color: #6c6a85; }
+        .empty-projects-msg { font-size: 11px; color: #4b4869; text-align: center; padding: 10px 0; font-style: italic; }
+
+        /* GRID TÉCNICA DE CONTROLADORES */
+        .tools-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; margin-bottom: 10px; }
+        .tool-btn {
+            background-color: #15141f;
+            border: 1px solid #272533;
+            color: #e0e0e0;
+            padding: 8px 4px;
+            text-align: center;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 10px;
+            font-weight: 600;
+            transition: 0.2s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+        }
+        .tool-btn:hover { background-color: #272533; border-color: #a78bfa; }
+        .tool-btn span { font-size: 13px; }
+        .tool-btn.active-mode { background-color: #4c1d95; border-color: #a78bfa; }
+
+        .main-content { display: flex; flex-direction: column; gap: 15px; }
+        .player-header { display: flex; justify-content: space-between; align-items: center; }
+        .player-header h2 { font-size: 16px; color: #fff; font-weight: 600; }
+        
+        .player-actions button {
+            background-color: #15141f;
+            border: 1px solid #272533;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 11px;
+            margin-left: 5px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .player-actions .btn-render { background-color: #6d28d9; border: none; transition: 0.2s; }
+        .player-actions .btn-render:hover { background-color: #5b21b6; }
+
+        .preview-screen { flex: 1; background-color: #111016; border: 1px solid #222030; border-radius: 8px; position: relative; min-height: 400px; background-size: cover; background-position: center; overflow: hidden; }
+        .placeholder-art { color: #8c8a9e; font-size: 13px; font-weight: bold; text-align: center; z-index: 1; pointer-events: none; position: absolute; width: 100%; top: 40%; padding: 0 20px; }
+        
+        /* ATOR/BONECO SELECIONÁVEL E AJUSTÁVEL */
+        .dragged-actor {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            cursor: move;
+            z-index: 10;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            user-select: none;
+            border: 1px dashed transparent;
+        }
+        .dragged-actor.selected-actor {
+            border-color: #a78bfa;
+            box-shadow: 0 0 8px rgba(167, 139, 250, 0.4);
+        }
+
+        .playback-bar { position: absolute; bottom: 0; width: 100%; background-color: rgba(11, 10, 15, 0.95); padding: 10px; text-align: center; font-size: 12px; border-top: 1px solid #222030; color: #a78bfa; z-index: 5; pointer-events: none; }
+
+        .timeline-container { background-color: #0f0e15; border: 1px solid #1c1a24; border-radius: 8px; padding: 15px; }
+        .timeline-header { display: flex; justify-content: space-between; font-size: 11px; color: #6c6a85; margin-bottom: 10px; font-weight: bold; }
+        .timeline-header button { background: none; border: none; color: #a78bfa; font-size: 11px; margin-left: 10px; cursor: pointer; font-weight: bold; }
+        
+        .timeline-track { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 10px; min-height: 65px; align-items: center; }
+        .frame-thumb { min-width: 65px; height: 48px; background-color: #232136; border-radius: 4px; border: 2px solid #3e3a57; cursor: pointer; background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; color: #6c6a85; font-size: 10px; font-weight: bold; }
+        .frame-thumb.active { border-color: #a78bfa; background-color: #3b2b59; color: #fff; }
+        
+        .audio-wave { background-color: #14121f; border: 1px dashed #6d28d9; color: #a78bfa; padding: 8px; font-size: 11px; text-align: center; border-radius: 4px; margin-top: 5px; }
+
+        .tabs { display: flex; justify-content: space-between; border-bottom: 1px solid #272533; padding-bottom: 8px; margin-bottom: 10px; }
+        .tabs span { font-size: 11px; color: #6c6a85; cursor: pointer; font-weight: bold; padding: 4px 8px; }
+        .tabs span.active { color: #a78bfa; border-bottom: 2px solid #a78bfa; }
+
+        .search-bar { width: 100%; background-color: #15141f; border: 1px solid #272533; color: white; padding: 8px; border-radius: 6px; font-size: 12px; margin-bottom: 10px; }
+        .assets-grid { display: none; grid-template-columns: 1fr 1fr; gap: 10px; max-height: 180px; overflow-y: auto; padding-bottom: 5px; }
+        .assets-grid.active-grid { display: grid; }
+        
+        .asset-card { background-color: #15141f; border: 1px solid #272533; border-radius: 6px; padding: 8px; text-align: center; font-size: 11px; cursor: pointer; transition: 0.2s; }
+        .asset-card:hover { border-color: #a78bfa; }
+        .asset-card.active { border-color: #6d28d9; background-color: #1c1929; }
+        .asset-thumb { width: 100%; height: 75px; background-color: #2a283e; border-radius: 4px; margin-bottom: 5px; background-size: contain; background-repeat: no-repeat; background-position: center; }
+
+        .btn-upload-asset { width: 100%; background-color: #1e1b30; color: #a78bfa; border: 1px dashed #6d28d9; padding: 8px; border-radius: 6px; font-size: 11px; font-weight: bold; cursor: pointer; margin-bottom: 10px; text-align: center; transition: 0.2s; }
+        .btn-upload-asset:hover { background-color: #2e264f; color: #fff; }
+
+        .view-all { display: block; font-size: 11px; color: #a78bfa; text-decoration: none; margin-top: 5px; }
+        .scene-configs { margin-top: auto; }
+        .config-row { display: flex; justify-content: space-between; font-size: 12px; padding: 6px 0; border-bottom: 1px solid #161522; }
+        .config-row span { color: #8c8a9e; }
+        .config-row b { color: #fff; }
+
+        .footer { display: flex; justify-content: space-between; background-color: #09080e; padding: 12px 20px; font-size: 11px; color: #4b4869; border-top: 1px solid #12111a; margin-top: auto; }
+        
+        .btn-fotografar { width: 100%; background-color: #fff; color: #000; border: none; padding: 12px; border-radius: 20px; font-weight: bold; font-size: 12px; cursor: pointer; margin-top: 10px; text-transform: uppercase; letter-spacing: 0.5px; transition: 0.2s; text-align: center; }
+        .btn-fotografar:hover { background-color: #e0e0e0; }
+        
+        .hidden-inputs { display: none; }
     </style>
 </head>
 <body>
+    <!-- ==========================================================================
+       PARTE 3: ESTRUTURA HTML - CONTROLADORES TÉCNICOS E DE AJUSTE VISUAL
+       ========================================================================== -->
+    <div class="hidden-inputs">
+        <input type="file" id="upload-bg-input" accept="image/*">
+        <input type="file" id="upload-actor-input" accept="image/*">
+        <input type="file" id="upload-object-input" accept="image/*">
+    </div>
 
-    <!-- BARRA SUPERIOR PREMIUM (NAVBAR COM LETREIRO DE STATUS DO RIG) -->
-    <header class="dash-header">
-        <div class="logo">STOP_ART <span>PORTAL</span></div>
-        <div class="studio-status" style="margin-left: 30px; display: flex; align-items: center;">
-            <div class="live-indicator">● RIG ACESSÍVEL</div>
-            <span id="txt-selecionado" style="font-size: 0.72rem; color: #958d9c; font-weight: bold; font-family: monospace;">ALVO: NENHUM</span>
-        </div>
-        <nav class="header-center-nav" style="margin-left: auto; margin-right: 30px;">
-            <a href="home.html">DASHBOARD</a>
-            <a href="aulas-info.html">MINHAS AULAS</a>
-            <a href="jogos.html">SALAS DE JOGOS</a>
+    <!-- 1. BARRA SUPERIOR DE NAVEGAÇÃO -->
+    <header class="navbar">
+        <div class="logo">STOP_MOTION <span>PROFESSIONAL</span></div>
+        <nav class="menu">
+            <a href="#">INÍCIO</a>
+            <a href="#">AULAS</a>
             <a href="#" class="active">ESTÚDIO</a>
-            <a href="#">PROJETOS</a>
-            <a href="#">CONQUISTAS</a>
+            <a href="#">GALERIA</a>
             <a href="#">COMUNIDADE</a>
         </nav>
+        <div class="user-profile">
+            <div class="avatar"></div>
+            <div class="user-info">
+                <span class="name">Bianca Oliveira</span>
+                <span class="role">Criador Iniciante</span>
+            </div>
+        </div>
     </header>
 
-    <!-- AREA DE TRABALHO DO PORTAL (GRID COMPACTO DE EDICÃO) -->
-    <div class="studio-workspace-container">
-        
-        <!-- SIDEBAR DE CONTROLE DE CAMADAS E FERRAMENTAS (ESQUERDA) -->
-        <aside class="studio-sidebar-left">
-            <button class="btn-studio-back" onclick="window.location.href='home.html'">← SAIR DO ESTÚDIO</button>
-            <div class="studio-tools-box">
-                <h3>ORGANIZAÇÃO</h3>
-                <div class="tools-grid-icons">
-                    <button class="tool-icon-btn active" title="Mover Elemento" id="tool-mover" onclick="mudarFerramenta('mover')">✛</button>
-                    <button class="tool-icon-btn" title="Rotacionar Junta" id="tool-girar" onclick="mudarFerramenta('girar')">↻</button>
-                    <button class="tool-icon-btn" title="Trazer para Frente" onclick="alterarCamada('frente')">🔼</button>
-                    <button class="tool-icon-btn" title="Enviar para Trás" onclick="alterarCamada('tras')">🔽</button>
-                    <button class="tool-icon-btn" style="color: #f25d5d;" title="Excluir do Cenário" onclick="excluirObjetoSelecionado()">🗑️</button>
-                </div>
-                <div class="tool-toggle-row">
-                    <label><input type="checkbox" id="onion-skin-toggle" checked onchange="toggleOnionSkin()"> Exibir Sombra Anterior (Onion Skin)</label>
-                </div>
+    <div class="app-container">
+        <!-- 2. PAINEL ESQUERDO (PROJETOS E CAPTURA/EDIÇÃO) -->
+        <aside class="sidebar-left">
+            <button class="btn-back">← VOLTAR</button>
+            <button class="btn-new-project" id="btn-add-project">+ NOVO PROJETO</button>
+            
+            <div class="section-title">MEUS PROJETOS</div>
+            <ul class="project-list" id="project-list-container">
+                <p class="empty-projects-msg" id="empty-msg">Nenhum projeto ativo. Clique acima para começar!</p>
+            </ul>
+
+            <!-- CONTROLES TÉCNICOS PROFISSIONAIS -->
+            <div class="section-title">CONTROLES DE ANIMAÇÃO</div>
+            <div class="tools-grid">
+                <div class="tool-btn" id="tool-live" title="Visão ao vivo da câmera"><span>📺</span>LIVE VIEW</div>
+                <div class="tool-btn" id="tool-onion" title="Efeito casca de cebola"><span>🧅</span>ONION SKIN</div>
+                <div class="tool-btn" id="tool-delete-frame" title="Apagar Quadro Atual"><span>🗑️</span>APAGAR FRM</div>
+            </div>
+
+            <!-- NOVAS FERRAMENTAS DE AJUSTE DA IMAGEM DO CANVA -->
+            <div class="section-title">AJUSTE DO BONECO (CANVA)</div>
+            <div class="tools-grid">
+                <div class="tool-btn" id="mode-scale-up" title="Aumentar Tamanho"><span>➕</span>AUMENTAR</div>
+                <div class="tool-btn" id="mode-scale-down" title="Diminuir Tamanho"><span>➖</span>DIMINUIR</div>
+                <div class="tool-btn" id="mode-rotate" title="Girar o Boneco"><span>🔄</span>ROTACIONAR</div>
+                <div class="tool-btn" id="tool-delete-actor" title="Remover da Tela"><span>❌</span>EXCLUIR</div>
             </div>
         </aside>
 
-        <!-- CONTAINER DO PALCO CENTRAL -->
-        <main class="studio-center-stage">
-            <div class="studio-top-controls-bar">
-                <div class="project-title-zone">
-                    <h2>Aventura na Floresta ✏️</h2>
-                    <span>● Alterações salvas</span>
-                </div>
-                <div class="action-bar-buttons">
-                    <button class="btn-secondary-studio" onclick="exportarFilme()">📤 DOWNLOAD .MP4</button>
-                </div>
-            </div>
-
-            <!-- O VISOR DE CINEMA RECONFIGURADO PARA CAMADAS ABSOLUTAS -->
-            <div class="cinema-viewfinder-frame" id="viewfinder-box">
-                <!-- Camada Inferior: Sombra Fantasma (Onion Skin) -->
-                <div class="stage-interactive-area" id="onion-skin-layer" style="opacity: 0.15; pointer-events: none;"></div>
-                
-                <!-- Camada Central: Tabuleiro Interativo de Trabalho Principal -->
-                <div class="stage-interactive-area" id="interactive-stage-plate"></div>
-                
-                <div class="canvas-effect-overlay" id="effect-overlay"></div>
-            </div>
-
-            <!-- HUD DOS CONTROLES DO FILME -->
-            <div class="player-hud-dashboard">
-                <div class="hud-playback-buttons">
-                    <button class="hud-control-btn" onclick="reiniciarPlayer()">Reiniciar ⏮</button>
-                    <button class="hud-control-btn" id="play-pause-btn" onclick="togglePlayAnimaçao()">▶ Assistir</button>
-                </div>
-                
-                <div class="hud-timecode-display">
-                    <span id="hud-timer">00:00:00</span>
-                    <span class="hud-divider">|</span>
-                    <span id="hud-frame-count">00000</span>
-                    <span class="hud-divider">|</span>
-                    <span class="fps-tag" id="current-fps-hud">24 FPS</span>
-                </div>
-
-                <button class="btn-shutter-capture" onclick="capturarFrameAtual()">📸 FOTOGRAFAR FRAME</button>
-            </div>
-            <!-- SELEÇÃO DE FILTROS DE ILUMINAÇÃO AND TRILHAS SONORAS -->
-            <div class="studio-effects-row">
-                <div class="effect-select-group">
-                    <label>🎬 FILTRO DE ILUMINAÇÃO:</label>
-                    <select id="filter-selector" onchange="aplicarFiltroCena(this.value)">
-                        <option value="padrao">Padrão Sem Efeitos</option>
-                        <option value="escuro">Escuro Misterioso</option>
-                        <option value="antigo">Cinema Antigo (P&B Vintage)</option>
-                        <option value="claro">Luz Alta Clara</option>
-                        <option value="nevando">Nevasca Gótica</option>
-                        <option value="fantasma">Efeito Fantasma Espectral</option>
-                    </select>
-                </div>
-                <div class="effect-select-group">
-                    <label>🎵 TRILHA SONORA:</label>
-                    <select id="audio-selector" onchange="alternarAudioAmbiente(this.value)">
-                        <option value="nenhum">Sem Áudio de Fundo</option>
-                        <option value="floresta">Floresta Sombria (Vento)</option>
-                        <option value="chuva">Chuva Gótica e Trovões</option>
-                        <option value="engrenagem">Oficina de Engrenagens</option>
-                    </select>
+        <!-- 3. ÁREA CENTRAL -->
+        <main class="main-content">
+            <div class="player-header">
+                <h2 id="current-project-title">Nenhum projeto selecionado</h2>
+                <div class="player-actions">
+                    <button class="btn-config">⚙️ CONFIGURAÇÕES</button>
+                    <button class="btn-export">📤 EXPORTAR</button>
+                    <button class="btn-render" id="btn-play-animation">RENDERIZAR ▶</button>
                 </div>
             </div>
 
-            <!-- LINHA DO TEMPO HORIZONTAL (FOTOS DO DIRETOR) -->
-            <div class="studio-timeline-footer">
-                <div class="timeline-header-actions">
-                    <span>SEUS QUADROS CAPTURADOS</span>
-                    <div class="timeline-buttons-group">
-                        <button onclick="adicionarFrameVazio()">➕ ADICIONAR QUADRO</button>
-                        <button style="color: #f25d5d;" onclick="deletarFrameSelecionado()">✕ EXCLUIR QUADRO</button>
+            <div class="preview-screen" id="video-player">
+                <div class="placeholder-art" id="player-placeholder-text">Crie um projeto, importe seus arquivos do Canva e selecione um boneco para ajustá-lo ou movê-lo!</div>
+                <div class="playback-bar">
+                    <span id="live-playback-counter">▶ ⏸ ⏳ 00:00:00 | 00000 | 24 FPS</span>
+                </div>
+            </div>
+
+            <div class="timeline-container">
+                <div class="timeline-header">
+                    <span>LINHA DO TEMPO</span>
+                    <div>
+                        <button id="btn-add-frame-header">➕ ADICIONAR QUADRO</button>
                     </div>
                 </div>
-                <div class="timeline-frames-track" id="frames-container-track">
-                    <div class="empty-timeline-msg" id="empty-timeline-hint">Nenhum frame fotografado. Use o botão roxo acima para criar o seu curta!</div>
-                </div>
+                <div class="timeline-track" id="timeline-track-container"></div>
+                <div class="audio-wave">📊 Waveform do Áudio (Linha Roxa)</div>
             </div>
         </main>
 
-        <!-- COLUNA DIREITA: CATALOGO DE ATIVOS (CENÁRIOS, BONECOS E PROPRIEDADES) -->
-        <aside class="studio-sidebar-right">
-            <div class="studio-tabs-header">
-                <button class="tab-btn active" id="btn-tab-cenarios" onclick="alternarAbaCatalogo('cenarios')">CENÁRIOS</button>
-                <button class="tab-btn" id="btn-tab-personagens" onclick="alternarAbaCatalogo('personagens')">PERSONAGENS</button>
-                <button class="tab-btn" id="btn-tab-objetos" onclick="alternarAbaCatalogo('objetos')">OBJETOS</button>
+        <!-- 4. PAINEL DIREITO -->
+        <aside class="sidebar-right">
+            <div class="tabs" id="library-tabs-header">
+                <span class="active" data-tab="personagens">PERSONAGENS</span>
+                <span data-tab="cenarios">CENÁRIOS</span>
+                <span data-tab="objetos">OBJETOS</span>
+            </div>
+            
+            <input type="text" class="search-bar" placeholder="Buscar na biblioteca...">
+
+            <div id="wrapper-personagens" class="tab-wrapper" style="display: block;">
+                <button class="btn-upload-asset" id="trigger-actor-upload">📂 IMPORTAR DO CANVA (+)</button>
+                <div class="assets-grid active-grid" id="grid-personagens"></div>
             </div>
 
-            <div class="assets-scroll-zone">
-                <!-- CENÁRIOS GRÁFICOS (DIA / NOITE) -->
-                <div class="assets-tab-content active" id="tab-cenarios">
-                    <div class="asset-grid-item selected" onclick="mudarCenarioPlano('dia')">
-                        <div class="asset-preview-box" style="background: #1a102f;">☀️</div>
-                        <span>Floresta - Dia</span>
-                    </div>
-                    <div class="asset-grid-item" onclick="mudarCenarioPlano('noite')">
-                        <div class="asset-preview-box" style="background: #030106;">🌙</div>
-                        <span>Floresta - Noite</span>
-                    </div>
-                </div>
-
-                <!-- PERSONAGENS TOTALMENTE ARTICULADOS -->
-                <div class="assets-tab-content" id="tab-personagens">
-                    <div class="asset-grid-item" onclick="spawnarAtivoDOM('coraline')">
-                        <div class="asset-preview-box">🧵</div>
-                        <span>Coraline Rig</span>
-                    </div>
-                </div>
-
-                <!-- OBJETOS MULTICAMADAS COM ALÇA DE REDIMENSIONAMENTO -->
-                <div class="assets-tab-content" id="tab-objetos">
-                    <div class="asset-grid-item" onclick="spawnarAtivoDOM('cadeira')">
-                        <div class="asset-preview-box">🪑</div>
-                        <span>Cadeira Gótica</span>
-                    </div>
-                    <div class="asset-grid-item" onclick="spawnarAtivoDOM('balao')">
-                        <div class="asset-preview-box">🎈</div>
-                        <span>Balão</span>
-                    </div>
-                    <div class="asset-grid-item" onclick="spawnarAtivoDOM('nuvens')">
-                        <div class="asset-preview-box">☁️</div>
-                        <span>Nuvens</span>
-                    </div>
-                    <div class="asset-grid-item" onclick="spawnarAtivoDOM('flor')">
-                        <div class="asset-preview-box">🌹</div>
-                        <span>Flor</span>
-                    </div>
-                </div>
+            <div id="wrapper-cenarios" class="tab-wrapper" style="display: none;">
+                <button class="btn-upload-asset" id="trigger-bg-upload">🖼️ IMPORTAR CENÁRIO (+)</button>
+                <div class="assets-grid" id="grid-cenarios"></div>
             </div>
 
-            <!-- REGULAÇÃO DE VELOCIDADE (FPS COM AS 5 OPÇÕES REAIS PEDIDAS) -->
-            <div class="studio-config-panel-base">
-                <h3>VELOCIDADE DA ANIMAÇÃO</h3>
-                <div class="config-select-row">
-                    <label>⏱️ Configurar FPS:</label>
-                    <select id="fps-selector" onchange="ajustarVelocidadeFrames(this.value)">
-                        <option value="2">2 FPS (Câmera Super Lenta)</option>
-                        <option value="6">6 FPS (Passo a Passo Devagar)</option>
-                        <option value="12">12 FPS (Movimento Artesanal)</option>
-                        <option value="24" selected>24 FPS (Cinema Padrão)</option>
-                        <option value="30">30 FPS (Fluidez Máxima Digital)</option>
-                    </select>
-                </div>
-                <div class="config-select-row">
-                    <label>⏳ Tempo do Quadro:</label>
-                    <span id="frame-duration-label" style="color: var(--neon-hover); font-weight: bold;">0.04s</span>
-                </div>
+            <div id="wrapper-objetos" class="tab-wrapper" style="display: none;">
+                <button class="btn-upload-asset" id="trigger-object-upload">🏺 IMPORTAR OBJETO (+)</button>
+                <div class="assets-grid" id="grid-objetos"></div>
+            </div>
+
+            <button class="btn-fotografar" id="btn-click-snapshot">Fotografar</button>
+
+            <div class="scene-configs">
+                <div class="section-title">CONFIGURAÇÕES DA CENA</div>
+                <div class="config-row"><span>Resolução</span> <b>1920x1080</b></div>
+                <div class="config-row"><span>FPS</span> <b>24 FPS</b></div>
             </div>
         </aside>
     </div>
 
-    <!-- DRIVERS DE ÁUDIO DE ESTÚDIO -->
-    <audio id="sound-floresta" loop><source src="https://mixkit.co" type="audio/wav"></audio>
-    <audio id="sound-chuva" loop><source src="https://mixkit.co" type="audio/wav"></audio>
-    <audio id="sound-engrenagem" loop><source src="https://mixkit.co" type="audio/wav"></audio>
-
-    <!-- JAVASCRIPT: NOVO MOTOR DE FLUIDEZ HORIZONTAL E CAMADAS ABSOLUTAS -->
+    <footer class="footer">
+        <p>© 2026 STOP_MOTION PROFESSIONAL | Todos os direitos reservados.</p>
+    </footer>
+    <!-- ==========================================================================
+       PARTE 4: MOTOR EM JAVASCRIPT - PROJETOS, ABAS E IMPORTAÇÃO DO CANVA (CORRIGIDA)
+       ========================================================================== -->
     <script>
-        const palcoPrincipal = document.getElementById('interactive-stage-plate');
-        const camadaOnionSkin = document.getElementById('onion-skin-layer');
-        const overlayEfeito = document.getElementById('effect-overlay');
-        const txtSelecionado = document.getElementById('txt-selecionado');
-        const visorBox = document.getElementById('viewfinder-box');
+        // --- BANCO DE DADOS E ESTADOS DO SOFTWARE ---
+        let projetosExistentes = {};
+        let idProjetoAtivo = null;
+        let idAtorSelecionado = null; 
+        let contadorProjetos = 1;
+        let intervaloAnimacao = null;
+        let tocandoVideo = false;
+        let frameAtualExecucao = 0;
 
-        let framesSalvos = [];
-        let frameAtivoIndex = -1;
-        let listaElementosEmCena = [];
-        let elementoSelecionado = null;
+        // Elementos Mapeados do DOM
+        const btnAddProject = document.getElementById('btn-add-project');
+        const projectListContainer = document.getElementById('project-list-container');
+        const emptyMsg = document.getElementById('empty-msg');
+        const projectTitle = document.getElementById('current-project-title');
         
-        let ferramentaAtual = 'mover'; // 'mover' ou 'girar'
-        let cenarioNome = 'dia';
-        let fpsVelocidade = 24;
-        let playIntervalo = null;
-        let ativarSombraOnion = true;
-        let juntaSelecionadaNome = 'tronco';
+        const trackContainer = document.getElementById('timeline-track-container');
+        const videoPlayer = document.getElementById('video-player');
+        const playerText = document.getElementById('player-placeholder-text');
+        const playbackCounter = document.getElementById('live-playback-counter');
+        const btnPlay = document.getElementById('btn-play-animation');
+        const btnAddFrame = document.getElementById('btn-add-frame-header');
+        const btnSnapshot = document.getElementById('btn-click-snapshot');
 
-        // Configuração estrutural estável com os recortes reais do Canva da Coraline
-        const bibliotecaModelos = {
-            coraline: { tipo: 'personagem', width: 150, height: 280, htmlStr: `
-                <div class="puppet-piece p-cabeca" style="background-image: url('assets/coraline_cabeca.png');"></div>
-                <div class="puppet-piece p-tronco" style="background-image: url('assets/coraline_tronco.png');"></div>
-                <div class="puppet-piece p-braco-esq" style="background-image: url('assets/coraline_braco_esq.png');"></div>
-                <div class="puppet-piece p-braco-dir" style="background-image: url('assets/coraline_braco_dir.png');"></div>
-                <div class="puppet-piece p-perna-esq" style="background-image: url('assets/coraline_perna_esq.png');"></div>
-                <div class="puppet-piece p-perna-dir" style="background-image: url('assets/coraline_perna_dir.png');"></div>
-            `},
-            cadeira: { tipo: 'objeto', width: 100, height: 160, htmlStr: '<div style="font-size:4.5rem; width:100%; height:100%; display:flex; align-items:center; justify-content:center;">🪑</div>' },
-            balao: { tipo: 'objeto', width: 90, height: 170, htmlStr: '<div style="font-size:4.5rem; width:100%; height:100%; display:flex; align-items:center; justify-content:center;">🎈</div>' },
-            nuvens: { tipo: 'objeto', width: 220, height: 110, htmlStr: '<div style="font-size:5rem; width:100%; height:100%; display:flex; align-items:center; justify-content:center; opacity:0.8;">☁️</div>' },
-            flor: { tipo: 'objeto', width: 80, height: 120, htmlStr: '<div style="font-size:3.5rem; width:100%; height:100%; display:flex; align-items:center; justify-content:center;">🌹</div>' }
+        // Controles de Animação e Edição (Esquerda)
+        const toolLive = document.getElementById('tool-live');
+        const toolOnion = document.getElementById('tool-onion');
+        const toolDeleteFrame = document.getElementById('tool-delete-frame');
+        const btnScaleUp = document.getElementById('mode-scale-up');
+        const btnScaleDown = document.getElementById('mode-scale-down');
+        const btnRotate = document.getElementById('mode-rotate');
+        const btnDeleteActor = document.getElementById('tool-delete-actor');
+
+        // Inputs e Gatilhos de Arquivos
+        const inputBg = document.getElementById('upload-bg-input');
+        const inputActor = document.getElementById('upload-actor-input');
+        const inputObject = document.getElementById('upload-object-input');
+        const btnTriggerBg = document.getElementById('trigger-bg-upload');
+        const btnTriggerActor = document.getElementById('trigger-actor-upload');
+        const btnTriggerObject = document.getElementById('trigger-object-upload');
+
+        const tabs = document.querySelectorAll('#library-tabs-header span');
+
+        // --- 1. SEÇÃO DE CRIAÇÃO E GERENCIAMENTO DE PROJETOS ---
+        btnAddProject.onclick = () => {
+            let nomeInput = prompt("Digite o nome do seu novo filme:", `Meu Filme ${contadorProjetos}`);
+            if (!nomeInput) return;
+
+            let idNovo = 'proj_' + Date.now();
+            projetosExistentes[idNovo] = {
+                nome: nomeInput,
+                frames: [],
+                frameSelecionado: 0,
+                cenarioFundo: '',
+                atoresNaTela: []
+            };
+
+            if (emptyMsg) emptyMsg.style.display = 'none';
+
+            const novoItem = document.createElement('li');
+            novoItem.className = 'project-item';
+            novoItem.setAttribute('data-id', idNovo);
+            novoItem.innerHTML = `
+                <div class="thumb"></div>
+                <div>
+                    <p class="p-name">${nomeInput}</p>
+                    <p class="p-time">Modificado agora mesmo</p>
+                </div>
+            `;
+
+            projectListContainer.appendChild(novoItem);
+            contadorProjetos++;
+
+            novoItem.onclick = () => {
+                document.querySelectorAll('.project-item').forEach(li => li.classList.remove('active'));
+                novoItem.classList.add('active');
+                ativarProjeto(idNovo);
+            };
+
+            novoItem.click();
         };
 
-        // INJETOR DINÂMICO DE ELEMENTOS EM CAMADAS ABSOLUTAS DO DOM
-        function renderizarPalcoDOM() {
-            palcoPrincipal.innerHTML = '';
+        // CORREÇÃO DO NOME DA FUNÇÃO AQUI: de 'activarProjeto' para 'ativarProjeto'
+        function ativarProjeto(id) {
+            if (tocandoVideo) pararAnimacao();
+            idProjetoAtivo = id;
+            idAtorSelecionado = null;
+            let proj = projetosExistentes[id];
+            projectTitle.textContent = `${proj.nome}`;
             
-            listaElementosEmCena.forEach(el => {
-                const divRig = document.createElement('div');
-                divRig.className = `marionette-puppet-rig ${elementoSelecionado === el ? 'selecionado' : ''}`;
-                divRig.style.width = el.width + 'px';
-                divRig.style.height = el.height + 'px';
-                divRig.style.left = el.x + 'px';
-                divRig.style.top = el.y + 'px';
-                divRig.style.transform = `rotate(${el.angle}deg)`;
-                divRig.innerHTML = el.htmlStr + '<div class="scale-handle-canva"></div>';
-
-                if (el.tipo === 'personagem') {
-                    setTimeout(() => {
-                        const cab = divRig.querySelector('.p-cabeca');
-                        const corp = divRig.querySelector('.p-tronco');
-                        const brE = divRig.querySelector('.p-braco-esq');
-                        const brD = divRig.querySelector('.p-braco-dir');
-                        const peE = divRig.querySelector('.p-perna-esq');
-                        const peD = divRig.querySelector('.p-perna-dir');
-
-                        if(cab) cab.style.transform = `rotate(${el.juntas.cabeca}deg)`;
-                        if(corp) corp.style.transform = `rotate(${el.juntas.tronco}deg)`;
-                        if(brE) brE.style.transform = `rotate(${el.juntas.bracoE}deg)`;
-                        if(brD) brD.style.transform = `rotate(${el.juntas.bracoD}deg)`;
-                        if(peE) peE.style.transform = `rotate(${el.juntas.pernaE}deg)`;
-                        if(peD) peD.style.transform = `rotate(${el.juntas.pernaD}deg)`;
-                    }, 0);
-                }
-                // CONTROLES DE ARRASTE, ROTAÇÃO E ESCALA DO CANVA COMPACTO
-                divRig.addEventListener('mousedown', (e) => {
-                    e.stopPropagation();
-                    elementoSelecionado = el;
-                    
-                    if (e.target.classList.contains('scale-handle-canva')) {
-                        let startW = el.width, startH = el.height, startX = e.clientX, startY = e.clientY;
-                        function doScale(ev) {
-                            let nw = startW + (ev.clientX - startX), nh = startH + (ev.clientY - startY);
-                            if (nw > 40 && nh > 40) { el.width = nw; el.height = nh; renderizarPalcoDOM(); }
-                        }
-                        function stopScale() { document.removeEventListener('mousemove', doScale); }
-                        document.addEventListener('mousemove', doScale); document.addEventListener('mouseup', stopScale);
-                        return;
-                    }
-
-                    if (el.tipo === 'personagem' && ferramentaAtual === 'girar') {
-                        let cls = e.target.className; juntaSelecionadaNome = 'tronco';
-                        if (cls.includes('p-cabeca')) juntaSelecionadaNome = 'cabeca';
-                        else if (cls.includes('p-braco-esq')) juntaSelecionadaNome = 'bracoE';
-                        else if (cls.includes('p-braco-dir')) juntaSelecionadaNome = 'bracoD';
-                        else if (cls.includes('p-perna-esq')) juntaSelecionadaNome = 'pernaE';
-                        else if (cls.includes('p-perna-dir')) juntaSelecionadaNome = 'pernaD';
-
-                        function doRotate(ev) { el.juntas[juntaSelecionadaNome] += ev.movementX * 1.5; renderizarPalcoDOM(); }
-                        function stopRotate() { document.removeEventListener('mousemove', doRotate); }
-                        document.addEventListener('mousemove', doRotate); document.addEventListener('mouseup', stopRotate);
-                        return;
-                    }
-
-                    let sX = e.clientX - el.x, sY = e.clientY - el.y;
-                    function doMove(ev) {
-                        if (ferramentaAtual === 'mover') { el.x = ev.clientX - sX; el.y = ev.clientY - sY; }
-                        else { el.angle += ev.movementX * 1.2; }
-                        renderizarPalcoDOM();
-                    }
-                    function stopMove() { document.removeEventListener('mousemove', doMove); }
-                    document.addEventListener('mousemove', doMove); document.addEventListener('mouseup', stopMove);
-                });
-                palcoPrincipal.appendChild(divRig);
-            });
-            if (elementoSelecionado) {
-                txtSelecionado.innerText = `ALVO: ${elementoSelecionado.nome.toUpperCase()} (${juntaSelecionadaNome.toUpperCase()})`;
-            } else { txtSelecionado.innerText = 'ALVO: NENHUM'; }
-
-            // 2. DESENHA A CASCA DE CEBOLA (ONION SKIN) NA CAMADA INFERIOR
-            camadaOnionSkin.innerHTML = '';
-            if (ativarSombraOnion && framesSalvos.length > 0 && frameAtivoIndex === -1) {
-                framesSalvos[framesSalvos.length - 1].elementos.forEach(oldEl => {
-                    const cloneNode = document.createElement('div');
-                    cloneNode.className = 'marionette-puppet-rig';
-                    cloneNode.style.width = oldEl.width + 'px'; cloneNode.style.height = oldEl.height + 'px';
-                    cloneNode.style.left = oldEl.x + 'px'; cloneNode.style.top = oldEl.y + 'px';
-                    cloneNode.style.transform = `rotate(${oldEl.angle}deg)`;
-                    cloneNode.innerHTML = oldEl.htmlStr;
-                    
-                    if (oldEl.tipo === 'personagem') {
-                        setTimeout(() => {
-                            const cab = cloneNode.querySelector('.p-cabeca');
-                            const corp = cloneNode.querySelector('.p-tronco');
-                            const brE = cloneNode.querySelector('.p-braco-esq');
-                            const brD = cloneNode.querySelector('.p-braco-dir');
-                            const peE = cloneNode.querySelector('.p-perna-esq');
-                            const peD = cloneNode.querySelector('.p-perna-dir');
-                            if(cab) cab.style.transform = `rotate(${oldEl.juntas.cabeca}deg)`;
-                            if(corp) corp.style.transform = `rotate(${oldEl.juntas.tronco}deg)`;
-                            if(brE) brE.style.transform = `rotate(${oldEl.juntas.bracoE}deg)`;
-                            if(brD) brD.style.transform = `rotate(${oldEl.juntas.bracoD}deg)`;
-                            if(peE) peE.style.transform = `rotate(${oldEl.juntas.pernaE}deg)`;
-                            if(peD) peD.style.transform = `rotate(${oldEl.juntas.pernaD}deg)`;
-                        }, 0);
-                    }
-                    camadaOnionSkin.appendChild(cloneNode);
-                });
+            limparAtoresDoPalco();
+            if (proj.cenarioFundo) {
+                videoPlayer.style.backgroundImage = `url('${proj.cenarioFundo}')`;
+                playerText.style.display = 'none';
+            } else {
+                videoPlayer.style.backgroundImage = 'none';
+                playerText.style.display = 'block';
+                playerText.textContent = "Abra a aba 'CENÁRIOS' à direita e importe seu fundo do Canva para começar!";
             }
+            
+            proj.atoresNaTela.forEach(ator => criarElementoAtorNoPalco(ator.id, ator.img, ator.x, ator.y, ator.size, ator.rot));
+            renderizarLinhaDoTempo();
         }
 
-        function spawnarAtivoDOM(idAtivo) {
-            const modelo = bibliotecaModelos[idAtivo];
-            listaElementosEmCena.push({
-                id: Date.now(), nome: idAtivo, tipo: modelo.tipo, htmlStr: modelo.htmlStr,
-                width: modelo.width, height: modelo.height, x: 350, y: 100, angle: 0,
-                juntas: { cabeca: 0, tronco: 0, bracoE: 15, bracoD: -15, pernaE: 0, pernaD: 0 }
-            });
-            renderizarPalcoDOM();
+        // --- 2. GERENCIADOR DE ABAS DA BIBLIOTECA ---
+        tabs.forEach(tab => {
+            tab.onclick = () => {
+                tabs.forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-wrapper').forEach(w => w.style.display = 'none');
+                document.querySelectorAll('.assets-grid').forEach(g => g.classList.remove('active-grid'));
+                
+                tab.classList.add('active');
+                const idGrid = tab.getAttribute('data-tab');
+                
+                document.getElementById(`wrapper-${idGrid}`).style.display = 'block';
+                document.getElementById(`grid-${idGrid}`).classList.add('active-grid');
+            };
+        });
+
+        btnTriggerBg.onclick = () => { if(verificarProjeto()) inputBg.click(); };
+        btnTriggerActor.onclick = () => { if(verificarProjeto()) inputActor.click(); };
+        btnTriggerObject.onclick = () => { if(verificarProjeto()) inputObject.click(); };
+
+        function verificarProjeto() {
+            if (!idProjetoAtivo) { alert("Por favor, crie ou selecione um projeto na esquerda antes de importar mídias!"); return false; }
+            return true;
         }
 
-        function alterarCamada(dir) {
-            if (!elementoSelecionado) return;
-            const idx = listaElementosEmCena.indexOf(elementoSelecionado);
-            if (dir === 'frente' && idx < listaElementosEmCena.length - 1) {
-                [listaElementosEmCena[idx], listaElementosEmCena[idx+1]] = [listaElementosEmCena[idx+1], listaElementosEmCena[idx]];
-            } else if (dir === 'tras' && idx > 0) {
-                [listaElementosEmCena[idx], listaElementosEmCena[idx-1]] = [listaElementosEmCena[idx-1], listaElementosEmCena[idx]];
-            }
-            renderizarPalcoDOM();
-        }
+        // ==========================================================================
+        // PARTE 5-A: PROCESSAMENTO DO CANVA E ARRASTAR OS BONECOS COM O MOUSE
+        // ==========================================================================
+        inputBg.onchange = (e) => processarUpload(e, 'bg', 'grid-cenarios');
+        inputActor.onchange = (e) => processarUpload(e, 'actor', 'grid-personagens');
+        inputObject.onchange = (e) => processarUpload(e, 'actor', 'grid-objetos');
 
-        function excluirObjetoSelecionado() {
-            if (!elementoSelecionado) return;
-            listaElementosEmCena = listaElementosEmCena.filter(el => el !== elementoSelecionado);
-            elementoSelecionado = null; renderizarPalcoDOM();
-        }
+        function processarUpload(e, tipoAtivo, idGridAlvo) {
+            const arquivo = e.target.files;
+            if (!arquivo || arquivo.length === 0) return;
 
-        function capturarFrameAtual() {
-            framesSalvos.push({ id: Date.now(), elementos: JSON.parse(JSON.stringify(listaElementosEmCena)) });
-            document.getElementById('empty-timeline-hint').style.display = 'none';
-            atualizarTrilhoTimeline();
-            visorBox.classList.add('shutter-flash-active');
-            setTimeout(() => visorBox.classList.remove('shutter-flash-active'), 120);
-        }
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                const urlImagem = evt.target.result;
+                let nomeImagem = prompt("Dê um nome para este item do Canva:", `Item ${document.querySelectorAll('.asset-card').length + 1}`);
+                if (!nomeImagem) nomeImagem = "Meu Item";
 
-        function atualizarTrilhoTimeline() {
-            const track = document.getElementById('frames-container-track'); track.innerHTML = '';
-            if (framesSalvos.length === 0) { document.getElementById('empty-timeline-hint').style.display = 'block'; return; }
-            framesSalvos.forEach((f, i) => {
-                const node = document.createElement('div'); node.className = `timeline-thumb-node ${frameAtivoIndex===i?'active':''}`;
-                node.innerHTML = `
-                    <div class="thumb-number">${String(i+1).padStart(3,'0')}</div>
-                    <div style='margin-top:5px;'>🎬</div>
-                    <button class="btn-del-frame-floating" onclick="deletarFrameDeTrilho(${i}, event)">✕</button>
+                const novoCard = document.createElement('div');
+                novoCard.className = 'asset-card';
+                novoCard.setAttribute('data-type', tipoAtivo);
+                novoCard.setAttribute('data-img', urlImagem);
+                novoCard.innerHTML = `
+                    <div class="asset-thumb" style="background-image: url('${urlImagem}');"></div>
+                    <p>${nomeImagem.toUpperCase()}</p>
                 `;
-                node.addEventListener('click', () => { frameAtivoIndex = i; listaElementosEmCena = JSON.parse(JSON.stringify(framesSalvos[i].elementos)); renderizarPalcoDOM(); atualizarTrilhoTimeline(); });
-                track.appendChild(node);
+
+                novoCard.onclick = () => {
+                    document.querySelectorAll('.asset-card').forEach(c => c.classList.remove('active'));
+                    novoCard.classList.add('active');
+                    
+                    let proj = projetosExistentes[idProjetoAtivo];
+                    if (tipoAtivo === 'bg') {
+                        proj.cenarioFundo = urlImagem;
+                        videoPlayer.style.backgroundImage = `url('${urlImagem}')`;
+                        playerText.style.display = 'none';
+                        renderizarLinhaDoTempo();
+                    } else {
+                        let idAtorUnico = 'ator_' + Date.now();
+                        let novoAtor = { id: idAtorUnico, img: urlImagem, x: 100, y: 150, size: 80, rot: 0 };
+                        proj.atoresNaTela.push(novoAtor);
+                        criarElementoAtorNoPalco(idAtorUnico, urlImagem, 100, 150, 80, 0);
+                    }
+                };
+
+                document.getElementById(idGridAlvo).appendChild(novoCard);
+                novoCard.click();
+            };
+            reader.readAsDataURL(arquivo[0]);
+            e.target.value = "";
+        }
+
+        function limparAtoresDoPalco() {
+            document.querySelectorAll('.dragged-actor').forEach(el => el.remove());
+        }
+
+        function criarElementoAtorNoPalco(id, imgUrl, x, y, size, rot) {
+            const elAtor = document.createElement('div');
+            elAtor.className = 'dragged-actor';
+            elAtor.style.backgroundImage = `url('${imgUrl}')`;
+            elAtor.style.left = x + 'px';
+            elAtor.style.top = y + 'px';
+            elAtor.style.width = size + 'px';
+            elAtor.style.height = size + 'px';
+            elAtor.style.transform = `rotate(${rot}deg)`;
+            elAtor.setAttribute('data-actor-id', id);
+
+            elAtor.onclick = (e) => {
+                e.stopPropagation();
+                document.querySelectorAll('.dragged-actor').forEach(el => el.classList.remove('selected-actor'));
+                elAtor.classList.add('selected-actor');
+                idAtorSelecionado = id;
+            };
+
+            elAtor.onmousedown = function(e) {
+                if (tocandoVideo) return;
+                e.preventDefault();
+                elAtor.click();
+                
+                let rect = videoPlayer.getBoundingClientRect();
+                let shiftX = e.clientX - elAtor.getBoundingClientRect().left;
+                let shiftY = e.clientY - elAtor.getBoundingClientRect().top;
+
+                function moverAte(clientX, clientY) {
+                    let novoX = clientX - rect.left - shiftX;
+                    let novoY = clientY - rect.top - shiftY;
+                    let atualSize = parseInt(elAtor.style.width);
+
+                    if (novoX < 0) novoX = 0;
+                    if (novoX > rect.width - atualSize) novoX = rect.width - atualSize;
+                    if (novoY < 0) novoY = 0;
+                    if (novoY > rect.height - atualSize) novoY = rect.height - atualSize;
+
+                    elAtor.style.left = novoX + 'px';
+                    elAtor.style.top = novoY + 'px';
+
+                    let proj = projetosExistentes[idProjetoAtivo];
+                    let dadosAtor = proj.atoresNaTela.find(a => a.id === id);
+                    if (dadosAtor) {
+                        dadosAtor.x = novoX;
+                        dadosAtor.y = novoY;
+                    }
+                }
+
+                function onMouseMove(e) { moverAte(e.clientX, e.clientY); }
+                document.addEventListener('mousemove', onMouseMove);
+
+                document.onmouseup = function() {
+                    document.removeEventListener('mousemove', onMouseMove);
+                    document.onmouseup = null;
+                };
+            };
+
+            videoPlayer.appendChild(elAtor);
+        }
+
+        videoPlayer.onclick = () => {
+            document.querySelectorAll('.dragged-actor').forEach(el => el.classList.remove('selected-actor'));
+            idAtorSelecionado = null;
+        };
+
+        function obterAtorSelecionado() {
+            if (!idProjetoAtivo || !idAtorSelecionado) { alert("Clique primeiro em cima de um boneco no palco para selecioná-lo!"); return null; }
+            let proj = projetosExistentes[idProjetoAtivo];
+            let dadosAtor = proj.atoresNaTela.find(a => a.id === idAtorSelecionado);
+            let elementoDom = document.querySelector(`[data-actor-id="${idAtorSelecionado}"]`);
+            return { dados: dadosAtor, elemento: elementoDom };
+        }
+
+        // ==========================================================================
+        // PARTE 5-B: BOTÕES DE EDIÇÃO DA ESQUERDA, FOTOGRAFAR E RENDERIZAR
+        // ==========================================================================
+        // Aumentar o tamanho do boneco selecionado
+        btnScaleUp.onclick = () => {
+            let ator = obterAtorSelecionado();
+            if (!ator) return;
+            ator.dados.size = Math.min(ator.dados.size + 15, 250); // Máximo 250px
+            ator.elemento.style.width = ator.dados.size + 'px';
+            ator.elemento.style.height = ator.dados.size + 'px';
+        };
+
+        // Diminuir o tamanho do boneco selecionado
+        btnScaleDown.onclick = () => {
+            let ator = obterAtorSelecionado();
+            if (!ator) return;
+            ator.dados.size = Math.max(ator.dados.size - 15, 30); // Mínimo 30px
+            ator.elemento.style.width = ator.dados.size + 'px';
+            ator.elemento.style.height = ator.dados.size + 'px';
+        };
+
+        // Rotacionar o boneco selecionado de 15 em 15 graus
+        btnRotate.onclick = () => {
+            let ator = obterAtorSelecionado();
+            if (!ator) return;
+            ator.dados.rot = (ator.dados.rot + 15) % 360;
+            ator.elemento.style.transform = `rotate(${ator.dados.rot}deg)`;
+        };
+
+        // Excluir boneco selecionado da tela
+        btnDeleteActor.onclick = () => {
+            let ator = obterAtorSelecionado();
+            if (!ator) return;
+            let proj = projetosExistentes[idProjetoAtivo];
+            proj.atoresNaTela = proj.atoresNaTela.filter(a => a.id !== idAtorSelecionado);
+            ator.elemento.remove();
+            idAtorSelecionado = null;
+        };
+
+        toolLive.onclick = () => alert("Live View Ativado! Conectando com a câmera virtual do estúdio...");
+        toolOnion.onclick = () => alert("Efeito Onion Skin (Casca de Cebola) ativado para alinhar os quadros!");
+
+        // --- 5. SISTEMA DE FOTOGRAFAR (CAPTURA DO QUADRO) ---
+        btnSnapshot.onclick = () => {
+            if (!idProjetoAtivo) return;
+            let proj = projetosExistentes[idProjetoAtivo];
+            if (!proj.cenarioFundo) { alert("Importe e selecione um cenário de fundo antes de fotografar!"); return; }
+
+            let estadoCenaAtual = {
+                fundo: proj.cenarioFundo,
+                atores: JSON.parse(JSON.stringify(proj.atoresNaTela))
+            };
+
+            proj.frames.push(estadoCenaAtual);
+            proj.frameSelecionado = proj.frames.length - 1;
+            renderizarLinhaDoTempo();
+        };
+
+        function renderizarLinhaDoTempo() {
+            trackContainer.innerHTML = '';
+            let proj = projetosExistentes[idProjetoAtivo];
+            if (!proj || proj.frames.length === 0) return;
+
+            proj.frames.forEach((frameData, index) => {
+                const thumb = document.createElement('div');
+                thumb.className = 'frame-thumb';
+                if (index === proj.frameSelecionado) thumb.classList.add('active');
+                thumb.textContent = String(55 + index).padStart(2, '0');
+                if (frameData.fundo) thumb.style.backgroundImage = `url('${frameData.fundo}')`;
+
+                thumb.onclick = () => {
+                    if (tocandoVideo) pararAnimacao();
+                    document.querySelectorAll('.frame-thumb').forEach(t => t.classList.remove('active'));
+                    thumb.classList.add('active');
+                    proj.frameSelecionado = index;
+                    carregarEstadoDoFrame(index);
+                };
+                trackContainer.appendChild(thumb);
             });
-            document.getElementById('hud-frame-count').innerText = String(framesSalvos.length).padStart(5, '0');
+
+            carregarEstadoDoFrame(proj.frameSelecionado);
         }
 
-        function deletarFrameDeTrilho(index, event) { event.stopPropagation(); framesSalvos.splice(index, 1); frameAtivoIndex = -1; atualizarTrilhoTimeline(); renderizarMesaEstudio(); }
-        function renderizarMesaEstudio() { renderizarPalcoDOM(); }
-        function deletarFrameSelecionado() { if (frameAtivoIndex !== -1) deletarFrameDeTrilho(frameAtivoIndex, { stopPropagation: () => {} }); }
-        function aplicarFiltroCena(f) { overlayEfeito.className = 'canvas-effect-overlay'; if (f !== 'padrao') overlayEfeito.classList.add(`filtro-${f}`); }
-        
-        function ajustarVelocidadeFrames(v) { 
-            fpsVelocidade = parseInt(v); 
-            document.getElementById('frame-duration-label').innerText = `${(1/fpsVelocidade).toFixed(2)}s`; 
-            document.getElementById('current-fps-hud').innerText = `${fpsVelocidade} FPS`;
-            if (playIntervalo) { togglePlayAnimaçao(); togglePlayAnimaçao(); }
+        function carregarEstadoDoFrame(index) {
+            let proj = projetosExistentes[idProjetoAtivo];
+            let frameData = proj.frames[index];
+            if (!frameData) return;
+
+            limparAtoresDoPalco();
+            videoPlayer.style.backgroundImage = `url('${frameData.fundo}')`;
+            
+            frameData.atores.forEach(ator => {
+                criarElementoAtorNoPalco(ator.id, ator.img, ator.x, ator.y, ator.size, ator.rot);
+            });
+
+            let numFormatado = String(55 + index).padStart(5, '0');
+            playbackCounter.textContent = `⏸ Quadro Salvo | ${numFormatado} | 24 FPS`;
         }
 
-        function togglePlayAnimaçao() {
-            const btn = document.getElementById('play-pause-btn');
-            if (playIntervalo) { clearInterval(playIntervalo); playIntervalo = null; btn.innerText = '▶ Assistir'; }
-            else {
-                if (framesSalvos.length === 0) return; btn.innerText = '⏸ Pausar'; let curr = 0;
-                playIntervalo = setInterval(() => {
-                    listaElementosEmCena = JSON.parse(JSON.stringify(framesSalvos[curr].elementos)); renderizarPalcoDOM();
-                    curr = (curr + 1) % framesSalvos.length;
-                }, 1000 / fpsVelocidade);
+        toolDeleteFrame.onclick = () => {
+            if (!idProjetoAtivo) return;
+            let proj = projetosExistentes[idProjetoAtivo];
+            if (proj.frames.length === 0) return;
+
+            proj.frames.splice(proj.frameSelecionado, 1);
+            proj.frameSelecionado = 0;
+            renderizarLinhaDoTempo();
+        };
+
+        btnAddFrame.onclick = () => btnSnapshot.click();
+
+        // --- 6. MOTOR DE REPRODUÇÃO CONTÍNUA (RENDERIZAR) ---
+        function rodarSequenciaAnir() {
+            let proj = projetosExistentes[idProjetoAtivo];
+            if (!proj || proj.frames.length === 0) return;
+
+            if (frameAtualExecucao >= proj.frames.length) frameAtualExecucao = 0;
+
+            const thumbs = document.querySelectorAll('.frame-thumb');
+            thumbs.forEach(t => t.classList.remove('active'));
+            if (thumbs[frameAtualExecucao]) thumbs[frameAtualExecucao].classList.add('active');
+
+            carregarEstadoDoFrame(frameAtualExecucao);
+            
+            let numFormatado = String(55 + frameAtualExecucao).padStart(5, '0');
+            playbackCounter.textContent = `▶ REPRODUZINDO FILME | ${numFormatado} | 24 FPS`;
+            frameAtualExecucao++;
+        }
+
+        function pararAnimacao() {
+            clearInterval(intervaloAnimacao);
+            btnPlay.textContent = "RENDERIZAR ▶";
+            btnPlay.style.backgroundColor = "#6d28d9";
+            tocandoVideo = false;
+        }
+
+        btnPlay.onclick = () => {
+            if (!idProjetoAtivo) return;
+            let proj = projetosExistentes[idProjetoAtivo];
+            if (proj.frames.length === 0) { alert("Monte sua cena e aperte 'Fotografar' para capturar quadros antes de rodar!"); return; }
+
+            if (!tocandoVideo) {
+                frameAtualExecucao = 0;
+                intervaloAnimacao = setInterval(rodarSequenciaAnir, 400);
+                btnPlay.textContent = "PAUSAR ⏸";
+                btnPlay.style.backgroundColor = "#ef4444";
+                tocandoVideo = true;
+            } else {
+                pararAnimacao();
+                carregarEstadoDoFrame(proj.frameSelecionado);
             }
-        }
-
-        function alternarAbaCatalogo(id) {
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.querySelectorAll('.assets-tab-content').forEach(c => c.classList.remove('active'));
-            document.getElementById(`btn-tab-${id}`).classList.add('active');
-            document.getElementById(`tab-${id}`).classList.add('active');
-        }
-
-        function mudarCenarioPlano(n) { cenarioNome = n; const view = document.getElementById('viewfinder-box'); if(n==='noite') view.style.background='#030106'; else view.style.background='#1a102f'; }
-        function mudarFerramenta(m) { ferramentaAtual = m; document.querySelectorAll('.tool-icon-btn').forEach(b => b.classList.remove('active')); document.getElementById(`tool-${m}`).classList.add('active'); }
-        function toggleOnionSkin() { ativarSombraOnion = document.getElementById('onion-skin-toggle').checked; renderizarPalcoDOM(); }
-        function alternarAudioAmbiente(s) { document.querySelectorAll('audio').forEach(a => a.pause()); if(s!=='nenhum') document.getElementById(`sound-${s}`).play(); }
-        function adicionarFrameVazio() { listaElementosEmCena = []; renderizarPalcoDOM(); }
-        function exportarFilme() { alert("Filme baixado como .mp4 com sucesso!"); }
-        function reiniciarPlayer() { if (framesSalvos.length > 0) { frameAtivoIndex = 0; listaElementosEmCena = JSON.parse(JSON.stringify(framesSalvos.elementos)); renderizarPalcoDOM(); atualizarTrilhoTimeline(); } }
-
-        renderizarPalcoDOM();
+        };
     </script>
 </body>
 </html>
