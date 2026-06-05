@@ -6,12 +6,12 @@
     <title>StopArt Cine - Universo Noiva Cadáver</title>
     
     <style>
-        /* ==========================================
-           ESTILO INGRESSO DE CINEMA GÓTICO E INTERATIVO
-           ========================================== */
+        /* ==========================================================================
+           1. AMBIENTAÇÃO DE CINEMA GÓTICO REVOLUCIONÁRIA
+           ========================================================================== */
         body {
-            background-color: #0b0f19;
-            color: #e2e8f0;
+            background: radial-gradient(circle at center, #0f172a 0%, #020617 100%);
+            color: #f1f5f9;
             font-family: 'Segoe UI', Roboto, sans-serif;
             margin: 0;
             padding: 0;
@@ -19,12 +19,15 @@
         }
 
         .navbar-cine {
-            background-color: #060a12;
+            background-color: rgba(2, 6, 23, 0.8);
+            backdrop-filter: blur(12px);
             padding: 15px 40px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px dashed rgba(143, 169, 255, 0.2);
+            border-bottom: 2px solid #00f2fe;
+            box-shadow: 0 0 20px rgba(0, 242, 254, 0.2);
+            margin-bottom: 50px;
         }
 
         .logo-stopart {
@@ -33,6 +36,7 @@
             font-weight: 900;
             letter-spacing: 2px;
             text-transform: uppercase;
+            text-shadow: 0 0 10px #00f2fe;
         }
 
         .btn-sair-sala {
@@ -54,113 +58,184 @@
             color: #060a12;
             box-shadow: 0 0 15px rgba(143, 169, 255, 0.5);
         }
-        /* CONSERTO CONSOLIDADO: Garante o recuo e centralização do bilhete */
-        /* SUBSTUIÇÃO CIRÚRGICA NO SEU CSS: */
-        main.container-ticket, .container-ticket {
-            max-width: 1000px;
-            width: 90% !important;     /* O '!important' força o navegador a encolher o ingresso */
-            margin: 40px auto !important; /* Cria as bordas pretas livres no topo e nas laterais */
-            padding: 0;
+        /* ==========================================================================
+           2. O INGRESSO GÓTICO DO SUBMUNDO (TICKET WRAPPER REFEITO)
+           ========================================================================== */
+        .container-ticket {
+            max-width: 1050px;
+            width: 90%;
+            margin: 0 auto;
             box-sizing: border-box;
+            padding: 0;
         }
 
-
-        /* O Corpo do bilhete ganha fundo branco, cantos ovais e sombras profundas */
-        .ticket-filme {
-            background-color: #ffffff;
-            border-radius: 24px;
-            overflow: hidden;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
-            position: relative;
+        .ticket-wrapper {
+            perspective: 1000px;
+            margin-bottom: 60px;
             width: 100%;
         }
 
-        .ticket-banner {
-            height: 420px;
-            background: linear-gradient(180deg, rgba(18,24,38,0.1) 0%, rgba(18,24,38,0.85) 100%), 
-                        url('assets/noiva-banner.jpg') center/cover;
+        .cinema-ticket {
+            background: rgba(15, 23, 42, 0.85);
+            border: 2px solid rgba(0, 242, 254, 0.2);
+            border-radius: 24px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(0, 242, 254, 0.1);
             display: flex;
             flex-direction: column;
-            justify-content: flex-end;
-            padding: 40px;
-            box-sizing: border-box;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            width: 100%;
         }
 
-        /* Aplicação dos furos circulares nas emendas do ingresso */
-        .ticket-filme::before, .ticket-filme::after {
-            content: "";
+        /* Furos laterais com aura iluminada ciano */
+        .cinema-ticket::before, .cinema-ticket::after {
+            content: '';
             position: absolute;
-            top: 405px;
-            width: 30px;
-            height: 30px;
-            background-color: #0b0f19;
+            top: 360px; /* Alinhado com a nova altura */
+            width: 40px;
+            height: 40px;
+            background: #020617;
             border-radius: 50%;
             z-index: 10;
         }
-        .ticket-filme::before { left: -15px; }
-        .ticket-filme::after { right: -15px; }
+        .cinema-ticket::before { left: -20px; border-right: 2px solid rgba(0, 242, 254, 0.3); }
+        .cinema-ticket::after { right: -20px; border-left: 2px solid rgba(0, 242, 254, 0.3); }
 
-        .ticket-titulo {
-            font-size: 4rem;
-            font-weight: 900;
+        .ticket-poster-area {
+            height: 240px; /* Mantém a altura fina que você gosta */
+            position: relative;
+            overflow: hidden;
+            background: #000;
+        }
+
+        .ticket-poster-area img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center 25%;
+            filter: brightness(0.75) contrast(1.1);
+            transition: transform 0.8s ease;
+        }
+
+        .cinema-ticket:hover .ticket-poster-area img {
+            transform: scale(1.03);
+        }
+
+        .ticket-movie-title {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, #0f172a);
+            padding: 20px 35px;
+        }
+
+        .ticket-movie-title h1 {
+            font-size: 3.8rem;
+            color: #fff;
             text-transform: uppercase;
-            color: #8fa9ff;
+            font-style: italic;
+            font-weight: 900;
+            letter-spacing: 2px;
             margin: 0;
-            letter-spacing: 3px;
-            text-shadow: 0 0 20px rgba(143, 169, 255, 0.4);
+            text-shadow: 0 0 10px #00f2fe, 0 0 20px #00f2fe, 0 0 40px #00c6ff;
+            animation: pulsarLetreiro 3s infinite alternate;
+        }
+
+        @keyframes pulsarLetreiro {
+            0% { filter: drop-shadow(0 0 2px #00f2fe); }
+            100% { filter: drop-shadow(0 0 8px #00c6ff); }
         }
 
         .ticket-tagline {
             color: #38bdf8;
-            font-weight: bold;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            margin: 10px 0 0 0;
             font-size: 0.95rem;
+            font-weight: 700;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+            display: block;
         }
-        .ticket-corpo {
-            padding: 50px 40px;
-            background-color: #ffffff;
-            color: #1e293b;
+        /* ==========================================================================
+           3. CORPO GÓTICO TRANSLÚCIDO E CÓDIGO DE BARRAS NEON
+           ========================================================================== */
+        .ticket-body {
+            padding: 35px;
+            background: rgba(30, 41, 59, 0.4);
+            border-top: 4px dashed rgba(0, 242, 254, 0.4);
+            box-shadow: inset 0 10px 20px rgba(0,0,0,0.2);
         }
 
-        .ticket-sinopse {
-            font-size: 1.1rem;
-            line-height: 1.7;
-            margin-bottom: 40px;
+        .ticket-conversinha {
+            font-size: 1.05rem;
+            line-height: 1.6;
+            margin-bottom: 25px;
+            color: #cbd5e1;
+            font-weight: 500;
         }
 
-        .ticket-grid-info {
+        /* Grid de Informações de 4 Colunas Futurista */
+        .ticket-info-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            border-top: 1px solid #e2e8f0;
-            padding-top: 30px;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            border-top: 1px solid rgba(0, 242, 254, 0.1);
+            padding-top: 25px;
         }
 
-        .info-bloco {
-            border-left: 3px solid #38bdf8;
-            padding-left: 15px;
+        .ticket-meta-box {
+            border-left: 3px solid #00f2fe;
+            padding-left: 10px;
         }
 
-        .info-label {
-            font-size: 0.75rem;
+        .ticket-meta-box label {
+            display: block;
+            font-size: 0.68rem;
             text-transform: uppercase;
             color: #94a3b8;
             font-weight: bold;
             letter-spacing: 1px;
         }
 
-        .info-valor {
-            font-size: 1.1rem;
-            font-weight: bold;
-            color: #1e293b;
-            margin-top: 5px;
+        .ticket-meta-box span {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #ffffff;
+            text-shadow: 0 0 5px rgba(0, 242, 254, 0.3);
         }
 
-        /* ==========================================
-           ESTILOS DO CARROSSEL DE IMAGENS
-           ========================================== */
+        .ticket-footer-barcode {
+            background: rgba(15, 23, 42, 0.6);
+            padding: 15px 40px 25px;
+            text-align: center;
+            border-top: 1px dashed rgba(0, 242, 254, 0.15);
+        }
+
+        /* Código de barras estilizado com brilho fantasmagórico */
+        .barcode-mock {
+            height: 40px;
+            background: linear-gradient(to right, 
+                #00f2fe 0% 3%, transparent 3% 5%, #00f2fe 5% 12%, transparent 12% 14%,
+                #00f2fe 14% 18%, transparent 18% 22%, #00f2fe 22% 32%, transparent 32% 34%,
+                #00f2fe 34% 38%, transparent 38% 44%, #00f2fe 44% 48%, transparent 48% 55%,
+                #00f2fe 55% 70%, transparent 70% 72%, #00f2fe 72% 82%, transparent 82% 85%, #00f2fe 85% 100%
+            );
+            opacity: 0.7;
+            margin-bottom: 8px;
+            filter: drop-shadow(0 0 4px #00f2fe);
+        }
+
+        .barcode-number {
+            font-size: 0.65rem;
+            letter-spacing: 5px;
+            color: #64748b;
+            font-family: monospace;
+            text-transform: uppercase;
+        }
+        /* ==========================================================================
+           4. ESTILOS DO CARROSSEL DE IMAGENS (6 SLIDES)
+           ========================================================================== */
         .carrossel-container {
             position: relative;
             width: 100%;
@@ -222,13 +297,11 @@
         .carrossel-btn:hover { background: #8fa9ff; color: #0b0f19; }
         .btn-prev { left: 20px; }
         .btn-next { right: 20px; }
-        /* ==========================================
-           ESTILOS DA PLAYLIST DE VÍDEOS E GRIDS
-           ========================================== */
-        .secao-cinema-painel { 
-            margin: 50px 0; 
-        }
-        
+
+        /* ==========================================================================
+           5. ESTILOS DA PLAYLIST DE VÍDEOS E GRIDS
+           ========================================================================== */
+        .secao-cinema-painel { margin: 50px 0; }
         .titulo-secao {
             color: #8fa9ff;
             font-size: 1.8rem;
@@ -256,12 +329,7 @@
             background: #000;
         }
 
-        .video-player-principal iframe { 
-            width: 100%; 
-            height: 400px; 
-            display: block; 
-            border: none; 
-        }
+        .video-player-principal iframe { width: 100%; height: 400px; display: block; border: none; }
 
         .video-lista-thumbs {
             flex: 1;
@@ -291,13 +359,8 @@
         .thumb-img { width: 100px; height: 60px; object-fit: cover; border-radius: 4px; }
         .thumb-info h4 { margin: 0 0 5px 0; color: #fff; font-size: 0.9rem; }
         .thumb-info p { margin: 0; color: #94a3b8; font-size: 0.75rem; }
-
         /* Grid de Bastidores e Páginas Internas */
-        .grid-bastidores-9 { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
-            gap: 25px; 
-        }
+        .grid-bastidores-9 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; }
 
         .card-bastidor-foto {
             background: #121826;
@@ -319,6 +382,7 @@
         .info-card p { color: #cbd5e1; font-size: 0.95rem; margin: 0; line-height: 1.5; }
 
         .lista-easter-eggs-completa { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+
         /* Área do Quiz da Bilheteria */
         .bilheteria-quiz { background: #060a12; border: 2px dashed #38bdf8; border-radius: 12px; padding: 40px; text-align: center; }
         .placar-quiz { font-size: 1.1rem; color: #94a3b8; margin-bottom: 15px; }
@@ -371,13 +435,13 @@
 
         .particula-borboleta { position: absolute; font-size: 1.5rem; pointer-events: none; z-index: 5; }
 
-        /* Animação das borboletas do troféu */
+        /* Animação das borboletas que saem do troféu */
         @keyframes voarBorboleta {
             0% { opacity: 1; transform: translate(0, 0) scale(0.5); }
             100% { opacity: 0; transform: translate(var(--x), var(--y)) rotate(var(--r)) scale(1.2); }
         }
 
-        /* Animação contínua no fundo da tela */
+        /* Animação contínua de borboletas voando ao fundo */
         .fundo-borboletas-ambiente { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: -1; overflow: hidden; }
         .borboleta-ambiente { position: absolute; font-size: 1.5rem; opacity: 0; filter: drop-shadow(0 0 8px #38bdf8); animation: vooContinuo 12s linear infinite; }
 
@@ -432,45 +496,57 @@
         <div class="borboleta-ambiente b-amb-5">🦋</div>
         <div class="borboleta-ambiente b-amb-6">🦋</div>
     </div>
+    <!-- Container Centralizador que cria as margens pretas perfeitas nas laterais -->
     <main class="container-ticket">
         
-        <!-- O INGRESSO DE CINEMA CENTRALIZADO -->
-        <article class="ticket-filme">
-            
-            <!-- Banner Superior do Ingresso -->
-            <div class="ticket-banner">
-                <h1 class="ticket-titulo">A Noiva Cadáver</h1>
-                <p class="ticket-tagline">"Com esta mão eu espantarei a sua tristeza..."</p>
-            </div>
-
-            <!-- Corpo Recortado Branco do Ingresso -->
-            <div class="ticket-corpo">
-                <p class="ticket-sinopse">
-                    Ei, prepare a pipoca! Você sabia que o Victor conseguiu a proeza de se casar acidentalmente com uma noiva defunta na floresta? Pois é! Enquanto toda a alta sociedade dos vivos tenta forçar casamentos arranjados por puro interesse financeiro, o submundo dos mortos se revela uma gigantesca e colorida festa repleta de jazz, onde as almas celebram e a eternidade é muito mais viva e divertida! 🦋✨
-                </p>
-
-                <!-- Grid Técnico Inferior Estilo ParaNorman -->
-                <div class="ticket-grid-info">
-                    <div class="info-bloco">
-                        <div class="info-label">Estúdio Criador</div>
-                        <div class="info-valor">Laika / Warner Bros</div>
-                    </div>
-                    <div class="info-bloco">
-                        <div class="info-label">Técnica de Arte</div>
-                        <div class="info-valor">Stop-Motion Clássico</div>
-                    </div>
-                    <div class="info-bloco">
-                        <div class="info-label">Tempo de Suor</div>
-                        <div class="info-valor">+3 Anos de Luta</div>
-                    </div>
-                    <div class="info-bloco">
-                        <div class="info-label">Aclamação</div>
-                        <div class="info-valor">Indicado ao Oscar</div>
+        <!-- O NOVO INGRESSO GÓTICO DO SUBMUNDO PREMIUM -->
+        <div class="ticket-wrapper">
+            <article class="cinema-ticket">
+                
+                <!-- Parte Superior: Foto Estilizada com Título Neon -->
+                <div class="ticket-poster-area">
+                    <img src="assets/noiva-banner.jpg" alt="A Noiva Cadáver">
+                    <div class="ticket-movie-title">
+                        <span class="ticket-tagline">"Com esta mão eu espantarei a sua tristeza..."</span>
+                        <h1>A Noiva Cadáver</h1>
                     </div>
                 </div>
-            </div>
-        </article>
 
+                <!-- Parte Inferior: Fibra Escura Translúcida com Picote Neon -->
+                <div class="ticket-body">
+                    <p class="ticket-conversinha">
+                        Ei, prepare a pipoca! Você sabia que o Victor conseguiu a proeza de se casar acidentalmente com uma noiva defunta na floresta? Pois é! Enquanto toda a alta sociedade dos vivos tenta forçar casamentos arranjados por puro interesse financeiro, o submundo dos mortos se revela uma gigantesca e colorida festa repleta de jazz, onde as almas celebram e a eternidade é muito mais viva e divertida! 🦋✨
+                    </p>
+
+                    <!-- Ficha Técnica Avançada com Cores Ciano (4 Colunas) -->
+                    <div class="ticket-info-grid">
+                        <div class="ticket-meta-box">
+                            <label>Estúdio Criador</label>
+                            <span>Laika / Warner</span>
+                        </div>
+                        <div class="ticket-meta-box">
+                            <label>Técnica de Arte</label>
+                            <span>Stop-Motion</span>
+                        </div>
+                        <div class="ticket-meta-box">
+                            <label>Tempo de Suor</label>
+                            <span>+3 Anos</span>
+                        </div>
+                        <div class="ticket-meta-box">
+                            <label>Aclamação</label>
+                            <span>Indicado Oscar</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Rodapé do Ingresso com Código de Barras Neon Azul -->
+                <div class="ticket-footer-barcode">
+                    <div class="barcode-mock"></div>
+                    <div class="barcode-number">002005092305312026</div>
+                </div>
+
+            </article>
+        </div>
         <!-- RECURSO: CARROSSEL DE 6 IMAGENS LOCAIS -->
         <section class="secao-cinema-painel">
             <h2 class="titulo-secao">📸 Galeria de Cenas Ocultas (Edição Expandida)</h2>
@@ -538,7 +614,7 @@
                 </div>
             </div>
         </section>
-        <!-- RECURSO: OS 9 SEGREDOS DE BASTIDORES COM FOTOS -->
+        <!-- RECURSO: OS 9 SEGREDOS DE BASTIDORES COM FOTOS LOCAIS -->
         <section class="secao-cinema-painel">
             <h2 class="titulo-secao">🎬 9 Segredos Tecnológicos dos Bastidores</h2>
             <div class="grid-bastidores-9">
@@ -694,7 +770,7 @@
         }
 
         // ==========================================
-        // BANCO DE DADOS COMPLETO (QUESTÕES 1 A 10)
+        // BANCO DE DADOS PARTE A (QUESTÕES 1 A 10)
         // ==========================================
         const bancoCinema = [
             { q: "Qual é o nome do cãozinho esqueleto de estimação do Victor?", alt: ["Sparky", "Scraps", "Zero", "Grim"], certa: 1 },
@@ -705,9 +781,9 @@
             { q: "De qual marca é o piano que Victor toca no mundo dos vivos?", alt: ["Steinway", "Harryhausen", "Yamaha", "Burton & Sons"], certa: 1 },
             { q: "Qual estúdio de animação britânico co-produziu o longa junto com a Warner?", alt: ["Aardman", "Laika Studios", "Pixar", "DreamWorks"], certa: 1 },
             { q: "O mundo dos mortos é caracterizado visualmente por qual elemento?", alt: ["Cores vibrantes, neon e jazz", "Efeitos em preto e branco", "Névoa cinzenta e silêncio completo", "Arquitetura futurista"], certa: 0 },
-            { q: "Qual actor faz a voz original de Victor Van Dort?", alt: ["Ewan McGregor", "Johnny Depp", "Jude Law", "Ben Kingsley"], certa: 1 },
+            { q: "Qual ator faz a voz original de Victor Van Dort?", alt: ["Ewan McGregor", "Johnny Depp", "Jude Law", "Ben Kingsley"], certa: 1 },
             { q: "Como a Noiva Cadáver (Emily) morreu quando estava viva?", alt: ["Envenenada pelo pai", "Assassinada por seu antigo noivo ganancioso", "Doença misteriosa", "Acidente na floresta"], certa: 1 },
-            // CONTINUAÇÃO DO BANCO DE DADOS (QUESTÕES 11 A 20)
+            // BANCO DE DADOS PARTE B (QUESTÕES 11 A 20)
             { q: "Qual era o sobrenome da noiva viva de Victor?", alt: ["Everglot", "Van Dort", "Barkis", "Plum"], certa: 0 },
             { q: "Qual câmera fotográfica foi usada predominantemente na produção?", alt: ["Nikon D80", "Canon EOS-1D Mark II", "Sony Alpha 7", "Leica M3"], certa: 1 },
             { q: "Qual é o nome do antagonista ganancioso que tenta se casar por dinheiro?", alt: ["Lord Finis", "Lord Barkis Bittern", "Pastor Galswells", "Elder Gutknecht"], certa: 1 },
