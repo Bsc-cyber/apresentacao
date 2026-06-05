@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stop Motion Studio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            color-scheme: dark;
+            --bg: #09070f;
+            --panel: #0f101a;
+            --panel-strong: #131523;
+            --border: #1f2133;
+            --border-strong: #272b42;
+            --text: #e8e7f7;
+            --muted: #8a8aac;
+            --accent: #ffb700;
+            --accent-soft: rgba(255, 183, 0, 0.14);
+            --danger: #ff5b5b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+
+        html, body {
+            min-height: 100%;
+            background: radial-gradient(circle at top, #141226 0%, #09070f 60%, #06050b 100%);
+            color: var(--text);
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .studio-shell {
+            width: 100%;
+            min-height: 100vh;
+            padding: 12px 14px 16px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 14px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-logo {
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            display: grid;
+            place-items: center;
+            background: radial-gradient(circle at 30% 30%, #ffb700 15%, #ff9d00 42%, transparent 65%);
+            color: #111;
+            font-weight: 800;
+            font-size: 18px;
+        }
+
+        .brand-name {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .brand-name strong {
+            color: var(--text);
+            font-size: 14px;
+            letter-spacing: 1px;
+        }
+
+        .brand-name span {
+            color: var(--accent);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .top-menu {
+            display: flex;
+            align-items: center;
+            gap: 22px;
+            flex-wrap: wrap;
+            font-size: 13px;
+        }
+
+        .top-menu a {
+            color: var(--muted);
+            text-decoration: none;
+            position: relative;
+            padding-bottom: 4px;
+        }
+
+        .top-menu a.active,
+        .top-menu a:hover {
+            color: var(--accent);
+        }
+
+        .top-menu a.active::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--accent);
+            border-radius: 999px;
+        }
+
+        .profile-card {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            border: 1px solid rgba(255,255,255,.08);
+            border-radius: 16px;
+            background: rgba(255,255,255,.03);
+        }
+
+        .profile-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff7ed0 0%, #9453ff 100%);
+            box-shadow: 0 0 0 4px rgba(255,183,0,.12);
+        }
+
+        .profile-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            font-size: 12px;
+        }
+
+        .profile-info strong {
+            color: #fff;
+        }
+
+        .profile-info span {
+            color: var(--muted);
+        }
+
+        .studio-grid {
+            display: grid;
+            grid-template-columns: 260px minmax(760px, 1fr) 260px;
+            grid-template-rows: auto 170px;
+            gap: 14px;
+            min-height: calc(100vh - 78px);
+        }
+
+        .studio-left,
+        .studio-right,
+        .studio-main,
+        .studio-timeline {
+            border-radius: 24px;
+            background: linear-gradient(180deg, rgba(17,16,29,.98), rgba(13,12,22,.96));
+            border: 1px solid rgba(255,255,255,.06);
+            box-shadow: 0 20px 60px rgba(0,0,0,.22);
+            backdrop-filter: blur(12px);
+        }
+
+        .studio-left {
+            grid-row: 1 / span 2;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .studio-main,
+        .studio-right {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .studio-main {
+            padding: 22px 22px 18px;
+            gap: 18px;
+        }
+
+        .studio-left .panel-body,
+        .studio-right .panel-body {
+            padding: 20px;
+        }
+
+        .studio-left .panel-body {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            overflow-y: auto;
+            padding-bottom: 16px;
+        }
+
+        .panel-block {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .back-button,
+        .primary-button,
+        .secondary-button,
+        .tiny-button {
+            border: none;
+            border-radius: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .back-button {
+            width: fit-content;
+            padding: 8px 12px;
+            background: rgba(255,255,255,.05);
+            color: var(--muted);
+        }
+
+        .primary-button {
+            padding: 12px 14px;
+            background: linear-gradient(135deg, #ffbf2d 0%, #ffbf5d 95%);
+            color: #111;
+            box-shadow: 0 10px 30px rgba(255,187,0,.22);
+        }
+
+        .secondary-button {
+            padding: 10px 12px;
+            background: rgba(255,255,255,.04);
+            color: var(--text);
+            border: 1px solid rgba(255,255,255,.06);
+        }
+
+        .tiny-button {
+            padding: 8px 10px;
+            background: rgba(255,255,255,.05);
+            color: var(--text);
+        }
+
+        .panel-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--text);
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .panel-subtitle {
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        .project-list,
+        .layer-list,
+        .asset-grid,
+        .settings-list {
+            display: grid;
+            gap: 12px;
+        }
+
+        .project-list {
+            max-height: 320px;
+            overflow-y: auto;
+        }
+
+        .layer-list {
+            max-height: 240px;
+            overflow-y: auto;
+        }
+
+        .asset-grid {
+            max-height: 360px;
+            overflow-y: auto;
+            padding-right: 8px;
+        }
+
+        .project-card,
+        .layer-item,
+        .asset-card,
+        .setting-row,
+        .timeline-thumb {
+            border-radius: 18px;
+            background: rgba(255,255,255,.03);
+            border: 1px solid rgba(255,255,255,.05);
+            padding: 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .layer-item.active,
+        .asset-card.active,
+        .project-card.active {
+            background: rgba(255,183,0,.1);
+            border-color: rgba(255,183,0,.35);
+        }
+
+        .layer-item:hover,
+        .project-card:hover,
+        .asset-card:hover {
+            background: rgba(255,255,255,.06);
+        }
+
+        .project-card {
+            cursor: pointer;
+            transition: transform .2s ease, border-color .2s ease, background .2s ease;
+        }
+
+        .project-card:hover,
+        .project-card.active {
+            transform: translateY(-2px);
+            background: rgba(255,255,255,.08);
+            border-color: rgba(255,183,0,.4);
+        }
+
+        .project-thumb,
+        .asset-thumb,
+        .timeline-thumb img {
+            width: 60px;
+            min-width: 60px;
+            height: 60px;
+            border-radius: 16px;
+            object-fit: cover;
+            background: rgba(255,255,255,.05);
+        }
+
+        .project-info,
+        .layer-info,
+        .asset-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            min-width: 0;
+        }
+
+        .project-title,
+        .asset-title,
+        .layer-title {
+            color: var(--text);
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .project-meta,
+        .asset-meta,
+        .layer-meta,
+        .setting-value {
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.4;
+        }
+
+        .tool-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .tool-button {
+            height: 68px;
+            background: rgba(255,255,255,.03);
+            border: 1px solid rgba(255,255,255,.05);
+            border-radius: 18px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+            color: var(--text);
+            font-size: 11px;
+            text-align: center;
+            cursor: pointer;
+            padding: 0 10px;
+        }
+
+        .tool-button span {
+            display: block;
+            font-size: 22px;
+        }
+
+        .tool-button:hover {
+            border-color: rgba(255,183,0,.5);
+            background: rgba(255,255,255,.07);
+        }
+
+        .studio-main-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .project-status {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            font-size: 13px;
+            color: var(--muted);
+        }
+
+        .status-badge {
+            width: 10px;
+            height: 10px;
+            border-radius: 999px;
+            background: #3cf47a;
+            box-shadow: 0 0 10px rgba(60,244,122,.4);
+        }
+
+        .studio-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .studio-actions .secondary-button {
+            min-width: 110px;
+        }
+
+        .studio-actions .primary-button {
+            min-width: 120px;
+        }
+
+        .canvas-shell {
+            position: relative;
+            border-radius: 24px;
+            overflow: hidden;
+            min-height: 520px;
+            background: radial-gradient(circle at top, rgba(255,183,0,.06), transparent 35%), linear-gradient(180deg, #11111f 0%, #09070f 100%);
+            border: 1px solid rgba(255,255,255,.05);
+        }
+
+        .canvas-topbar {
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            right: 16px;
+            z-index: 10;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .canvas-topbar .stat-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: rgba(10,10,18,.75);
+            border: 1px solid rgba(255,255,255,.08);
+            color: var(--text);
+            font-size: 11px;
+        }
+
+        .canvas-view {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        #pixi-root {
+            width: 100%;
+            height: 100%;
+        }
+
+        .onion-panel {
+            position: absolute;
+            right: 18px;
+            bottom: 18px;
+            width: 230px;
+            border-radius: 22px;
+            background: rgba(15,14,26,.96);
+            border: 1px solid rgba(255,255,255,.08);
+            padding: 14px;
+            display: grid;
+            gap: 10px;
+            backdrop-filter: blur(10px);
+            z-index: 10;
+            cursor: grab;
+            touch-action: none;
+        }
+
+        .onion-panel h4,
+        .panel-title {
+            margin-bottom: 6px;
+            font-size: 13px;
+        }
+
+        .range-group {
+            display: grid;
+            gap: 8px;
+        }
+
+        .range-group label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: var(--muted);
+        }
+
+        .range-group input {
+            width: 100%;
+        }
+
+        .studio-timeline {
+            grid-column: 2 / 3;
+            padding: 18px 20px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            min-height: 160px;
+        }
+
+        .timeline-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .timeline-track {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+            gap: 12px;
+            overflow-x: auto;
+            padding-bottom: 6px;
+        }
+
+        .timeline-thumb {
+            flex-direction: column;
+            min-width: 100px;
+            padding: 10px;
+            justify-content: space-between;
+            height: 92px;
+            background: rgba(255,255,255,.02);
+        }
+
+        .timeline-thumb.active {
+            border-color: rgba(255,183,0,.9);
+            box-shadow: 0 0 20px rgba(255,183,0,.15);
+        }
+
+        .timeline-thumb img {
+            width: 100%;
+            height: 58px;
+            border-radius: 14px;
+            object-fit: cover;
+        }
+
+        .timeline-meta {
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:6px;
+            color: var(--muted);
+            font-size: 11px;
+        }
+
+        .timeline-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            padding: 14px 16px;
+            border-radius: 20px;
+            background: rgba(255,255,255,.03);
+            border: 1px solid rgba(255,255,255,.05);
+        }
+
+        .timeline-footer .waveform {
+            flex: 1;
+            height: 48px;
+            border-radius: 16px;
+            background: linear-gradient(90deg, rgba(255,255,255,.05) 0%, rgba(255,255,255,.1) 100%);
+            display: grid;
+            place-items: center;
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .studio-right {
+            padding: 18px 20px 18px;
+            gap: 18px;
+            overflow-y: auto;
+        }
+
+        .tab-nav {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+
+        .tab-nav button {
+            flex: 1;
+            padding: 8px 10px;
+            background: rgba(255,255,255,.03);
+            border: 1px solid rgba(255,255,255,.06);
+            color: var(--muted);
+            border-radius: 14px;
+            font-size: 11px;
+            cursor: pointer;
+        }
+
+        .tab-nav button.active {
+            color: var(--accent);
+            border-color: rgba(255,183,0,.45);
+            background: rgba(255,183,0,.08);
+        }
+
+        .search-input {
+            width: 100%;
+            border: 1px solid rgba(255,255,255,.08);
+            border-radius: 16px;
+            padding: 12px 14px;
+            background: rgba(255,255,255,.04);
+            color: var(--text);
+            font-size: 13px;
+        }
+
+        .asset-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            overflow-y: auto;
+            max-height: 360px;
+            padding-right: 4px;
+        }
+
+        .asset-card {
+            flex-direction: column;
+            min-height: 120px;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .asset-card.active {
+            border-color: rgba(255,183,0,.5);
+            background: rgba(255,183,0,.06);
+        }
+
+        .asset-card span {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: rgba(255,255,255,.06);
+            color: var(--accent);
+            font-size: 14px;
+        }
+
+        .property-panel {
+            display: grid;
+            gap: 14px;
+        }
+
+        .property-panel .property-row {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 10px;
+            align-items: center;
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .property-panel .property-row strong {
+            color: var(--text);
+            font-size: 13px;
+            text-align: right;
+        }
+
+        .property-controls {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .property-controls button {
+            width: 100%;
+            padding: 12px 10px;
+            border-radius: 14px;
+            border: 1px solid rgba(255,255,255,.08);
+            background: rgba(255,255,255,.04);
+            color: var(--text);
+            cursor: pointer;
+        }
+
+        .property-controls button.active {
+            background: rgba(255,183,0,.14);
+            border-color: rgba(255,183,0,.35);
+            color: var(--accent);
+        }
+
+        .setting-row {
+            justify-content: space-between;
+        }
+
+        .setting-row strong {
+            color: var(--text);
+        }
+
+        .bottom-tag {
+            padding-top: 16px;
+            color: var(--muted);
+            font-size: 12px;
+            text-align: center;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .pill {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 6px 10px;
+            border-radius: 999px;
+            background: rgba(255,255,255,.05);
+            color: var(--muted);
+            font-size: 11px;
+            letter-spacing: .4px;
+        }
+
+        .waveform-bar {
+            height: 100%;
+            width: 100%;
+            background: linear-gradient(90deg, rgba(255,255,255,.08) 0%, rgba(255,255,255,.02) 100%);
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .waveform-bar::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: linear-gradient(90deg, rgba(255,255,255,.2) 0 2px, transparent 2px 4px);
+            background-size: 6px 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="studio-shell">
+        <header class="topbar">
+            <div class="brand">
+                <div class="brand-logo">SM</div>
+                <div class="brand-name">
+                    <strong>STOP_MOTION PROFESSIONAL</strong>
+                    <span>Estúdio Interativo</span>
+                </div>
+            </div>
+            <nav class="top-menu">
+                <a href="#">Início</a>
+                <a href="#">Aulas</a>
+                <a class="active" href="#">Estúdio</a>
+                <a href="#">Recursos</a>
+                <a href="#">Galeria</a>
+                <a href="#">Comunidade</a>
+            </nav>
+            <div class="profile-card">
+                <div class="profile-avatar"></div>
+                <div class="profile-info">
+                    <strong>Bianca Oliveira</strong>
+                    <span>Criador Iniciante</span>
+                </div>
+            </div>
+        </header>
+
+        <section class="studio-grid">
+            <aside class="studio-left">
+                <div class="panel-body">
+                    <div class="panel-block">
+                        <button class="back-button">← Voltar ao Painel</button>
+                        <button class="primary-button" id="btn-new-project">+ Novo Projeto</button>
+                    </div>
+
+                    <div class="panel-block">
+                        <div class="panel-title">Meus Projetos</div>
+                        <div class="panel-subtitle">Clique para carregar um projeto salvo ou criar um novo.</div>
+                        <div class="project-list" id="project-list"></div>
+                        <button class="secondary-button" style="width:100%; justify-content:center;">Ver todos os projetos →</button>
+                    </div>
+
+                    <div class="panel-block">
+                        <div class="panel-title">Ferramentas</div>
+                        <div class="tool-grid">
+                            <div class="tool-button" id="tool-move"><span>🟦</span>Mover</div>
+                            <div class="tool-button" id="tool-rotate"><span>↻</span>Rotacionar</div>
+                            <div class="tool-button" id="tool-scale"><span>↔</span>Redimensionar</div>
+                            <div class="tool-button" id="tool-duplicate"><span>⧉</span>Duplicar</div>
+                            <div class="tool-button" id="tool-lock"><span>🔒</span>Travar</div>
+                            <div class="tool-button" id="tool-delete"><span>✕</span>Excluir</div>
+                        </div>
+                    </div>
+
+                    <div class="panel-block">
+                        <div class="panel-title">Camadas</div>
+                        <div class="panel-subtitle">Arraste e organize a ordem de renderização dos elementos.</div>
+                        <div class="layer-list" id="layer-list"></div>
+                    </div>
+                </div>
+            </aside>
+
+            <main class="studio-main">
+                <div class="studio-main-header">
+                    <div>
+                        <div class="project-status">
+                            <span class="status-badge"></span>
+                            <div>Projeto: <strong id="project-name">Nenhum projeto selecionado</strong></div>
+                        </div>
+                        <div class="panel-subtitle" id="project-description">Salvo automaticamente no navegador e no cache local.</div>
+                    </div>
+                    <div class="studio-actions">
+                        <button class="secondary-button" id="btn-config">Configurações</button>
+                        <button class="secondary-button" id="btn-export">Exportar</button>
+                        <button class="primary-button" id="btn-render">Renderizar</button>
+                    </div>
+                </div>
+
+                <div class="canvas-shell">
+                    <div class="canvas-topbar">
+                        <span class="stat-pill" id="info-frame-count">Quadro 0000</span>
+                        <span class="stat-pill" id="info-timecode">00:00:00 | 24 FPS</span>
+                        <span class="stat-pill" id="info-mode">Modo: Move</span>
+                    </div>
+                    <div class="canvas-view" id="pixi-root"></div>
+                    <div class="onion-panel" id="onion-panel">
+                        <div class="panel-title">Onion Skin</div>
+                        <label><input type="checkbox" id="onion-enabled"> Ativar</label>
+                        <div class="range-group">
+                            <label>Quadros anteriores <span id="onion-prev-count">2</span></label>
+                            <input type="range" id="onion-prev" min="0" max="5" value="2">
+                        </div>
+                        <div class="range-group">
+                            <label>Quadros seguintes <span id="onion-next-count">2</span></label>
+                            <input type="range" id="onion-next" min="0" max="5" value="2">
+                        </div>
+                        <div class="range-group">
+                            <label>Opacidade <span id="onion-opacity">35%</span></label>
+                            <input type="range" id="onion-opacity-range" min="10" max="80" value="35">
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+            <aside class="studio-right">
+                <div class="panel-title">Biblioteca de Cenas</div>
+                <div class="tab-nav" id="tab-nav">
+                    <button class="active" data-tab="cenarios">Cenários</button>
+                    <button data-tab="personagens">Personagens</button>
+                    <button data-tab="objetos">Objetos</button>
+                    <button data-tab="filtros">Filtros</button>
+                </div>
+
+                <input type="text" class="search-input" id="search-input" placeholder="Buscar na biblioteca...">
+
+                <div class="panel-block">
+                    <button class="secondary-button" id="btn-import-background">Importar Cenário (+)</button>
+                    <button class="secondary-button" id="btn-import-actor">Importar Personagem (+)</button>
+                    <button class="secondary-button" id="btn-import-object">Importar Objeto (+)</button>
+                    <button class="secondary-button" id="btn-import-project">Importar Projeto</button>
+                </div>
+
+                <div class="asset-grid" id="asset-grid"></div>
+                <button class="secondary-button" style="width:100%; justify-content:center;">Ver todos os cenários →</button>
+
+                <div class="panel-block property-panel">
+                    <div class="panel-title">Propriedades</div>
+                    <div class="property-row"><span>X</span><strong id="prop-x">0</strong></div>
+                    <div class="property-row"><span>Y</span><strong id="prop-y">0</strong></div>
+                    <div class="property-row"><span>Largura</span><strong id="prop-width">0</strong></div>
+                    <div class="property-row"><span>Altura</span><strong id="prop-height">0</strong></div>
+                    <div class="property-row"><span>Rotação</span><strong id="prop-rotation">0°</strong></div>
+                    <div class="property-row"><span>Opacidade</span><strong id="prop-opacity">100%</strong></div>
+                </div>
+
+                <div class="panel-block property-controls">
+                    <button id="btn-lock-toggle">Olho / Trava</button>
+                    <button id="btn-create-rig">Criar Rig</button>
+                    <button id="btn-export-frame">Capturar Quadro</button>
+                    <button id="btn-clear-selection">Limpar Seleção</button>
+                </div>
+
+                <div class="settings-list">
+                    <div class="setting-row"><span>Resolução</span><strong>1920x1080</strong></div>
+                    <div class="setting-row"><span>FPS</span><strong>24</strong></div>
+                    <div class="setting-row"><span>Duração</span><strong>0.04 seg</strong></div>
+                    <div class="setting-row"><span>Visualização</span><strong>Padrão</strong></div>
+                </div>
+            </aside>
+
+            <section class="studio-timeline">
+                <div class="timeline-top">
+                    <div class="panel-title">Linha do Tempo</div>
+                    <button class="secondary-button" id="btn-add-frame">Adicionar Quadro</button>
+                </div>
+                <div class="timeline-track" id="timeline-track"></div>
+                <div class="timeline-footer">
+                    <div class="waveform">Waveform de Áudio (Linha Roxa)</div>
+                    <div class="panel-subtitle">00:02:15 | 00065 | 24 FPS</div>
+                </div>
+            </section>
+        </section>
+    </div>
+
+    <input type="file" accept="image/*" id="input-bg" hidden>
+    <input type="file" accept="image/*" id="input-actor" hidden>
+    <input type="file" accept="image/*" id="input-object" hidden>
+    <input type="file" accept=".stopmotion,.json" id="input-project" hidden>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/7.2.4/pixi.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dexie/3.2.2/dexie.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/antimatter15/whammy/whammy.js"></script>
+    <script src="app.js" defer></script>
+</body>
+</html>

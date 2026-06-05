@@ -1,0 +1,357 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FrameCraft - Stop Motion Studio</title>
+  <style>
+    /* Reset Geral da Interface Studio */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body {
+      background-color: #060608;
+      color: #e1e1e6;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* Topo do Aplicativo */
+    .topo-app {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 24px;
+      background-color: #0d0d11;
+      border-bottom: 1px solid #16161c;
+    }
+    .logo-app { font-weight: bold; font-size: 14px; letter-spacing: 0.5px; color: #ffffff; }
+    .logo-app span { color: #ffb800; }
+    .menu-superior { display: flex; gap: 24px; font-size: 11px; font-weight: bold; color: #7c7c8a; }
+    .menu-superior span { cursor: pointer; }
+    .menu-superior span.ativo { color: #ffffff; }
+    .usuario-perfil { display: flex; align-items: center; gap: 10px; font-size: 12px; }
+    .avatar {
+      width: 28px; height: 28px; background-color: #ffb800; color: #000;
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-weight: bold; font-size: 11px;
+    }
+    /* Layout da Área de Trabalho */
+    .conteudo-principal { display: flex; flex: 1; height: calc(100vh - 120px); }
+
+    /* PAINEL LATERAL DIREITO REESTRUTURADO */
+    .painel-lateral-direito {
+      width: 350px; 
+      background-color: #0d0d11; 
+      border-left: 1px solid #16161c;
+      padding: 16px; 
+      display: flex; 
+      flex-direction: column; 
+      gap: 16px; 
+      overflow-y: auto;
+    }
+    .painel-lateral-direito::-webkit-scrollbar { display: none; }
+
+    /* Barra de Rolagem Horizontal do Menu de Opções */
+    .abas-container-scroll {
+      width: 100%;
+      overflow-x: auto;
+      white-space: nowrap;
+      border-bottom: 1px solid #1a1a24;
+      padding-bottom: 4px;
+    }
+    .abas-container-scroll::-webkit-scrollbar { display: none; }
+
+    .abas-painel { display: flex; gap: 20px; }
+
+    /* Tipografia e traço amarelo idêntico à sua imagem */
+    .aba-item {
+      background: none;
+      border: none;
+      color: #7c7c8a;
+      padding: 8px 2px;
+      font-size: 11px;
+      font-weight: bold;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      position: relative;
+      flex-shrink: 0;
+    }
+    .aba-item:hover { color: #ffffff; }
+
+    .aba-item.ativa { color: #ffb800; }
+    .aba-item.ativa::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background-color: #ffb800;
+    }
+
+    /* Exibição Dinâmica do Bloco Ativo */
+    .conteudo-aba { display: none; flex-direction: column; }
+    .conteudo-aba.ativo { display: flex; }
+    /* Caixas Modulares Arredondadas Escuras */
+    .secao-painel { 
+      background-color: #121216; 
+      border-radius: 10px; 
+      padding: 16px; 
+    }
+    
+    .titulo-secao { 
+      font-size: 10px; 
+      color: #7c7c8a; 
+      letter-spacing: 1px; 
+      margin-bottom: 14px; 
+      font-weight: bold; 
+      text-transform: uppercase;
+    }
+    
+    .propriedade-linha { 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center; 
+      font-size: 13px; 
+      margin-bottom: 12px; 
+      color: #c4c4cc; 
+    }
+    .propriedade-linha:last-of-type { margin-bottom: 0; }
+    .propriedade-linha span.label-cinza { color: #7c7c8a; }
+
+    /* Botão Pontilhado de Criação Embutido */
+    .botao-criar-interno {
+      width: 100%; 
+      background-color: #16161c; 
+      color: #ffb800; 
+      border: 1px dashed #ffb800;
+      padding: 10px; 
+      font-size: 11px; 
+      font-weight: bold; 
+      border-radius: 6px;
+      cursor: pointer; 
+      text-transform: uppercase; 
+      margin-top: 14px; 
+      transition: all 0.2s;
+    }
+    .botao-criar-interno:hover { background-color: #ffb800; color: #000000; border-style: solid; }
+
+    /* Itens de Linha e Elementos de Camada */
+    .lista-itens { display: flex; flex-direction: column; gap: 4px; }
+    .item-linha { 
+      display: flex; 
+      align-items: center; 
+      justify-content: space-between; 
+      padding: 8px 4px; 
+      border-bottom: 1px solid #1a1a24; 
+      font-size: 13px; 
+    }
+    .item-linha:last-child { border-bottom: none; }
+    .item-nome { flex: 1; margin-left: 12px; color: #c4c4cc; }
+    .icon-visibilidade, .icon-drag { color: #50505a; cursor: pointer; font-size: 12px; }
+
+    /* Customização do Slider de Propriedades */
+    .slider-container { display: flex; align-items: center; gap: 12px; margin-top: 8px; width: 100%; }
+    .slider-container input[type="range"] { flex: 1; accent-color: #ffb800; height: 3px; background: #22222a; border-radius: 2px; outline: none; }
+    .slider-container span { font-size: 12px; color: #ffffff; min-width: 35px; text-align: right; }
+
+    /* Painéis Restantes da Interface */
+    .painel-lateral-esquerdo { width: 240px; background-color: #0d0d11; border-right: 1px solid #16161c; padding: 15px; }
+    .palco-central { flex: 1; display: flex; flex-direction: column; background-color: #060608; padding: 20px; }
+    .titulo-palco { font-size: 18px; font-weight: bold; margin-bottom: 15px; }
+    .tela-animacao { flex: 1; background-color: #0d0d11; border-radius: 12px; display: flex; align-items: center; justify-content: center; position: relative; border: 1px solid #16161c; }
+    .texto-vazio { color: #7c7c8a; font-size: 13px; }
+    .marca-dagua { position: absolute; right: 20px; bottom: 20px; text-align: right; font-size: 11px; color: #7c7c8a; }
+    .esteira-capturas { height: 60px; background-color: #0d0d11; border-top: 1px solid #16161c; padding: 10px 20px; font-size: 11px; color: #7c7c8a; }
+  </style>
+</head>
+<body>
+  <!-- Topo -->
+  <div class="topo-app">
+    <div class="logo-app">FrameCraft <span>STOP MOTION</span></div>
+    <div class="menu-superior">
+      <span>INÍCIO</span> <span>AULAS</span> <span class="ativo">ESTÚDIO</span> <span>RECURSOS</span> <span>GALERIA</span>
+    </div>
+    <div class="usuario-perfil">
+      <div>Bianca Oliveira<br><span style="color:#7c7c8a; font-size:10px;">Criador Iniciante</span></div>
+      <div class="avatar">BO</div>
+    </div>
+  </div>
+
+  <!-- Corpo Principal -->
+  <div class="conteudo-principal">
+    
+    <!-- Painel Lateral Esquerdo (Simulado) -->
+    <div class="painel-lateral-esquerdo">
+      <div style="font-size: 11px; color:#7c7c8a; font-weight:bold;">CONTROLES</div>
+    </div>
+
+    <!-- Centro (Mesa de Animação) -->
+    <div class="palco-central">
+      <div class="titulo-palco">Mesa de Animação Ativa</div>
+      <div class="tela-animacao">
+        <div class="texto-vazio">Mesa Ativa. Modifique as opções no painel à direita!</div>
+        <div class="marca-dagua">STOP MOTION<br>FOTO 0</div>
+      </div>
+    </div>
+
+    <!-- PAINEL LATERAL DIREITO REESTRUTURADO -->
+    <div class="painel-lateral-direito">
+      
+      <!-- Linha de Abas com Carrossel Horizontal Invisível -->
+      <div class="abas-container-scroll">
+        <div class="abas-painel">
+          <button class="aba-item ativa" onclick="mudarAba('cenario')">Cenário</button>
+          <button class="aba-item" onclick="mudarAba('personagens')">Personagens</button>
+          <button class="aba-item" onclick="mudarAba('filtros')">Filtros</button>
+          <button class="aba-item" onclick="mudarAba('sons')">Sons</button>
+          <button class="aba-item" onclick="mudarAba('objetos')">Objetos</button>
+          <button class="aba-item" onclick="mudarAba('editar-cena')">Editar Cena</button>
+        </div>
+      </div>
+
+      <!-- ================= CONTEÚDO DINÂMICO: CENÁRIO ================= -->
+      <div id="aba-cenario" class="conteudo-aba ativo">
+        <div class="secao-painel">
+          <h3 class="titulo-secao">Cenários Disponíveis</h3>
+          <div class="lista-itens">
+            <div class="item-linha">🖼️ <span class="item-nome">Quarto do Theo (Ativo)</span></div>
+            <div class="item-linha">🌲 <span class="item-nome">Parque Externo</span></div>
+          </div>
+          <button class="botao-criar-interno">+ Criar Cenário</button>
+        </div>
+      </div>
+      <!-- ================= CONTEÚDO DINÂMICO: PERSONAGENS ================= -->
+      <div id="aba-personagens" class="conteudo-aba">
+        <div class="secao-painel">
+          <h3 class="titulo-secao">Biblioteca de Personagens</h3>
+          <div class="lista-itens">
+            <div class="item-linha">👤 <span class="item-nome">Personagem (Theo)</span></div>
+            <div class="item-linha">👤 <span class="item-nome">Gato Ghibli</span></div>
+          </div>
+          <button class="botao-criar-interno">+ Criar Personagem</button>
+        </div>
+      </div>
+
+      <!-- ================= CONTEÚDO DINÂMICO: FILTROS ================= -->
+      <div id="aba-filtros" class="conteudo-aba">
+        <div class="secao-painel">
+          <h3 class="titulo-secao">Filtros de Cor</h3>
+          <div class="lista-itens">
+            <div class="item-linha">🎬 <span class="item-nome">Quente Vintage</span></div>
+            <div class="item-linha">🎞️ <span class="item-nome">Preto e Branco Coor</span></div>
+          </div>
+          <button class="botao-criar-interno">+ Criar Filtro</button>
+        </div>
+      </div>
+
+      <!-- ================= CONTEÚDO DINÂMICO: SONS ================= -->
+      <div id="aba-sons" class="conteudo-aba">
+        <div class="secao-painel">
+          <h3 class="titulo-secao">Efeitos de Áudio</h3>
+          <div class="lista-itens">
+            <div class="item-linha">🎵 <span class="item-nome">Trilha de Fundo_01.mp3</span></div>
+          </div>
+          <button class="botao-criar-interno">+ Criar Som</button>
+        </div>
+      </div>
+      <!-- ================= CONTEÚDO DINÂMICO: OBJETOS ================= -->
+      <div id="aba-objetos" class="conteudo-aba">
+        <div class="secao-painel">
+          <h3 class="titulo-secao">Objetos Adicionais</h3>
+          <div class="lista-itens">
+            <div class="item-linha">🪑 <span class="item-nome">Mesa Comum</span></div>
+            <div class="item-linha">💡 <span class="item-nome">Luminária Mesa</span></div>
+          </div>
+          <button class="botao-criar-interno">+ Criar Objeto</button>
+        </div>
+      </div>
+
+      <!-- ================= CONTEÚDO DINÂMICO: EDITAR CENA ================= -->
+      <div id="aba-editar-scene" class="conteudo-aba">
+        <div class="secao-painel">
+          <h3 class="titulo-secao">Ajustes Rápidos</h3>
+          <div class="lista-itens">
+            <div class="item-linha">✂️ <span class="item-nome">Cortar Sequência Atual</span></div>
+          </div>
+          <button class="botao-criar-interno">+ Criar Ajuste</button>
+        </div>
+      </div>
+
+      <!-- ================= BLOCO FIXO: CAMADAS / OBJETOS ================= -->
+      <div class="secao-painel">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <h3 class="titulo-secao" style="margin-bottom: 0;">CAMADAS / OBJETOS</h3>
+          <span style="font-size: 16px; color: #7c7c8a; cursor: pointer;">+</span>
+        </div>
+        <div class="lista-itens">
+          <div class="item-linha">
+            <span class="icon-visibilidade">👁️</span>
+            <span class="item-nome">Personagem (Theo)</span>
+            <span class="icon-drag">☰</span>
+          </div>
+          <div class="item-linha">
+            <span class="icon-visibilidade">👁️</span>
+            <span class="item-nome">Mesa</span>
+            <span class="icon-drag">☰</span>
+          </div>
+          <div class="item-linha">
+            <span class="icon-visibilidade">👁️</span>
+            <span class="item-nome">Cadeira</span>
+            <span class="icon-drag">☰</span>
+          </div>
+          <div class="item-linha">
+            <span class="icon-visibilidade">👁️</span>
+            <span class="item-nome">Luminária</span>
+            <span class="icon-drag">☰</span>
+          </div>
+        </div>
+      </div>
+      <!-- ================= BLOCO FIXO: DETALHES TÉCNICOS ================= -->
+      <div class="secao-painel">
+        <div class="propriedade-linha"><strong>Meu Filme Stop Motion</strong> <span>✏️</span></div>
+        <div class="propriedade-linha"><span class="label-cinza">Resolução</span> <span>1920 x 1080</span></div>
+        <div class="propriedade-linha"><span class="label-cinza">Taxa de Quadros</span> <span>12 fps</span></div>
+        <div class="propriedade-linha"><span class="label-cinza">Duração</span> <span>00:02:45</span></div>
+        <div class="propriedade-linha"><span class="label-cinza">Formato</span> <span>MP4</span></div>
+      </div>
+
+      <!-- ================= BLOCO FIXO: PROPRIEDADES (MOVIDO PARA A BASE) ================= -->
+      <div class="secao-painel">
+        <h3 class="titulo-secao">PROPRIEDADES DA SELEÇÃO</h3>
+        <div class="propriedade-linha"><span>Personagem (Theo)</span> <span>✏️</span></div>
+        <div style="margin-top: 8px;">
+          <span class="label-cinza" style="font-size: 13px;">Opacidade</span>
+          <div class="slider-container"><input type="range" min="0" max="100" value="100"><span>100%</span></div>
+        </div>
+        <div class="propriedade-linha" style="margin-top: 12px;"><span class="label-cinza">Posição X</span> <span>12.4 cm</span></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Rodapé -->
+  <div class="esteira-capturas">SUA ESTEIRA DE FOTOS CAPTURADAS (STOP MOTION)</div>
+
+  <!-- Lógica das Abas Dinâmicas -->
+  <script>
+    function mudarAba(nomeAba) {
+      document.querySelectorAll('.aba-item').forEach(b => b.classList.remove('ativa'));
+      document.querySelectorAll('.conteudo-aba').forEach(c => c.classList.remove('ativo'));
+      
+      event.currentTarget.classList.add('ativa');
+      
+      if(nomeAba === 'editar-cena') {
+        document.getElementById('aba-editar-scene').classList.add('ativo');
+      } else {
+        document.getElementById('aba-' + nomeAba).classList.add('ativo');
+      }
+    }
+  </script>
+
+</body>
+</html>
