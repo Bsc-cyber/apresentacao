@@ -3,85 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StopArt Cine - Universo ParaNorman</title>
+    <title>StopArt Cine - Universo Noiva Cadáver</title>
+    
     <style>
         /* ==========================================================================
-           1. RESET & BASE CINEMATOGRÁFICA
+           1. ESTILOS DE FUNDO E BARRA SUPERIOR
            ========================================================================== */
-        * {
+        body {
+            background-color: #0b0f19;
+            color: #e2e8f0;
+            font-family: 'Segoe UI', Roboto, sans-serif;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-        }
-
-        body {
-            background-color: #06020b;
-            color: #e5dbf1;
-            background-image: radial-gradient(circle at 50% -20%, #2b1347 0%, #06020b 70%);
             overflow-x: hidden;
-            padding-bottom: 80px;
         }
 
-        header {
-            padding: 20px 50px;
+        .navbar-cine {
+            background-color: #060a12;
+            padding: 15px 40px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: rgba(6, 2, 11, 0.85);
-            backdrop-filter: blur(10px);
-            border-bottom: 2px dashed rgba(174, 123, 255, 0.2);
-            position: sticky;
-            top: 0;
-            z-index: 100;
+            border-bottom: 1px dashed rgba(143, 169, 255, 0.2);
+            margin-bottom: 40px;
         }
 
-        .logo-art {
-            font-size: 1.5rem;
-            font-weight: bold;
-            letter-spacing: 2px;
+        .logo-stopart {
             color: #fff;
-            text-shadow: 0 0 10px #ae7bff, 0 0 20px #ae7bff;
+            font-size: 1.5rem;
+            font-weight: 900;
+            letter-spacing: 2px;
+            text-transform: uppercase;
         }
 
-        .btn-voltar {
-            color: #00ffcc;
+        .btn-sair-sala {
+            background: transparent;
+            color: #8fa9ff;
+            border: 2px solid #8fa9ff;
+            padding: 8px 20px;
+            border-radius: 20px;
             text-decoration: none;
-            font-weight: 700;
+            font-weight: bold;
             font-size: 0.85rem;
             text-transform: uppercase;
-            letter-spacing: 2px;
-            padding: 10px 20px;
-            border: 1px solid #00ffcc;
-            border-radius: 50px;
-            box-shadow: inset 0 0 10px rgba(0, 255, 204, 0.2);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
         }
 
-        .btn-voltar:hover {
-            color: #06020b;
-            background: #00ffcc;
-            box-shadow: 0 0 20px #00ffcc;
-            transform: scale(1.08);
+        .btn-sair-sala:hover {
+            background: #8fa9ff;
+            color: #060a12;
+            box-shadow: 0 0 15px rgba(143, 169, 255, 0.5);
         }
 
-        .main-container {
-            max-width: 950px;
+        /* Container centralizador do bilhete */
+        .container-ticket {
+            max-width: 1000px;
+            width: 90%;
             margin: 0 auto;
-            padding: 40px 20px;
-        }
-
-        .reveal {
-            opacity: 0;
-            transform: translateY(30px);
-            animation: fadeInUp 0.8s forwards ease-out;
-        }
-
-        @keyframes fadeInUp {
-            to { opacity: 1; transform: translateY(0); }
+            box-sizing: border-box;
         }
         /* ==========================================================================
-           2. INGRESSO FINO E ESTICADO NA LARGURA MÁXIMA
+           2. INGRESSO FINO E ESTICADO NA LARGURA MÁXIMA (ESTILO PARANORMAN)
            ========================================================================== */
         .ticket-wrapper {
             perspective: 1000px;
@@ -103,13 +86,14 @@
             transition: transform 0.1s ease;
         }
 
+        /* Furos circulares laterais adaptados ao fundo escuro da Noiva Cadáver */
         .cinema-ticket::before, .cinema-ticket::after {
             content: '';
             position: absolute;
             top: 75%;
             width: 36px;
             height: 36px;
-            background: #06020b;
+            background: #0b0f19;
             border-radius: 50%;
             z-index: 10;
         }
@@ -117,7 +101,7 @@
         .cinema-ticket::after { right: -18px; }
 
         .ticket-poster-area {
-            height: 240px;
+            height: 240px; /* Altura fina idêntica ao seu código do Norman */
             position: relative;
             overflow: hidden;
             background: #000;
@@ -142,22 +126,21 @@
 
         .ticket-movie-title h1 {
             font-size: 3.8rem;
-            color: #00ffcc;
+            color: #8fa9ff; /* Azul Ciano Gótico */
             text-transform: uppercase;
             font-style: italic;
             font-weight: 900;
             letter-spacing: 2px;
-            text-shadow: 3px 3px 0px #311155, 0 0 15px rgba(0, 255, 204, 0.5);
+            text-shadow: 3px 3px 0px #1e293b, 0 0 15px rgba(143, 169, 255, 0.5);
         }
 
         .ticket-tagline {
-            color: #ff3e6c;
+            color: #38bdf8; /* Azul Claro Brilhante */
             font-size: 0.95rem;
             font-weight: 700;
             letter-spacing: 4px;
             text-transform: uppercase;
         }
-
         .ticket-body {
             padding: 35px;
             background: #fdfaf6;
@@ -172,6 +155,7 @@
             font-weight: 500;
         }
 
+        /* Grid de Informações de 4 Colunas idêntico ao Norman */
         .ticket-info-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -181,7 +165,7 @@
         }
 
         .ticket-meta-box {
-            border-left: 3px solid #ff3e6c;
+            border-left: 3px solid #38bdf8; /* Azul neon gótico */
             padding-left: 10px;
         }
 
@@ -189,7 +173,7 @@
             display: block;
             font-size: 0.68rem;
             text-transform: uppercase;
-            color: #8c76a5;
+            color: #708090;
             font-weight: bold;
         }
 
@@ -206,6 +190,7 @@
             border-top: 2px dashed rgba(0,0,0,0.12);
         }
 
+        /* Código de barras gerado via gradiente puro */
         .barcode-mock {
             height: 40px;
             background: linear-gradient(to right, 
@@ -218,390 +203,743 @@
             margin-bottom: 8px;
         }
 
-        /* ==========================================================================
-           3. TITULOS E CARROSSEL PELÍCULA 35MM
-           ========================================================================== */
-        .section-title {
-            font-size: 1.8rem;
-            margin: 50px 0 25px;
-            color: #fff;
+        .barcode-number {
+            font-size: 0.65rem;
+            letter-spacing: 5px;
+            color: #708090;
+            font-family: monospace;
             text-transform: uppercase;
-            letter-spacing: 2px;
-            border-left: 6px solid #ff3e6c;
-            padding-left: 15px;
         }
-
-        .filmstrip-container {
-            background: #111;
-            padding: 15px 0;
-            border-top: 10px dashed #252525;
-            border-bottom: 10px dashed #252525;
-            border-radius: 8px;
-            position: relative;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.8);
-        }
-
-        .carousel-view {
+        /* ==========================================
+           ESTILOS DO CARROSSEL DE IMAGENS (6 SLIDES)
+           ========================================== */
+        .carrossel-container {
             position: relative;
             width: 100%;
-            height: 440px;
+            height: 450px;
+            margin: 50px 0;
+            border-radius: 16px;
             overflow: hidden;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.4);
         }
 
-        .carousel-track {
+        .carrossel-slides {
             display: flex;
             width: 100%;
             height: 100%;
-            transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            transition: transform 0.5s ease-in-out;
         }
 
-        .carousel-slide {
+        .slide {
             min-width: 100%;
             height: 100%;
             position: relative;
         }
 
-        .carousel-slide img {
+        .slide img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
 
-        .carousel-overlay {
+        .slide-legenda {
             position: absolute;
             bottom: 0;
             left: 0;
             right: 0;
-            background: linear-gradient(to top, rgba(6, 2, 11, 0.95) 0%, rgba(6, 2, 11, 0.3) 100%);
-            padding: 30px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.85));
+            color: #fff;
+            padding: 30px 20px 20px 20px;
+            font-size: 1.1rem;
+            text-align: center;
         }
 
-        .carousel-overlay h4 { font-size: 1.3rem; color: #00ffcc; margin-bottom: 5px; }
-
-        .carousel-arrow {
+        .carrossel-btn {
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            background: rgba(255, 62, 108, 0.8);
-            border: none;
-            color: white;
+            background: rgba(18, 24, 38, 0.7);
+            color: #8fa9ff;
+            border: 1px solid rgba(143,169,255,0.3);
             width: 45px;
             height: 45px;
-            cursor: pointer;
             border-radius: 50%;
-            font-size: 1.3rem;
-            z-index: 10;
+            cursor: pointer;
+            font-size: 1.2rem;
+            font-weight: bold;
+            transition: all 0.2s;
+            z-index: 5;
+        }
+
+        .carrossel-btn:hover { background: #8fa9ff; color: #0b0f19; }
+        .btn-prev { left: 20px; }
+        .btn-next { right: 20px; }
+
+        /* ==========================================
+           ESTILOS DA PLAYLIST DE VÍDEOS E GRIDS
+           ========================================== */
+        .secao-cinema-painel { margin: 50px 0; }
+        .titulo-secao {
+            color: #8fa9ff;
+            font-size: 1.8rem;
+            border-left: 4px solid #38bdf8;
+            padding-left: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 25px;
+        }
+
+        .playlist-layout {
             display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .arrow-left { left: 15px; }
-        .arrow-right { right: 15px; }
-
-        /* ==========================================================================
-           4. GRID DE 10 SEGREDOS COM IMAGENS LOCALIZADAS
-           ========================================================================== */
-        .curiosidades-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 25px;
-        }
-
-        .critica-card {
-            background: rgba(26, 13, 41, 0.45);
-            border: 1px solid rgba(174, 123, 255, 0.12);
+            gap: 30px;
+            background-color: #121826;
+            padding: 25px;
             border-radius: 16px;
+            border: 1px solid rgba(143, 169, 255, 0.1);
+        }
+
+        .video-player-principal {
+            flex: 2;
+            border-radius: 10px;
             overflow: hidden;
-            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+            background: #000;
+        }
+
+        .video-player-principal iframe { width: 100%; height: 400px; display: block; border: none; }
+
+        .video-lista-thumbs {
+            flex: 1;
             display: flex;
             flex-direction: column;
+            gap: 15px;
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 5px;
         }
 
-        .critica-card:hover {
-            border-color: #00ffcc;
-            background: rgba(26, 13, 41, 0.75);
+        .video-lista-thumbs::-webkit-scrollbar { width: 6px; }
+        .video-lista-thumbs::-webkit-scrollbar-thumb { background: #38bdf8; border-radius: 10px; }
+
+        .thumb-item {
+            display: flex;
+            gap: 12px;
+            background: #1a2336;
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .thumb-item:hover, .thumb-item.ativo { border-color: #8fa9ff; background: #222f47; }
+        .thumb-img { width: 100px; height: 60px; object-fit: cover; border-radius: 4px; }
+        .thumb-info h4 { margin: 0 0 5px 0; color: #fff; font-size: 0.9rem; }
+        .thumb-info p { margin: 0; color: #94a3b8; font-size: 0.75rem; }
+
+        /* Grid de Bastidores e Páginas Internas */
+        .grid-bastidores-9 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; }
+
+        .card-bastidor-foto {
+            background: #121826;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(143, 169, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .card-bastidor-foto:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 255, 204, 0.15);
+            border-color: #38bdf8;
+            box-shadow: 0 10px 20px rgba(56, 189, 248, 0.15);
         }
 
-        .card-img-wrapper {
-            width: 100%;
-            height: 220px; /* Deixei um tiquinho mais alto pro enquadramento ficar perfeito */
-            overflow: hidden;
-            background: #11071c;
-            border-bottom: 1px solid rgba(174, 123, 255, 0.15);
+        .foto-card { width: 100%; height: 180px; object-fit: cover; border-bottom: 1px solid rgba(143, 169, 255, 0.1); }
+        .info-card { padding: 20px; }
+        .info-card h3 { color: #38bdf8; margin: 0 0 10px 0; font-size: 1.2rem; }
+        .info-card p { color: #cbd5e1; font-size: 0.95rem; margin: 0; line-height: 1.5; }
+
+        .lista-easter-eggs-completa { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+
+        /* Área do Quiz da Bilheteria */
+        .bilheteria-quiz { background: #060a12; border: 2px dashed #38bdf8; border-radius: 12px; padding: 40px; text-align: center; }
+        .placar-quiz { font-size: 1.1rem; color: #94a3b8; margin-bottom: 15px; }
+        .opcoes-filme { display: grid; grid-template-columns: 1fr; gap: 12px; max-width: 650px; margin: 25px auto; }
+
+        .opcoes-filme button {
+            background: #121826;
+            color: #fff;
+            border: 1px solid rgba(143, 169, 255, 0.1);
+            padding: 15px 20px;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s ease;
         }
 
-        .card-img-wrapper img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover; /* Preenche tudo e some com o fundo roxo */
-            object-position: top center; /* MÁGICA: Alinha pelo topo da foto pra não cortar a cabeça! */
-            transition: transform 0.4s;
+        .opcoes-filme button:hover:not(:disabled) { border-color: #38bdf8; background: #1a2336; }
+        .opcoes-filme button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .btn-ingresso {
+            background: linear-gradient(90deg, #38bdf8 0%, #8fa9ff 100%);
+            color: #060a12;
+            border: none;
+            padding: 14px 40px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(56, 189, 248, 0.3);
+            transition: all 0.3s ease;
         }
 
+        .btn-ingresso:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(56, 189, 248, 0.5); }
 
-        .critica-card:hover .card-img-wrapper img {
-            transform: scale(1.05);
+        /* O Bloco do Troféu Mágico e Partículas */
+        .container-trofeu {
+            margin-top: 40px;
+            padding: 30px;
+            background: radial-gradient(circle, #1a2336 0%, #060a12 100%);
+            border-radius: 12px;
+            border: 2px solid #38bdf8;
+            display: none;
+            position: relative;
         }
 
-        .card-content {
-            padding: 20px;
-            flex-grow: 1;
+        .icone-trofeu { font-size: 4rem; animation: vibrar 2s infinite alternate; }
+        @keyframes vibrar { 0% { transform: scale(1); } 100% { transform: scale(1.1); } }
+
+        .particula-borboleta { position: absolute; font-size: 1.5rem; pointer-events: none; z-index: 5; }
+
+        /* Animação das borboletas que saem do troféu */
+        @keyframes voarBorboleta {
+            0% { opacity: 1; transform: translate(0, 0) scale(0.5); }
+            100% { opacity: 0; transform: translate(var(--x), var(--y)) rotate(var(--r)) scale(1.2); }
         }
 
-        .rating-stars { color: #ffb703; margin-bottom: 10px; font-size: 0.9rem; }
-        .critica-card h4 { color: #fff; font-size: 1.1rem; margin-bottom: 8px; }
-        .critica-card p { color: #bfaecf; line-height: 1.5; font-size: 0.9rem; }
+        /* Animação contínua de borboletas voando ao fundo */
+        .fundo-borboletas-ambiente { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: -1; overflow: hidden; }
+        .borboleta-ambiente { position: absolute; font-size: 1.5rem; opacity: 0; filter: drop-shadow(0 0 8px #38bdf8); animation: vooContinuo 12s linear infinite; }
 
-        .video-box-centered {
-            background: #11071c;
-            border: 8px solid #1a0d29;
-            border-radius: 16px;
-            width: 100%;
-            max-width: 500px;
-            height: 400px;
-            margin: 0 auto;
-            overflow: hidden;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+        @keyframes vooContinuo {
+            0% { transform: translateY(110vh) translateX(0) scale(0.5) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.7; }
+            50% { transform: translateY(50vh) translateX(60px) scale(1.1) rotate(15deg); }
+            90% { opacity: 0.7; }
+            100% { transform: translateY(-10vh) translateX(-40px) scale(0.6) rotate(-15deg); opacity: 0; }
         }
-        .video-box-centered iframe { width: 100%; height: 100%; border: none; }
+
+        .b-amb-1 { left: 8%;  animation-delay: 0s;  animation-duration: 14s; }
+        .b-amb-2 { left: 23%; animation-delay: 3s;  animation-duration: 19s; }
+        .b-amb-3 { left: 42%; animation-delay: 1s;  animation-duration: 16s; }
+        .b-amb-4 { left: 61%; animation-delay: 5s;  animation-duration: 21s; }
+        .b-amb-5 { left: 78%; animation-delay: 2s;  animation-duration: 13s; }
+        .b-amb-6 { left: 92%; animation-delay: 6.5s; animation-duration: 17s; }
+
+        .easter-egg-borboleta {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            font-size: 2.2rem;
+            cursor: pointer;
+            z-index: 100;
+            filter: drop-shadow(0 0 8px #38bdf8);
+            transition: transform 0.2s;
+        }
+        .easter-egg-borboleta:hover { transform: scale(1.2); }
 
         @media (max-width: 768px) {
-            .ticket-info-grid { grid-template-columns: repeat(2, 1fr); }
-            .ticket-movie-title h1 { font-size: 2.5rem; }
+            .playlist-layout { flex-direction: column; }
+            .video-player-principal iframe { height: 240px; }
+            .ticket-titulo { font-size: 2.5rem; }
         }
     </style>
 </head>
 <body>
 
-    <header>
-        <div class="logo-art">🎬 STOPART CINE</div>
-        <a href="home.html" class="btn-voltar">← Sair da Sala</a>
-    </header>
+    <!-- Menu Superior de Navegação Estilo Cinema -->
+    <nav class="navbar-cine">
+        <div class="logo-stopart">🎬 StopArt Cine</div>
+        <a href="home.html" class="btn-sair-sala">← Sair da Sala</a>
+    </nav>
 
-    <div class="main-container">
+    <!-- CONTEINER AUTOMÁTICO PARA AS BORBOLETAS DE FUNDO -->
+    <div class="fundo-borboletas-ambiente">
+        <div class="borboleta-ambiente b-amb-1">🦋</div>
+        <div class="borboleta-ambiente b-amb-2">🦋</div>
+        <div class="borboleta-ambiente b-amb-3">🦋</div>
+        <div class="borboleta-ambiente b-amb-4">🦋</div>
+        <div class="borboleta-ambiente b-amb-5">🦋</div>
+        <div class="borboleta-ambiente b-amb-6">🦋</div>
+    </div>
 
-        <!-- Ingresso Ajustado: Mesma largura dos elementos debaixo e mais fino -->
-        <div class="ticket-wrapper reveal">
-            <div class="cinema-ticket" id="parallaxTicket">
+    <!-- Container Centralizador que cria as margens pretas perfeitas -->
+    <main class="container-ticket">
+        
+        <!-- O INGRESSO COMPLETO ESTILO PARANORMAN -->
+        <div class="ticket-wrapper">
+            <article class="cinema-ticket">
                 
+                <!-- Parte Superior: Foto Fina e Título com Neon -->
                 <div class="ticket-poster-area">
-                    <img src="img/paranorman/paranorman-banner.jpg" alt="ParaNorman Universo">
+                    <img src="assets/noiva-banner.jpg" alt="A Noiva Cadáver">
                     <div class="ticket-movie-title">
-                        <h1>ParaNorman</h1>
-                        <div class="ticket-tagline">Você não vira herói sendo normal</div>
+                        <p class="ticket-tagline">"Com esta mão eu espantarei a sua tristeza..."</p>
+                        <h1>A Noiva Cadáver</h1>
                     </div>
                 </div>
 
+                <!-- Parte Inferior: Papel Claro com Picote e Conversinha -->
                 <div class="ticket-body">
                     <p class="ticket-conversinha">
-                        Ei, prepare a pipoca! Você sabia que o Norman consegue bater um papo super de boa com os mortos? Pois é! Enquanto toda a cidade acha o coitado uma figura esquisita, ele se torna a última barreira física entre os vivos e uma horda de zumbis furiosos despertados por uma antiga maldição de bruxa de 300 anos atrás! 🧟‍♂️✨
+                        Ei, prepare a pipoca! Você sabia que o Victor conseguiu a proeza de se casar acidentalmente com uma noiva defunta na floresta? Pois é! Enquanto toda a alta sociedade dos vivos tenta forçar casamentos arranjados por puro interesse financeiro, o submundo dos mortos se revela uma gigantesca e colorida festa repleta de jazz, onde as almas celebram e a eternidade é muito mais viva e divertida! 🦋✨
                     </p>
-                    
+
+                    <!-- Ficha Técnica de 4 Colunas Idêntica ao Norman -->
                     <div class="ticket-info-grid">
                         <div class="ticket-meta-box">
                             <label>Estúdio Criador</label>
-                            <span>Laika Studios</span>
+                            <span>Laika / Warner</span>
                         </div>
                         <div class="ticket-meta-box">
                             <label>Técnica de Arte</label>
-                            <span>Stop-Motion 3D</span>
+                            <span>Stop-Motion</span>
                         </div>
                         <div class="ticket-meta-box">
                             <label>Tempo de Suor</label>
-                            <span>+3 Anos de Luta</span>
+                            <span>+3 Anos</span>
                         </div>
                         <div class="ticket-meta-box">
                             <label>Aclamação</label>
-                            <span>Indicado ao Oscar</span>
+                            <span>Indicado Oscar</span>
                         </div>
                     </div>
                 </div>
 
+                <!-- Rodapé do Ingresso com o Código de Barras Clássico -->
                 <div class="ticket-footer-barcode">
                     <div class="barcode-mock"></div>
-                    <small style="letter-spacing: 4px; font-weight: bold; font-size: 0.65rem; color: #555;">CINE-STOPART-2012-NORMAN</small>
+                    <div class="barcode-number">002005092305312026</div>
                 </div>
-            </div>
+
+            </article>
         </div>
+        <!-- RECURSO: CARROSSEL DE 6 IMAGENS LOCAIS -->
+        <section class="secao-cinema-painel">
+            <h2 class="titulo-secao">📸 Galeria de Cenas Ocultas (Edição Expandida)</h2>
+            <div class="carrossel-container">
+                <div class="carrossel-slides" id="carrosselSlides">
+                    <div class="slide">
+                        <img src="assets/carrossel1.jpg" alt="Cenário de Animação 1">
+                        <div class="slide-legenda">A melancólica floresta gótica onde a promessa de Victor desperta Emily de seu sono profundo.</div>
+                    </div>
+                    <div class="slide">
+                        <img src="assets/carrossel2.jpg" alt="Luzes Coloridas 2">
+                        <div class="slide-legenda">O contraste brilhante e neon das cores quentes do bar de jazz no animado mundo dos mortos.</div>
+                    </div>
+                    <div class="slide">
+                        <img src="assets/carrossel3.jpg" alt="Engrenagens 3">
+                        <div class="slide-legenda">Por trás das câmeras: Os cenários em miniatura e maquetes artesanais construídas nos estúdios.</div>
+                    </div>
+                    <div class="slide">
+                        <img src="assets/carrossel4.jpg" alt="Cenário de Animação 4">
+                        <div class="slide-legenda">O ensaio do dueto de piano entre Victor e Emily, unindo sentimentos de dois mundos diferentes.</div>
+                    </div>
+                    <div class="slide">
+                        <img src="assets/carrossel5.jpg" alt="Cenário de Animação 5">
+                        <div class="slide-legenda">A rígida e cinzenta cidade dos vivos, controlada pelas severas aparências e casamentos arranjados.</div>
+                    </div>
+                    <div class="slide">
+                        <img src="assets/carrossel6.jpg" alt="Cenário de Animação 6">
+                        <div class="slide-legenda">A poética transformação final de Emily, encontrando sua merecida paz na luz do luar.</div>
+                    </div>
+                </div>
+                <button class="carrossel-btn btn-prev" onclick="mudarSlide(-1)">❮</button>
+                <button class="carrossel-btn btn-next" onclick="mudarSlide(1)">❯</button>
+            </div>
+        </section>
 
-        <!-- Carrossel de Cenas com Caminhos Locais Corrigidos -->
-        <section class="reveal">
-            <h2 class="section-title"> behind the scenes </h2>
-            <div class="filmstrip-container">
-                <button class="carousel-arrow arrow-left" onclick="changeSlide(-1)">❮</button>
-                <button class="carousel-arrow arrow-right" onclick="changeSlide(1)">❯</button>
-                
-                <div class="carousel-view">
-                    <div class="carousel-track" id="movieTrack">
-                        <div class="carousel-slide">
-                            <img src="img/paranorman/paranorman-cenario-maquete.jpg" alt="Maquete Sets">
-                            <div class="carousel-overlay">
-                                <h4>Maquetes e Cenários em Escala Real</h4>
-                                <p>Toda a cidade de Blithe Hollow foi erguida fisicamente em galpões gigantes. Cada minúsculo tijolo recebeu pintura texturizada individual!</p>
-                            </div>
+        <!-- RECURSO: PLAYLIST DE VÍDEOS DOS BASTIDORES -->
+        <section class="secao-cinema-painel">
+            <h2 class="titulo-secao">🎬 Como Foi Feito (Behind the Scenes)</h2>
+            <div class="playlist-layout">
+                <!-- Monitor de Reprodução Principal -->
+                <div class="video-player-principal">
+                    <iframe id="videoPrincipal" src="https://youtube.com" allowfullscreen></iframe>
+                </div>
+                <!-- Lista de Miniaturas Laterais -->
+                <div class="video-lista-thumbs">
+                    <div class="thumb-item ativo" onclick="trocarVideo('https://youtube.com', this)">
+                        <img src="assets/bastidor8.jpg" class="thumb-img" alt="Thumb 1">
+                        <div class="thumb-info">
+                            <h4>O Processo Criativo</h4>
+                            <p>O trabalho manual e paciência milimétrica dos animadores.</p>
                         </div>
-                        <div class="carousel-slide">
-                            <img src="img/paranorman/paranorman-bastidores-luz.jpg" alt="Luzes Teatro">
-                            <div class="carousel-overlay">
-                                <h4>Efeitos Práticos de Iluminação Teatral</h4>
-                                <p>Toda a luz verde fantasmagórica do filme é real! Mini spots de LED foram embutidos nos cenários físicos para criar o clima enevoado de terror.</p>
-                            </div>
+                    </div>
+                    <div class="thumb-item" onclick="trocarVideo('https://youtube.com', this)">
+                        <img src="assets/bastidor3.jpg" class="thumb-img" alt="Thumb 2">
+                        <div class="thumb-info">
+                            <h4>Segredos da Câmera</h4>
+                            <p>Como a iluminação digital e as lentes macro criaram o filme.</p>
+                        </div>
+                    </div>
+                    <div class="thumb-item" onclick="trocarVideo('https://youtube.com', this)">
+                        <img src="assets/bastidor5.jpg" class="thumb-img" alt="Thumb 3">
+                        <div class="thumb-info">
+                            <h4>Músicas e Orquestra</h4>
+                            <p>Danny Elfman revela os arranjos de jazz e coros góticos.</p>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
-        <!-- Player do YouTube Centralizado e Menor -->
-        <section class="reveal">
-            <h2 class="section-title" style="border-left-color: #00ffcc;">🎬 Play nos Bastidores Oficiais</h2>
-            <div class="video-box-centered">
-                <iframe src="https://youtube.com" 
-                        title="ParaNorman Behind the Scenes" 
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                        referrerpolicy="strict-origin-when-cross-origin" 
-                        allowfullscreen>
-                </iframe>
+        <!-- RECURSO: OS 9 SEGREDOS DE BASTIDORES COM FOTOS LOCAIS -->
+        <section class="secao-cinema-painel">
+            <h2 class="titulo-secao">🎬 9 Segredos Tecnológicos dos Bastidores</h2>
+            <div class="grid-bastidores-9">
+                <!-- Card 1 -->
+                <div class="card-bastidor-foto">
+                    <img src="assets/bastidor1.jpg" class="foto-card" alt="Engrenagens">
+                    <div class="info-card">
+                        <h3>1. Engrenagens Ocultas</h3>
+                        <p>O rosto de cada boneco continha mecanismos de relógio inseridos pelas orelhas. Os animadores giravam chaves Allen invisíveis para alterar expressões faciais milímetro a milímetro.</p>
+                    </div>
+                </div>
+                <!-- Card 2 -->
+                <div class="card-bastidor-foto">
+                    <img src="assets/bastidor2.jpg" class="foto-card" alt="Costura">
+                    <div class="info-card">
+                        <h3>2. Figurinos com Microfios</h3>
+                        <p>O icônico véu da Emily possuía fios de aço invisíveis em toda a sua costura. Isso permitia que os tecidos fossem congelados no ar para simular a física do vento quadro a quadro.</p>
+                    </div>
+                </div>
+                <!-- Card 3 -->
+                <div class="card-bastidor-foto">
+                    <img src="assets/bastidor3.jpg" class="foto-card" alt="Lente">
+                    <div class="info-card">
+                        <h3>3. Revolução DSLR</h3>
+                        <p>Foi o primeiro grande longa comercial de stop-motion a trocar as gigantescas câmeras de película de cinema por câmeras DSLR digitais comerciais (modelos Canon EOS-1D Mark II).</p>
+                    </div>
+                </div>
+                <!-- Card 4 -->
+                <div class="card-bastidor-foto">
+                    <img src="assets/bastidor4.jpg" class="foto-card" alt="Luzes">
+                    <div class="info-card">
+                        <h3>4. Iluminação Invertida</h3>
+                        <p>Para criar a ironia de Tim Burton, o mundo dos vivos usava filtros cinzentos e luzes difusas e frias, enquanto o mundo dos mortos usava luzes neon coloridas ultra-vibrantes.</p>
+                    </div>
+                </div>
+                <!-- Card 5 -->
+                <div class="card-bastidor-foto">
+                    <img src="assets/bastidor5.jpg" class="foto-card" alt="Estúdio">
+                    <div class="info-card">
+                        <h3>5. Linha de Montagem</h3>
+                        <p>A produção contou com mais de 30 sets de filmagem simultâneos espalhados em um galpão gigante na Inglaterra, permitindo que vários animadores filmassem cenas diferentes ao mesmo tempo.</p>
+                    </div>
+                </div>
+                <!-- Card 6 -->
+                <div class="card-bastidor-foto">
+                    <img src="assets/bastidor6.jpg" class="foto-card" alt="Marionete">
+                    <div class="info-card">
+                        <h3>6. Duplicatas dos Bonecos</h3>
+                        <p>Foram fabricados 14 bonecos idênticos do Victor, 14 da Emily e 13 da Victoria. Isso evitava que a produção parasse caso um boneco quebrasse ou se desgastasse.</p>
+                    </div>
+                </div>
+                <!-- Card 7 -->
+                <div class="card-bastidor-foto">
+                    <img src="assets/bastidor7.jpg" class="foto-card" alt="Argila">
+                    <div class="info-card">
+                        <h3>7. Esqueletos de Silicone</h3>
+                        <p>A "pele" dos personagens foi feita usando fórmulas de silicone líquido injetado sobre armaduras internas de metal durável, permitindo dobras perfeitas sem rachar.</p>
+                    </div>
+                </div>
+                <!-- Card 8 -->
+                <div class="card-bastidor-foto">
+                    <img src="assets/bastidor8.jpg" class="foto-card" alt="Música">
+                    <div class="info-card">
+                        <h3>8. Trilha Sonora Viva</h3>
+                        <p>Danny Elfman, parceiro clássico de Burton, compôs todas as músicas do filme e deu a voz original ao esqueleto cantor Bonejangles na taverna do submundo.</p>
+                    </div>
+                </div>
+                <!-- Card 9 -->
+                <div class="card-bastidor-foto">
+                    <img src="assets/bastidor9.jpg" class="foto-card" alt="Relógio">
+                    <div class="info-card">
+                        <h3>9. Ritmo de Caracol</h3>
+                        <p>Em uma semana inteira de trabalho intenso, a equipe de animadores conseguia produzir apenas entre 1 a 2 minutos acumulados de filmagem final útil para o longa.</p>
+                    </div>
+                </div>
             </div>
         </section>
 
-        <!-- Grade com Exatamente 10 Segredos Incríveis -->
-        <section class="reveal">
-            <h2 class="section-title" style="border-left-color: #ae7bff;">💡 10 Segredos Inacreditáveis de produção!</h2>
-            <div class="curiosidades-grid">
+        <!-- SEÇÃO: Lista Expandida de Easter Eggs -->
+        <section class="secao-cinema-painel">
+            <h2 class="titulo-secao">👁️ Detalhes Escondidos (Easter Eggs)</h2>
+            <div class="lista-easter-eggs-completa">
+                <div style="background: #121826; padding: 20px; border-radius: 8px; border-left: 3px solid #38bdf8;">
+                    <h3 style="color: #38bdf8; margin-top: 0;">🎹 O Piano Harryhausen</h3>
+                    <p style="color: #cbd5e1; margin-bottom: 0;">A marca do piano que Victor toca na mansão exibe o nome <strong>Harryhausen</strong>. Uma homenagem direta a Ray Harryhausen, pioneiro e mentor dos efeitos visuais em stop-motion.</p>
+                </div>
+                <div style="background: #121826; padding: 20px; border-radius: 8px; border-left: 3px solid #38bdf8;">
+                    <h3 style="color: #38bdf8; margin-top: 0;">💀 Jack Skellington no Submundo?</h3>
+                    <p style="color: #cbd5e1; margin-bottom: 0;">Durante a performance musical no bar dos mortos, a silhueta, pernas longas e os movimentos do esqueleto Bonejangles são referências explícitas ao visual do Jack de <em>O Estranho Mundo de Jack</em>.</p>
+                </div>
+                <div style="background: #121826; padding: 20px; border-radius: 8px; border-left: 3px solid #38bdf8;">
+                    <h3 style="color: #38bdf8; margin-top: 0;">📜 Contos Populares</h3>
+                    <p style="color: #cbd5e1; margin-bottom: 0;">A história do filme é inspirada em um antigo conto folclórico judeu-russo do século XIX chamado "A Noiva Cadáver", onde um noivo acidentalmente coloca o anel no dedo de um esqueleto na floresta.</p>
+                </div>
+                <div style="background: #121826; padding: 20px; border-radius: 8px; border-left: 3px solid #38bdf8;">
+                    <h3 style="color: #38bdf8; margin-top: 0;">🐕 Sparky Reencarnado?</h3>
+                    <p style="color: #cbd5e1; margin-bottom: 0;">O cachorrinho esqueleto Scraps possui uma anatomia e design que serviram de inspiração direta para o cão Sparky no posterior filme de Tim Burton, <em>Frankenweenie</em> (2012).</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEÇÃO: O Container do Quiz -->
+        <section class="secao-cinema-painel">
+            <h2 class="titulo-secao">🧠 O Grande Teste da Bilheteria (Quiz)</h2>
+            <div class="bilheteria-quiz">
+                <div class="placar-quiz">Pergunta <span id="num-pergunta">1</span> de 20 • Acertos: <span id="num-acertos">0</span></div>
+                <p id="txt-pergunta" style="font-size: 1.3rem; font-weight: bold; color: #38bdf8; margin-top: 0行业;"></p>
                 
-                <!-- Segredo 1 -->
-                <div class="critica-card">
-                    <div class="card-img-wrapper">
-                        <img src="img/paranorman/segredo-cabelo-norman.jpg" alt="Cabelo Norman">
-                    </div>
-                    <div class="card-content">
-                        <div class="rating-stars">⭐⭐⭐⭐⭐</div>
-                        <h4>1. Cabelo Humano Real!</h4>
-                        <p>O cabelo espetado do Norman foi feito com fios de cabelo humano real costurados à mão! Usaram arames de cobre internos revestidos de gel médico ultra-forte para mantê-lo congelado no ar.</p>
-                    </div>
-                </div>
+                <div class="opcoes-filme" id="caixa-opcoes"></div>
+                
+                <div id="msg-resultado" style="font-weight: bold; font-size: 1.2rem; min-height: 30px; margin-top: 15px;"></div>
+                <button id="btn-avancar" class="btn-ingresso" style="display: none;" onclick="proximaFase()">Próxima Pergunta 🎬</button>
 
-                <!-- Segredo 2 -->
-                <div class="critica-card">
-                    <div class="card-img-wrapper">
-                        <img src="img/paranorman/segredo-impressao-3d.jpg" alt="Expressões 3D">
-                    </div>
-                    <div class="card-content">
-                        <div class="rating-stars">⭐⭐⭐⭐⭐</div>
-                        <h4>2. Revolução Industrial 3D</h4>
-                        <p>Foi o primeiro longa da história a usar impressoras 3D coloridas de poeira de gesso para criar rostos. O Norman tinha 8.800 peças de expressões que se encaixavam na cabeça usando mini-ímãs!</p>
-                    </div>
+                <!-- SISTEMA DE PREMIAÇÃO / TROFÉU DINÂMICO -->
+                <div class="container-trofeu" id="bloco-trofeu">
+                    <div class="icone-trofeu" id="trofeu-emoji">🏆</div>
+                    <h3 id="trofeu-titulo" style="font-size: 1.6rem; color: #38bdf8; margin: 15px 0 5px 0;"></h3>
+                    <p id="trofeu-desc" style="color: #cbd5e1; font-size: 1.1rem; margin: 0 0 20px 0;"></p>
+                    <button id="btn-reiniciar" class="btn-ingresso" onclick="reiniciarQuiz()">Tentar Novamente 🔄</button>
                 </div>
-
-                <!-- Segredo 3 -->
-                <div class="critica-card">
-                    <div class="card-img-wrapper">
-                        <img src="img/paranorman/segredo-alta-costura.jpg" alt="Roupas Mini">
-                    </div>
-                    <div class="card-content">
-                        <div class="rating-stars">⭐⭐⭐⭐⭐</div>
-                        <h4>3. Alta Costura sob o Microscópio</h4>
-                        <p>Roupas normais ficariam duras e sem caimento nos bonecos. A equipe fiou linhas especiais finíssimas e usou agulhas cirúrgicas para costurar calças e jaquetas proporcionais à miniatura.</p>
-                    </div>
-                </div>
-
-                <!-- Segredo 4 -->
-                <div class="critica-card">
-                    <div class="card-img-wrapper">
-                        <img src="img/paranorman/segredo-pele-zumbi.jpg" alt="Zumbis Arte">
-                    </div>
-                    <div class="card-content">
-                        <div class="rating-stars">⭐⭐⭐⭐⭐</div>
-                        <h4>4. Pele de Silicone Fantasmagórica</h4>
-                        <p>Para os zumbis parecerem secos e antigos, os designers misturaram pó de silicone com texturas de marshmallow queimado e látex líquido para dar aquele efeito de pele rasgando.</p>
-                    </div>
-                </div>
-
-                <!-- Segredo 5 -->
-                <div class="critica-card">
-                    <div class="card-img-wrapper">
-                        <img src="img/paranorman/segredo-armadura-metal.jpg" alt="Esqueleto Interno">
-                    </div>
-                    <div class="card-content">
-                        <div class="rating-stars">⭐⭐⭐⭐⭐</div>
-                        <h4>5. Esqueletos Mecânicos Secretos</h4>
-                        <p>Por dentro de cada boneco há uma "armadura" articulada feita de juntas de metal cirúrgico de esferas. Isso garante que o boneco não saia da posição milimétrica enquanto a foto é batida.</p>
-                    </div>
-                </div>
-                <!-- Segredos 6 a 10 (Dinâmicos Sem Imagem para Equilíbrio) -->
-                <div class="critica-card">
-                    <div class="card-content">
-                        <div class="rating-stars">⭐⭐⭐⭐⭐</div>
-                        <h4>6. Maratona de Lentidão</h4>
-                        <p>A paciência é surreal: uma semana inteira de trabalho de um animador em um set isolado e escuro rendia apenas de 3 a 4 segundos de gravação para o filme final!</p>
-                    </div>
-                </div>
-
-                <div class="critica-card">
-                    <div class="card-content">
-                        <div class="rating-stars">⭐⭐⭐⭐⭐</div>
-                        <h4>7. Carros com Suspensão Real</h4>
-                        <p>A icônica van usada pelos adolescentes no filme tinha pneus de borracha infláveis reais e pequenas molas de metal na suspensão para tremer realisticamente a cada frame.</p>
-                    </div>
-                </div>
-
-                <div class="critica-card">
-                    <div class="card-content">
-                        <div class="rating-stars">⭐⭐⭐⭐⭐</div>
-                        <h4>8. Cenários de Papelão Nobre</h4>
-                        <p>As folhas das árvores de Blithe Hollow foram cortadas a laser uma a uma em folhas finas de cartolina importada e presas aos galhos por micro arames maleáveis.</p>
-                    </div>
-                </div>
-
-                <div class="critica-card">
-                    <div class="card-content">
-                        <div class="rating-stars">⭐⭐⭐⭐⭐</div>
-                        <h4>9. Sons Orgânicos</h4>
-                        <p>Para os barulhos dos passos dos zumbis arrastando os pés, os dubladores de efeitos andaram sobre sacos de areia molhada e cascas de ovos triturados no estúdio de áudio.</p>
-                    </div>
-                </div>
-
-                <div class="critica-card">
-                    <div class="card-content">
-                        <div class="rating-stars">⭐⭐⭐⭐⭐</div>
-                        <h4>10. 32 Meses de Flash</h4>
-                        <p>O filme demorou mais de 3 anos de produção contínua, batendo milhões de fotos digitais brutas com câmeras DSLR profissionais adaptadas antes da montagem final de cinema.</p>
-                    </div>
-                </div>
-
             </div>
         </section>
-    </div>
+    </main>
 
-    <!-- Scripts de Interação (Parallax 3D e Carrossel) -->
+    <!-- EASTER EGG: Borboleta Azul que espalha outras pelo fundo ao ser clicada -->
+    <div class="easter-egg-borboleta" onclick="espandirBorboletasFundo()">🦋</div>
+    <!-- Abertura oficial do motor JavaScript -->
     <script>
-        // EFEITO MOUSE PARALLAX 3D
-        const ticket = document.getElementById('parallaxTicket');
-        if(ticket) {
-            ticket.addEventListener('mousemove', (e) => {
-                const rect = ticket.getBoundingClientRect();
-                const rotateX = ((e.clientY - rect.top) / rect.height - 0.5) * -12;
-                const rotateY = ((e.clientX - rect.left) / rect.width - 0.5) * 12;
-                ticket.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.01)`;
+        // ==========================================
+        // CONTROLE DO CARROSSEL DE IMAGENS
+        // ==========================================
+        let slideIndex = 0;
+        const slides = document.getElementById("carrosselSlides");
+        const totalSlides = document.querySelectorAll(".slide").length;
+
+        function mudarSlide(direcao) {
+            slideIndex += direcao;
+            if (slideIndex >= totalSlides) { slideIndex = 0; }
+            if (slideIndex < 0) { slideIndex = totalSlides - 1; }
+            slides.style.transform = `translateX(-${slideIndex * 100}%)`;
+        }
+
+        setInterval(() => { mudarSlide(1); }, 6000);
+
+        // ==========================================
+        // CONTROLE DA PLAYLIST DE VÍDEOS
+        // ==========================================
+        function trocarVideo(urlVideo, elementoClicado) {
+            document.getElementById("videoPrincipal").src = urlVideo;
+            const todosThumbs = document.querySelectorAll(".thumb-item");
+            todosThumbs.forEach(thumb => thumb.classList.remove("ativo"));
+            elementoClicado.classList.add("ativo");
+        }
+
+        // ==========================================
+        // BANCO DE DADOS COMPLETO (QUESTÕES 1 A 10)
+        // ==========================================
+        const bancoCinema = [
+            { q: "Qual é o nome do cãozinho esqueleto de estimação do Victor?", alt: ["Sparky", "Scraps", "Zero", "Grim"], certa: 1 },
+            { q: "Qual atriz famosa dubla a Noiva Cadáver (Emily) na versão original?", alt: ["Winona Ryder", "Helena Bonham Carter", "Christina Ricci", "Drew Barrymore"], certa: 1 },
+            { q: "Quantas fotos individuais eram necessárias para fazer 1 segundo de filme?", alt: ["12 fotos", "24 fotos", "48 fotos", "60 fotos"], certa: 1 },
+            { q: "Quem assina a trilha sonora instrumental e as canções do filme?", alt: ["John Williams", "Hans Zimmer", "Danny Elfman", "Howard Shore"], certa: 2 },
+            { q: "Em qual conto popular a história de 'A Noiva Cadáver' foi baseada?", alt: ["Conto Folclórico Judeu-Russo", "Lenda Vampírica Romena", "Fábula Gótica Francesa", "Mito Celta Irlandês"], certa: 0 },
+            { q: "De qual marca é o piano que Victor toca no mundo dos vivos?", alt: ["Steinway", "Harryhausen", "Yamaha", "Burton & Sons"], certa: 1 },
+            { q: "Qual estúdio de animação britânico co-produziu o longa junto com a Warner?", alt: ["Aardman", "Laika Studios", "Pixar", "DreamWorks"], certa: 1 },
+            { q: "O mundo dos mortos é caracterizado visualmente por qual elemento?", alt: ["Cores vibrantes, neon e jazz", "Efeitos em preto e branco", "Névoa cinzenta e silêncio completo", "Arquitetura futurista"], certa: 0 },
+            { q: "Qual ator faz a voz original de Victor Van Dort?", alt: ["Ewan McGregor", "Johnny Depp", "Jude Law", "Ben Kingsley"], certa: 1 },
+            { q: "Como a Noiva Cadáver (Emily) morreu quando estava viva?", alt: ["Envenenada pelo pai", "Assassinada por seu antigo noivo ganancioso", "Doença misteriosa", "Acidente na floresta"], certa: 1 },
+            // CONTINUAÇÃO DO BANCO DE DADOS (QUESTÕES 11 A 20)
+            { q: "Qual era o sobrenome da noiva viva de Victor?", alt: ["Everglot", "Van Dort", "Barkis", "Plum"], certa: 0 },
+            { q: "Qual câmera fotográfica foi usada predominantemente na produção?", alt: ["Nikon D80", "Canon EOS-1D Mark II", "Sony Alpha 7", "Leica M3"], certa: 1 },
+            { q: "Qual é o nome do antagonista ganancioso que tenta se casar por dinheiro?", alt: ["Lord Finis", "Lord Barkis Bittern", "Pastor Galswells", "Elder Gutknecht"], certa: 1 },
+            { q: "Aproximadamente quantos bonecos do Victor foram construídos para as filmagens?", alt: ["Apenas 1", "Cerca de 5", "Exatamente 14", "Mais de 100"], certa: 2 },
+            { q: "De que material era feita a 'pele' flexível das marionetes?", alt: ["Argila tradicional", "Plástico rígido", "Silicone líquido injetado", "Cera de abelha"], certa: 2 },
+            { q: "Qual o nome do esqueleto ancião e sábio que cuida dos livros no submundo?", alt: ["Elder Gutknecht", "Bonejangles", "General Bonesapart", "Paul o Garçom"], certa: 0 },
+            { q: "Em qual categoria o filme foi indicado no Oscar de 2006?", alt: ["Melhor Figurino", "Melhor Direção de Arte", "Melhor Animação", "Melhor Trilha Sonora"], certa: 2 },
+            { q: "Quantos anos durou todo o processo de produção do filme?", alt: ["1 ano", "2 anos", "Mais de 3 anos", "7 anos"], certa: 2 },
+            { q: "O esqueleto Bonejangles lidera uma banda que toca qual gênero musical?", alt: ["Ópera Gótica", "Jazz / Swing", "Rock Clássico", "Música Barroca"], certa: 1 },
+            { q: "Em que centenas de criaturas Emily se transforma na poética cena final?", alt: ["Corvos Negros", "Borboletas Azuis", "Ratos de biblioteca", "Pétalas de Rosa"], certa: 1 }
+        ];
+
+        let faseAtual = 0;
+        let acertos = 0;
+
+        function montarFase() {
+            const dados = bancoCinema[faseAtual];
+            document.getElementById("num-pergunta").innerText = faseAtual + 1;
+            document.getElementById("num-acertos").innerText = acertos;
+            
+            document.getElementById("txt-pergunta").style.display = "block";
+            document.getElementById("caixa-opcoes").style.display = "grid";
+            document.getElementById("msg-resultado").style.display = "block";
+            
+            document.getElementById("txt-pergunta").innerText = dados.q;
+            
+            const conteiner = document.getElementById("caixa-opcoes");
+            conteiner.innerHTML = ""; 
+            
+            document.getElementById("msg-resultado").innerText = "";
+            document.getElementById("btn-avancar").style.display = "none";
+
+            dados.alt.forEach((opcao, idx) => {
+                const btn = document.createElement("button");
+                btn.innerText = opcao;
+                btn.onclick = () => checarEscolha(idx, btn);
+                conteiner.appendChild(btn);
             });
-            ticket.addEventListener('mouseleave', () => { ticket.style.transform = 'rotateX(0deg) rotateY(0deg) scale(1)'; });
         }
 
-        // CONTROLE DO CARROSSEL
-        let indexAtivo = 0;
-        const totalSlides = document.querySelectorAll('.carousel-slide').length;
-        const trilhaDoCarrossel = document.getElementById('movieTrack');
+        function checarEscolha(escolhido, botaoAlvo) {
+            const dados = bancoCinema[faseAtual];
+            const botoes = document.querySelectorAll(".opcoes-filme button");
+            const feedback = document.getElementById("msg-resultado");
 
-        function changeSlide(direcao) {
-            indexAtivo += direcao;
-            if (indexAtivo >= totalSlides) indexAtivo = 0;
-            if (indexAtivo < 0) indexAtivo = totalSlides - 1;
-            trilhaDoCarrossel.style.transform = `translateX(-${indexAtivo * 100}%)`;
+            botoes.forEach(b => b.disabled = true);
+
+            if (escolhido === dados.certa) {
+                botaoAlvo.style.background = "#0369a1";
+                botaoAlvo.style.borderColor = "#38bdf8";
+                botaoAlvo.style.color = "#38bdf8";
+                feedback.innerText = "🍿 Resposta Correta! Corta e roda a cena!";
+                feedback.style.color = "#38bdf8";
+                acertos++;
+                document.getElementById("num-acertos").innerText = acertos;
+            } else {
+                botaoAlvo.style.background = "#991b1b";
+                botaoAlvo.style.borderColor = "#ef4444";
+                feedback.innerText = "❌ Errado! Os animadores choraram com esse take.";
+                feedback.style.color = "#ef4444";
+                botoes[dados.certa].style.border = "2px dashed #38bdf8";
+            }
+
+            document.getElementById("btn-avancar").style.display = "inline-block";
         }
-        setInterval(() => { changeSlide(1); }, 6000);
+
+        function proximaFase() {
+            faseAtual++;
+            if (faseAtual < bancoCinema.length) {
+                montarFase();
+            } else {
+                exibirPremiacaoFinal();
+            }
+        }
+
+        function exibirPremiacaoFinal() {
+            document.getElementById("txt-pergunta").style.display = "none";
+            document.getElementById("caixa-opcoes").style.display = "none";
+            document.getElementById("msg-resultado").style.display = "none";
+            document.getElementById("btn-avancar").style.display = "none";
+
+            const bloco = document.getElementById("bloco-trofeu");
+            const titulo = document.getElementById("trofeu-titulo");
+            const desc = document.getElementById("trofeu-desc");
+            const emoji = document.getElementById("trofeu-emoji");
+
+            bloco.style.display = "block";
+
+            if (acertos === 20) {
+                emoji.innerText = "👑🦋";
+                titulo.innerText = "Nível: Diretor Supremo (Tim Burton)";
+                desc.innerText = `Perfeito! Você gabaritou as ${acertos} questões! As borboletas azuis da liberdade voam ao seu redor!`;
+                soltarBorboletas(80);
+            } else if (acertos >= 15) {
+                emoji.innerText = "🏆💀";
+                titulo.innerText = "Nível: Animador Master da Laika";
+                desc.innerText = `Incrível! Você acertou ${acertos} de 20. Conhece os sets perfeitamente!`;
+                soltarBorboletas(40);
+            } else if (acertos >= 10) {
+                emoji.innerText = "🍿🦴";
+                titulo.innerText = "Nível: Esqueleto Músico Cinéfilo";
+                desc.innerText = `Bom trabalho! ${acertos} acertos. Já pode tocar piano junto com o Victor!`;
+                soltarBorboletas(15);
+            } else {
+                emoji.innerText = "🪦☁️";
+                titulo.innerText = "Nível: Habitante do Mundo dos Vivos";
+                desc.innerText = `Você acertou apenas ${acertos} de 20. Seu mundo ainda está meio cinzento, assista ao filme de novo!`;
+            }
+        }
+
+        function reiniciarQuiz() {
+            faseAtual = 0;
+            acertos = 0;
+            document.getElementById("bloco-trofeu").style.display = "none";
+            const antigas = document.querySelectorAll("#bloco-trofeu .particula-borboleta");
+            antigas.forEach(b => b.remove());
+            montarFase();
+        }
+
+        function soltarBorboletas(quantidade) {
+            const container = document.getElementById("bloco-trofeu");
+            for (let i = 0; i < quantity = quantidade; i++) {
+                const borboleta = document.createElement("div");
+                borboleta.className = "particula-borboleta";
+                borboleta.innerText = "🦋";
+
+                const angulo = Math.random() * Math.PI * 2;
+                const distancia = 100 + Math.random() * 300;
+                const x = Math.cos(angulo) * distancia;
+                const y = Math.sin(angulo) * distancia - 50;
+                const r = Math.random() * 360;
+
+                borboleta.style.setProperty('--x', `${x}px`);
+                borboleta.style.setProperty('--y', `${y}px`);
+                borboleta.style.setProperty('--r', `${r}deg`);
+
+                borboleta.style.left = "50%";
+                borboleta.style.top = "40%";
+                borboleta.style.animation = "voarBorboleta 4s forwards ease-out";
+
+                container.appendChild(borboleta);
+            }
+        }
+
+        function espandirBorboletasFundo() {
+            for (let i = 0; i < 25; i++) {
+                const bFundo = document.createElement("div");
+                bFundo.className = "particula-borboleta";
+                bFundo.innerText = "🦋";
+                
+                bFundo.style.position = "fixed";
+                bFundo.style.left = Math.random() * 100 + "vw";
+                bFundo.style.bottom = "-50px";
+                bFundo.style.top = "auto";
+                bFundo.style.fontSize = (1 + Math.random() * 1.5) + "rem";
+                bFundo.style.opacity = 0.7 + Math.random() * 0.3;
+                bFundo.style.filter = "drop-shadow(0 0 5px #38bdf8)";
+                bFundo.style.transition = "transform 4s ease-out, opacity 4s";
+                
+                document.body.appendChild(bFundo);
+
+                setTimeout(() => {
+                    const subirX = (Math.random() * 200 - 100) + "px";
+                    const subirY = -(window.innerHeight + 100) + "px";
+                    const rodar = (Math.random() * 360) + "deg";
+                    
+                    bFundo.style.transform = `translate(${subirX}, ${subirY}) rotate(${rodar})`;
+                    bFundo.style.opacity = "0";
+                }, 50);
+
+                setTimeout(() => { bFundo.remove(); }, 4050);
+            }
+        }
+
+        window.onload = montarFase;
     </script>
 </body>
 </html>

@@ -54,24 +54,30 @@
             color: #060a12;
             box-shadow: 0 0 15px rgba(143, 169, 255, 0.5);
         }
-
-        .container-ticket {
+        /* CONSERTO CONSOLIDADO: Garante o recuo e centralização do bilhete */
+        /* SUBSTUIÇÃO CIRÚRGICA NO SEU CSS: */
+        main.container-ticket, .container-ticket {
             max-width: 1000px;
-            margin: 40px auto;
-            padding: 0 20px;
+            width: 90% !important;     /* O '!important' força o navegador a encolher o ingresso */
+            margin: 40px auto !important; /* Cria as bordas pretas livres no topo e nas laterais */
+            padding: 0;
+            box-sizing: border-box;
         }
 
+
+        /* O Corpo do bilhete ganha fundo branco, cantos ovais e sombras profundas */
         .ticket-filme {
-            background-color: #121826;
+            background-color: #ffffff;
             border-radius: 24px;
             overflow: hidden;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
             position: relative;
+            width: 100%;
         }
 
         .ticket-banner {
-            height: 380px;
-            background: linear-gradient(180deg, rgba(18,24,38,0.2) 0%, #121826 100%), 
+            height: 420px;
+            background: linear-gradient(180deg, rgba(18,24,38,0.1) 0%, rgba(18,24,38,0.85) 100%), 
                         url('assets/noiva-banner.jpg') center/cover;
             display: flex;
             flex-direction: column;
@@ -79,6 +85,20 @@
             padding: 40px;
             box-sizing: border-box;
         }
+
+        /* Aplicação dos furos circulares nas emendas do ingresso */
+        .ticket-filme::before, .ticket-filme::after {
+            content: "";
+            position: absolute;
+            top: 405px;
+            width: 30px;
+            height: 30px;
+            background-color: #0b0f19;
+            border-radius: 50%;
+            z-index: 10;
+        }
+        .ticket-filme::before { left: -15px; }
+        .ticket-filme::after { right: -15px; }
 
         .ticket-titulo {
             font-size: 4rem;
@@ -98,10 +118,9 @@
             margin: 10px 0 0 0;
             font-size: 0.95rem;
         }
-
         .ticket-corpo {
-            padding: 40px;
-            background-color: #fff;
+            padding: 50px 40px;
+            background-color: #ffffff;
             color: #1e293b;
         }
 
@@ -138,6 +157,7 @@
             color: #1e293b;
             margin-top: 5px;
         }
+
         /* ==========================================
            ESTILOS DO CARROSSEL DE IMAGENS
            ========================================== */
@@ -199,21 +219,16 @@
             z-index: 5;
         }
 
-        .carrossel-btn:hover {
-            background: #8fa9ff;
-            color: #0b0f19;
-        }
-
+        .carrossel-btn:hover { background: #8fa9ff; color: #0b0f19; }
         .btn-prev { left: 20px; }
         .btn-next { right: 20px; }
-
         /* ==========================================
-           ESTILOS DA PLAYLIST, GRIDS E QUIZ
+           ESTILOS DA PLAYLIST DE VÍDEOS E GRIDS
            ========================================== */
-        .secao-cinema-painel {
-            margin: 50px 0;
+        .secao-cinema-painel { 
+            margin: 50px 0; 
         }
-
+        
         .titulo-secao {
             color: #8fa9ff;
             font-size: 1.8rem;
@@ -241,11 +256,11 @@
             background: #000;
         }
 
-        .video-player-principal iframe {
-            width: 100%;
-            height: 400px;
-            display: block;
-            border: none;
+        .video-player-principal iframe { 
+            width: 100%; 
+            height: 400px; 
+            display: block; 
+            border: none; 
         }
 
         .video-lista-thumbs {
@@ -272,25 +287,16 @@
             transition: all 0.3s;
         }
 
-        .thumb-item:hover, .thumb-item.ativo {
-            border-color: #8fa9ff;
-            background: #222f47;
-        }
-
-        .thumb-img {
-            width: 100px;
-            height: 60px;
-            object-fit: cover;
-            border-radius: 4px;
-        }
-
+        .thumb-item:hover, .thumb-item.ativo { border-color: #8fa9ff; background: #222f47; }
+        .thumb-img { width: 100px; height: 60px; object-fit: cover; border-radius: 4px; }
         .thumb-info h4 { margin: 0 0 5px 0; color: #fff; font-size: 0.9rem; }
         .thumb-info p { margin: 0; color: #94a3b8; font-size: 0.75rem; }
 
-        .grid-bastidores-9 {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 25px;
+        /* Grid de Bastidores e Páginas Internas */
+        .grid-bastidores-9 { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+            gap: 25px; 
         }
 
         .card-bastidor-foto {
@@ -312,29 +318,11 @@
         .info-card h3 { color: #38bdf8; margin: 0 0 10px 0; font-size: 1.2rem; }
         .info-card p { color: #cbd5e1; font-size: 0.95rem; margin: 0; line-height: 1.5; }
 
-        .lista-easter-eggs-completa {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-        }
-
-        .bilheteria-quiz {
-            background: #060a12;
-            border: 2px dashed #38bdf8;
-            border-radius: 12px;
-            padding: 40px;
-            text-align: center;
-        }
-
+        .lista-easter-eggs-completa { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        /* Área do Quiz da Bilheteria */
+        .bilheteria-quiz { background: #060a12; border: 2px dashed #38bdf8; border-radius: 12px; padding: 40px; text-align: center; }
         .placar-quiz { font-size: 1.1rem; color: #94a3b8; margin-bottom: 15px; }
-
-        .opcoes-filme {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 12px;
-            max-width: 650px;
-            margin: 25px auto;
-        }
+        .opcoes-filme { display: grid; grid-template-columns: 1fr; gap: 12px; max-width: 650px; margin: 25px auto; }
 
         .opcoes-filme button {
             background: #121826;
@@ -366,6 +354,7 @@
         }
 
         .btn-ingresso:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(56, 189, 248, 0.5); }
+
         /* O Bloco do Troféu Mágico e Partículas */
         .container-trofeu {
             margin-top: 40px;
@@ -380,17 +369,32 @@
         .icone-trofeu { font-size: 4rem; animation: vibrar 2s infinite alternate; }
         @keyframes vibrar { 0% { transform: scale(1); } 100% { transform: scale(1.1); } }
 
-        .particula-borboleta {
-            position: absolute;
-            font-size: 1.5rem;
-            pointer-events: none;
-            z-index: 5;
-        }
+        .particula-borboleta { position: absolute; font-size: 1.5rem; pointer-events: none; z-index: 5; }
 
+        /* Animação das borboletas do troféu */
         @keyframes voarBorboleta {
             0% { opacity: 1; transform: translate(0, 0) scale(0.5); }
             100% { opacity: 0; transform: translate(var(--x), var(--y)) rotate(var(--r)) scale(1.2); }
         }
+
+        /* Animação contínua no fundo da tela */
+        .fundo-borboletas-ambiente { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: -1; overflow: hidden; }
+        .borboleta-ambiente { position: absolute; font-size: 1.5rem; opacity: 0; filter: drop-shadow(0 0 8px #38bdf8); animation: vooContinuo 12s linear infinite; }
+
+        @keyframes vooContinuo {
+            0% { transform: translateY(110vh) translateX(0) scale(0.5) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.7; }
+            50% { transform: translateY(50vh) translateX(60px) scale(1.1) rotate(15deg); }
+            90% { opacity: 0.7; }
+            100% { transform: translateY(-10vh) translateX(-40px) scale(0.6) rotate(-15deg); opacity: 0; }
+        }
+
+        .b-amb-1 { left: 8%;  animation-delay: 0s;  animation-duration: 14s; }
+        .b-amb-2 { left: 23%; animation-delay: 3s;  animation-duration: 19s; }
+        .b-amb-3 { left: 42%; animation-delay: 1s;  animation-duration: 16s; }
+        .b-amb-4 { left: 61%; animation-delay: 5s;  animation-duration: 21s; }
+        .b-amb-5 { left: 78%; animation-delay: 2s;  animation-duration: 13s; }
+        .b-amb-6 { left: 92%; animation-delay: 6.5s; animation-duration: 17s; }
 
         .easter-egg-borboleta {
             position: fixed;
@@ -404,49 +408,6 @@
         }
         .easter-egg-borboleta:hover { transform: scale(1.2); }
 
-        /* ==========================================
-           ANIMAÇÃO DE BORBOLETAS NO FUNDO DE TELA
-           ========================================== */
-        .fundo-borboletas-ambiente {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            pointer-events: none;
-            z-index: -1;
-            overflow: hidden;
-        }
-
-        .borboleta-ambiente {
-            position: absolute;
-            font-size: 1.5rem;
-            opacity: 0;
-            filter: drop-shadow(0 0 8px #38bdf8);
-            animation: vooContinuo 12s linear infinite;
-        }
-
-        @keyframes vooContinuo {
-            0% {
-                transform: translateY(110vh) translateX(0) scale(0.5) rotate(0deg);
-                opacity: 0;
-            }
-            10% { opacity: 0.7; }
-            50% { transform: translateY(50vh) translateX(60px) scale(1.1) rotate(15deg); }
-            90% { opacity: 0.7; }
-            100% {
-                transform: translateY(-10vh) translateX(-40px) scale(0.6) rotate(-15deg);
-                opacity: 0;
-            }
-        }
-
-        .b-amb-1 { left: 8%;  animation-delay: 0s;  animation-duration: 14s; }
-        .b-amb-2 { left: 23%; animation-delay: 3s;  animation-duration: 19s; }
-        .b-amb-3 { left: 42%; animation-delay: 1s;  animation-duration: 16s; }
-        .b-amb-4 { left: 61%; animation-delay: 5s;  animation-duration: 21s; }
-        .b-amb-5 { left: 78%; animation-delay: 2s;  animation-duration: 13s; }
-        .b-amb-6 { left: 92%; animation-delay: 6.5s; animation-duration: 17s; }
-
         @media (max-width: 768px) {
             .playlist-layout { flex-direction: column; }
             .video-player-principal iframe { height: 240px; }
@@ -456,13 +417,13 @@
 </head>
 <body>
 
-    <!-- Menu Superior de Navegação -->
+    <!-- Menu Superior de Navegação Estilo Cinema -->
     <nav class="navbar-cine">
         <div class="logo-stopart">🎬 StopArt Cine</div>
         <a href="home.html" class="btn-sair-sala">← Sair da Sala</a>
     </nav>
 
-    <!-- CONTEINER AMBIENTAL DAS BORBOLETAS NO FUNDO -->
+    <!-- CONTEINER AUTOMÁTICO PARA AS BORBOLETAS DE FUNDO -->
     <div class="fundo-borboletas-ambiente">
         <div class="borboleta-ambiente b-amb-1">🦋</div>
         <div class="borboleta-ambiente b-amb-2">🦋</div>
@@ -471,39 +432,74 @@
         <div class="borboleta-ambiente b-amb-5">🦋</div>
         <div class="borboleta-ambiente b-amb-6">🦋</div>
     </div>
-
     <main class="container-ticket">
         
-        <!-- O INGRESSO DE CINEMA -->
+        <!-- O INGRESSO DE CINEMA CENTRALIZADO -->
         <article class="ticket-filme">
+            
+            <!-- Banner Superior do Ingresso -->
             <div class="ticket-banner">
                 <h1 class="ticket-titulo">A Noiva Cadáver</h1>
                 <p class="ticket-tagline">"Com esta mão eu espantarei a sua tristeza..."</p>
             </div>
+
+            <!-- Corpo Recortado Branco do Ingresso -->
             <div class="ticket-corpo">
                 <p class="ticket-sinopse">
                     Ei, prepare a pipoca! Você sabia que o Victor conseguiu a proeza de se casar acidentalmente com uma noiva defunta na floresta? Pois é! Enquanto toda a alta sociedade dos vivos tenta forçar casamentos arranjados por puro interesse financeiro, o submundo dos mortos se revela uma gigantesca e colorida festa repleta de jazz, onde as almas celebram e a eternidade é muito mais viva e divertida! 🦋✨
                 </p>
+
+                <!-- Grid Técnico Inferior Estilo ParaNorman -->
                 <div class="ticket-grid-info">
-                    <div class="info-bloco"><div class="info-label">Estúdio Criador</div><div class="info-valor">Laika / Warner Bros</div></div>
-                    <div class="info-bloco"><div class="info-label">Técnica de Arte</div><div class="info-valor">Stop-Motion Clássico</div></div>
-                    <div class="info-bloco"><div class="info-label">Tempo de Suor</div><div class="info-valor">+3 Anos de Luta</div></div>
-                    <div class="info-bloco"><div class="info-label">Aclamação</div><div class="info-valor">Indicado ao Oscar</div></div>
+                    <div class="info-bloco">
+                        <div class="info-label">Estúdio Criador</div>
+                        <div class="info-valor">Laika / Warner Bros</div>
+                    </div>
+                    <div class="info-bloco">
+                        <div class="info-label">Técnica de Arte</div>
+                        <div class="info-valor">Stop-Motion Clássico</div>
+                    </div>
+                    <div class="info-bloco">
+                        <div class="info-label">Tempo de Suor</div>
+                        <div class="info-valor">+3 Anos de Luta</div>
+                    </div>
+                    <div class="info-bloco">
+                        <div class="info-label">Aclamação</div>
+                        <div class="info-valor">Indicado ao Oscar</div>
+                    </div>
                 </div>
             </div>
         </article>
 
-        <!-- RECURSO: CARROSSEL EXPANDIDO DE 6 IMAGENS -->
+        <!-- RECURSO: CARROSSEL DE 6 IMAGENS LOCAIS -->
         <section class="secao-cinema-painel">
             <h2 class="titulo-secao">📸 Galeria de Cenas Ocultas (Edição Expandida)</h2>
             <div class="carrossel-container">
                 <div class="carrossel-slides" id="carrosselSlides">
-                    <div class="slide"><img src="assets/carrossel1.jpg" alt="Cena 1"><div class="slide-legenda">A melancólica floresta gótica onde a promessa de Victor desperta Emily de seu sono profundo.</div></div>
-                    <div class="slide"><img src="assets/carrossel2.jpg" alt="Cena 2"><div class="slide-legenda">O contraste brilhante e neon das cores quentes do bar de jazz no animado mundo dos mortos.</div></div>
-                    <div class="slide"><img src="assets/carrossel3.jpg" alt="Cena 3"><div class="slide-legenda">Por trás das câmeras: Os cenários em miniatura e maquetes artesanais construídas nos estúdios.</div></div>
-                    <div class="slide"><img src="assets/carrossel4.jpg" alt="Cena 4"><div class="slide-legenda">O ensaio do dueto de piano entre Victor e Emily, unindo sentimentos de dois mundos diferentes.</div></div>
-                    <div class="slide"><img src="assets/carrossel5.jpg" alt="Cena 5"><div class="slide-legenda">A rígida e cinzenta cidade dos vivos, controlada pelas severas aparências e casamentos arranjados.</div></div>
-                    <div class="slide"><img src="assets/carrossel6.jpg" alt="Cena 6"><div class="slide-legenda">A poética transformação final de Emily, encontrando sua merecida paz na luz do luar.</div></div>
+                    <div class="slide">
+                        <img src="assets/carrossel1.jpg" alt="Cenário de Animação 1">
+                        <div class="slide-legenda">A melancólica floresta gótica onde a promessa de Victor desperta Emily de seu sono profundo.</div>
+                    </div>
+                    <div class="slide">
+                        <img src="assets/carrossel2.jpg" alt="Luzes Coloridas 2">
+                        <div class="slide-legenda">O contraste brilhante e neon das cores quentes do bar de jazz no animado mundo dos mortos.</div>
+                    </div>
+                    <div class="slide">
+                        <img src="assets/carrossel3.jpg" alt="Engrenagens 3">
+                        <div class="slide-legenda">Por trás das câmeras: Os cenários em miniatura e maquetes artesanais construídas nos estúdios.</div>
+                    </div>
+                    <div class="slide">
+                        <img src="assets/carrossel4.jpg" alt="Cenário de Animação 4">
+                        <div class="slide-legenda">O ensaio do dueto de piano entre Victor e Emily, unindo sentimentos de dois mundos diferentes.</div>
+                    </div>
+                    <div class="slide">
+                        <img src="assets/carrossel5.jpg" alt="Cenário de Animação 5">
+                        <div class="slide-legenda">A rígida e cinzenta cidade dos vivos, controlada pelas severas aparências e casamentos arranjados.</div>
+                    </div>
+                    <div class="slide">
+                        <img src="assets/carrossel6.jpg" alt="Cenário de Animação 6">
+                        <div class="slide-legenda">A poética transformação final de Emily, encontrando sua merecida paz na luz do luar.</div>
+                    </div>
                 </div>
                 <button class="carrossel-btn btn-prev" onclick="mudarSlide(-1)">❮</button>
                 <button class="carrossel-btn btn-next" onclick="mudarSlide(1)">❯</button>
@@ -520,15 +516,24 @@
                 <div class="video-lista-thumbs">
                     <div class="thumb-item ativo" onclick="trocarVideo('https://youtube.com', this)">
                         <img src="assets/bastidor8.jpg" class="thumb-img" alt="Thumb 1">
-                        <div class="thumb-info"><h4>O Processo Criativo</h4><p>O trabalho manual e paciência milimétrica.</p></div>
+                        <div class="thumb-info">
+                            <h4>O Processo Criativo</h4>
+                            <p>O trabalho manual e paciência milimétrica dos animadores.</p>
+                        </div>
                     </div>
                     <div class="thumb-item" onclick="trocarVideo('https://youtube.com', this)">
                         <img src="assets/bastidor3.jpg" class="thumb-img" alt="Thumb 2">
-                        <div class="thumb-info"><h4>Segredos da Câmera</h4><p>Como as lentes macro criaram o filme.</p></div>
+                        <div class="thumb-info">
+                            <h4>Segredos da Câmera</h4>
+                            <p>Como a iluminação digital e as lentes macro criaram o filme.</p>
+                        </div>
                     </div>
                     <div class="thumb-item" onclick="trocarVideo('https://youtube.com', this)">
                         <img src="assets/bastidor5.jpg" class="thumb-img" alt="Thumb 3">
-                        <div class="thumb-info"><h4>Músicas e Orquestra</h4><p>Danny Elfman revela os arranjos góticos.</p></div>
+                        <div class="thumb-info">
+                            <h4>Músicas e Orquestra</h4>
+                            <p>Danny Elfman revela os arranjos de jazz e coros góticos.</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -537,26 +542,101 @@
         <section class="secao-cinema-painel">
             <h2 class="titulo-secao">🎬 9 Segredos Tecnológicos dos Bastidores</h2>
             <div class="grid-bastidores-9">
-                <div class="card-bastidor-foto"><img src="assets/bastidor1.jpg" class="foto-card" alt="E1"><div class="info-card"><h3>1. Engrenagens Ocultas</h3><p>O rosto de cada boneco continha mecanismos de relógio internos. Os animadores giravam chaves Allen invisíveis nas orelhas para mudar expressões.</p></div></div>
-                <div class="card-bastidor-foto"><img src="assets/bastidor2.jpg" class="foto-card" alt="E2"><div class="info-card"><h3>2. Figurinos com Microfios</h3><p>O véu da Emily possuía fios de aço invisíveis na costura. Isso permitia que tecidos fossem congelados no ar para simular o vento.</p></div></div>
-                <div class="card-bastidor-foto"><img src="assets/bastidor3.jpg" class="foto-card" alt="E3"><div class="info-card"><h3>3. Revolução DSLR</h3><p>Foi o primeiro grande longa de stop-motion a trocar as pesadas câmeras de película comerciais por modelos DSLR digitais comuns.</p></div></div>
-                <div class="card-bastidor-foto"><img src="assets/bastidor4.jpg" class="foto-card" alt="E4"><div class="info-card"><h3>4. Iluminação Invertida</h3><p>O mundo dos vivos usava filtros cinzentos e luzes difusas frias, enquanto o mundo dos mortos usava luzes neon coloridas ultra-vibrantes.</p></div></div>
-                <div class="card-bastidor-foto"><img src="assets/bastidor5.jpg" class="foto-card" alt="E5"><div class="info-card"><h3>5. Linha de Montagem</h3><p>A produção contou com mais de 30 sets espalhados em um galpão gigante na Inglaterra, permitindo filmagens simultâneas de cenas diferentes.</p></div></div>
-                <div class="card-bastidor-foto"><img src="assets/bastidor6.jpg" class="foto-card" alt="E6"><div class="info-card"><h3>6. Duplicatas dos Bonecos</h3><p>Foram fabricados 14 bonecos idênticos do Victor, 14 da Emily e 13 da Victoria para evitar pausas caso alguma peça quebrasse.</p></div></div>
-                <div class="card-bastidor-foto"><img src="assets/bastidor7.jpg" class="foto-card" alt="E7"><div class="info-card"><h3>7. Esqueletos de Silicone</h3><p>A "pele" foi feita com silicone líquido injetado sobre armaduras internas de metal durável, permitindo dobras perfeitas.</p></div></div>
-                <div class="card-bastidor-foto"><img src="assets/bastidor8.jpg" class="foto-card" alt="E8"><div class="info-card"><h3>8. Trilha Sonora Viva</h3><p>Danny Elfman compôs todas as músicas e deu a voz original ao esqueleto cantor Bonejangles na taverna do submundo.</p></div></div>
-                <div class="card-bastidor-foto"><img src="assets/bastidor9.jpg" class="foto-card" alt="E9"><div class="info-card"><h3>9. Ritmo de Caracol</h3><p>Em uma semana inteira de trabalho intenso, a equipe de animadores conseguia produzir apenas entre 1 a 2 minutos úteis de filme final.</p></div></div>
+                <!-- Card 1 -->
+                <div class="card-bastidor-foto">
+                    <img src="assets/bastidor1.jpg" class="foto-card" alt="Engrenagens">
+                    <div class="info-card">
+                        <h3>1. Engrenagens Ocultas</h3>
+                        <p>O rosto de cada boneco continha mecanismos de relógio inseridos pelas orelhas. Os animadores giravam chaves Allen invisíveis para alterar expressões faciais milímetro a milímetro.</p>
+                    </div>
+                </div>
+                <!-- Card 2 -->
+                <div class="card-bastidor-foto">
+                    <img src="assets/bastidor2.jpg" class="foto-card" alt="Costura">
+                    <div class="info-card">
+                        <h3>2. Figurinos com Microfios</h3>
+                        <p>O icônico véu da Emily possuía fios de aço invisíveis em toda a sua costura. Isso permitia que os tecidos fossem congelados no ar para simular a física do vento quadro a quadro.</p>
+                    </div>
+                </div>
+                <!-- Card 3 -->
+                <div class="card-bastidor-foto">
+                    <img src="assets/bastidor3.jpg" class="foto-card" alt="Lente">
+                    <div class="info-card">
+                        <h3>3. Revolução DSLR</h3>
+                        <p>Foi o primeiro grande longa comercial de stop-motion a trocar as gigantescas câmeras de película de cinema por câmeras DSLR digitais comerciais (modelos Canon EOS-1D Mark II).</p>
+                    </div>
+                </div>
+                <!-- Card 4 -->
+                <div class="card-bastidor-foto">
+                    <img src="assets/bastidor4.jpg" class="foto-card" alt="Luzes">
+                    <div class="info-card">
+                        <h3>4. Iluminação Invertida</h3>
+                        <p>Para criar a ironia de Tim Burton, o mundo dos vivos usava filtros cinzentos e luzes difusas e frias, enquanto o mundo dos mortos usava luzes neon coloridas ultra-vibrantes.</p>
+                    </div>
+                </div>
+                <!-- Card 5 -->
+                <div class="card-bastidor-foto">
+                    <img src="assets/bastidor5.jpg" class="foto-card" alt="Estúdio">
+                    <div class="info-card">
+                        <h3>5. Linha de Montagem</h3>
+                        <p>A produção contou com mais de 30 sets de filmagem simultâneos espalhados em um galpão gigante na Inglaterra, permitindo que vários animadores filmassem cenas diferentes ao mesmo tempo.</p>
+                    </div>
+                </div>
+                <!-- Card 6 -->
+                <div class="card-bastidor-foto">
+                    <img src="assets/bastidor6.jpg" class="foto-card" alt="Marionete">
+                    <div class="info-card">
+                        <h3>6. Duplicatas dos Bonecos</h3>
+                        <p>Foram fabricados 14 bonecos idênticos do Victor, 14 da Emily e 13 da Victoria. Isso evitava que a produção parasse caso um boneco quebrasse ou se desgastasse.</p>
+                    </div>
+                </div>
+                <!-- Card 7 -->
+                <div class="card-bastidor-foto">
+                    <img src="assets/bastidor7.jpg" class="foto-card" alt="Argila">
+                    <div class="info-card">
+                        <h3>7. Esqueletos de Silicone</h3>
+                        <p>A "pele" dos personagens foi feita usando fórmulas de silicone líquido injetado sobre armaduras internas de metal durável, permitindo dobras perfeitas sem rachar.</p>
+                    </div>
+                </div>
+                <!-- Card 8 -->
+                <div class="card-bastidor-foto">
+                    <img src="assets/bastidor8.jpg" class="foto-card" alt="Música">
+                    <div class="info-card">
+                        <h3>8. Trilha Sonora Viva</h3>
+                        <p>Danny Elfman, parceiro clássico de Burton, compôs todas as músicas do filme e deu a voz original ao esqueleto cantor Bonejangles na taverna do submundo.</p>
+                    </div>
+                </div>
+                <!-- Card 9 -->
+                <div class="card-bastidor-foto">
+                    <img src="assets/bastidor9.jpg" class="foto-card" alt="Relógio">
+                    <div class="info-card">
+                        <h3>9. Ritmo de Caracol</h3>
+                        <p>Em uma semana inteira de trabalho intenso, a equipe de animadores conseguia produzir apenas entre 1 a 2 minutos acumulados de filmagem final útil para o longa.</p>
+                    </div>
+                </div>
             </div>
         </section>
 
-        <!-- SEÇÃO: Easter Eggs -->
+        <!-- SEÇÃO: Lista Expandida de Easter Eggs -->
         <section class="secao-cinema-painel">
             <h2 class="titulo-secao">👁️ Detalhes Escondidos (Easter Eggs)</h2>
             <div class="lista-easter-eggs-completa">
-                <div style="background: #121826; padding: 20px; border-radius: 8px; border-left: 3px solid #38bdf8;"><h3 style="color: #38bdf8; margin-top: 0;">🎹 O Piano Harryhausen</h3><p style="color: #cbd5e1; margin-bottom: 0;">A marca do piano exibe o nome Harryhausen. Homenagem a Ray Harryhausen, pioneiro dos efeitos visuais em stop-motion.</p></div>
-                <div style="background: #121826; padding: 20px; border-radius: 8px; border-left: 3px solid #38bdf8;"><h3 style="color: #38bdf8; margin-top: 0;">💀 Jack Skellington no Submundo?</h3><p style="color: #cbd5e1; margin-bottom: 0;">A silhueta e os movimentos do esqueleto Bonejangles são referências explícitas ao visual do Jack de O Estranho Mundo de Jack.</p></div>
-                <div style="background: #121826; padding: 20px; border-radius: 8px; border-left: 3px solid #38bdf8;"><h3 style="color: #38bdf8; margin-top: 0;">📜 Contos Populares</h3><p style="color: #cbd5e1; margin-bottom: 0;">A história é inspirada em um antigo conto folclórico judeu-russo do século XIX chamado "A Noiva Cadáver", de um casamento acidental na floresta.</p></div>
-                <div style="background: #121826; padding: 20px; border-radius: 8px; border-left: 3px solid #38bdf8;"><h3 style="color: #38bdf8; margin-top: 0;">🐕 Sparky Reencarnado?</h3><p style="color: #cbd5e1; margin-bottom: 0;">O cão Scraps possui uma anatomia e design que serviram de inspiração direta para o cão Sparky em Frankenweenie (2012).</p></div>
+                <div style="background: #121826; padding: 20px; border-radius: 8px; border-left: 3px solid #38bdf8;">
+                    <h3 style="color: #38bdf8; margin-top: 0;">🎹 O Piano Harryhausen</h3>
+                    <p style="color: #cbd5e1; margin-bottom: 0;">A marca do piano que Victor toca na mansão exibe o nome <strong>Harryhausen</strong>. Uma homenagem direta a Ray Harryhausen, pioneiro e mentor dos efeitos visuais em stop-motion.</p>
+                </div>
+                <div style="background: #121826; padding: 20px; border-radius: 8px; border-left: 3px solid #38bdf8;">
+                    <h3 style="color: #38bdf8; margin-top: 0;">💀 Jack Skellington no Submundo?</h3>
+                    <p style="color: #cbd5e1; margin-bottom: 0;">Durante a performance musical no bar dos mortos, a silhueta, pernas longas e os movimentos do esqueleto Bonejangles são referências explícitas ao visual do Jack de <em>O Estranho Mundo de Jack</em>.</p>
+                </div>
+                <div style="background: #121826; padding: 20px; border-radius: 8px; border-left: 3px solid #38bdf8;">
+                    <h3 style="color: #38bdf8; margin-top: 0;">📜 Contos Populares</h3>
+                    <p style="color: #cbd5e1; margin-bottom: 0;">A história do filme é inspirada em um antigo conto folclórico judeu-russo do século XIX chamado "A Noiva Cadáver", onde um noivo acidentalmente coloca o anel no dedo de um esqueleto na floresta.</p>
+                </div>
+                <div style="background: #121826; padding: 20px; border-radius: 8px; border-left: 3px solid #38bdf8;">
+                    <h3 style="color: #38bdf8; margin-top: 0;">🐕 Sparky Reencarnado?</h3>
+                    <p style="color: #cbd5e1; margin-bottom: 0;">O cachorrinho esqueleto Scraps possui uma anatomia e design que serviram de inspiração direta para o cão Sparky no posterior filme de Tim Burton, <em>Frankenweenie</em> (2012).</p>
+                </div>
             </div>
         </section>
 
@@ -566,10 +646,13 @@
             <div class="bilheteria-quiz">
                 <div class="placar-quiz">Pergunta <span id="num-pergunta">1</span> de 20 • Acertos: <span id="num-acertos">0</span></div>
                 <p id="txt-pergunta" style="font-size: 1.3rem; font-weight: bold; color: #38bdf8; margin-top: 0;"></p>
+                
                 <div class="opcoes-filme" id="caixa-opcoes"></div>
+                
                 <div id="msg-resultado" style="font-weight: bold; font-size: 1.2rem; min-height: 30px; margin-top: 15px;"></div>
                 <button id="btn-avancar" class="btn-ingresso" style="display: none;" onclick="proximaFase()">Próxima Pergunta 🎬</button>
 
+                <!-- SISTEMA DE PREMIAÇÃO / TROFÉU DINÂMICO -->
                 <div class="container-trofeu" id="bloco-trofeu">
                     <div class="icone-trofeu" id="trofeu-emoji">🏆</div>
                     <h3 id="trofeu-titulo" style="font-size: 1.6rem; color: #38bdf8; margin: 15px 0 5px 0;"></h3>
@@ -580,9 +663,13 @@
         </section>
     </main>
 
+    <!-- EASTER EGG: Borboleta Azul que espalha outras pelo fundo ao ser clicada -->
     <div class="easter-egg-borboleta" onclick="espandirBorboletasFundo()">🦋</div>
+    <!-- Abertura oficial do motor JavaScript -->
     <script>
+        // ==========================================
         // CONTROLE DO CARROSSEL DE IMAGENS
+        // ==========================================
         let slideIndex = 0;
         const slides = document.getElementById("carrosselSlides");
         const totalSlides = document.querySelectorAll(".slide").length;
@@ -593,9 +680,12 @@
             if (slideIndex < 0) { slideIndex = totalSlides - 1; }
             slides.style.transform = `translateX(-${slideIndex * 100}%)`;
         }
+
         setInterval(() => { mudarSlide(1); }, 6000);
 
+        // ==========================================
         // CONTROLE DA PLAYLIST DE VÍDEOS
+        // ==========================================
         function trocarVideo(urlVideo, elementoClicado) {
             document.getElementById("videoPrincipal").src = urlVideo;
             const todosThumbs = document.querySelectorAll(".thumb-item");
@@ -603,7 +693,9 @@
             elementoClicado.classList.add("ativo");
         }
 
+        // ==========================================
         // BANCO DE DADOS COMPLETO (QUESTÕES 1 A 10)
+        // ==========================================
         const bancoCinema = [
             { q: "Qual é o nome do cãozinho esqueleto de estimação do Victor?", alt: ["Sparky", "Scraps", "Zero", "Grim"], certa: 1 },
             { q: "Qual atriz famosa dubla a Noiva Cadáver (Emily) na versão original?", alt: ["Winona Ryder", "Helena Bonham Carter", "Christina Ricci", "Drew Barrymore"], certa: 1 },
@@ -613,7 +705,7 @@
             { q: "De qual marca é o piano que Victor toca no mundo dos vivos?", alt: ["Steinway", "Harryhausen", "Yamaha", "Burton & Sons"], certa: 1 },
             { q: "Qual estúdio de animação britânico co-produziu o longa junto com a Warner?", alt: ["Aardman", "Laika Studios", "Pixar", "DreamWorks"], certa: 1 },
             { q: "O mundo dos mortos é caracterizado visualmente por qual elemento?", alt: ["Cores vibrantes, neon e jazz", "Efeitos em preto e branco", "Névoa cinzenta e silêncio completo", "Arquitetura futurista"], certa: 0 },
-            { q: "Qual ator faz a voz original de Victor Van Dort?", alt: ["Ewan McGregor", "Johnny Depp", "Jude Law", "Ben Kingsley"], certa: 1 },
+            { q: "Qual actor faz a voz original de Victor Van Dort?", alt: ["Ewan McGregor", "Johnny Depp", "Jude Law", "Ben Kingsley"], certa: 1 },
             { q: "Como a Noiva Cadáver (Emily) morreu quando estava viva?", alt: ["Envenenada pelo pai", "Assassinada por seu antigo noivo ganancioso", "Doença misteriosa", "Acidente na floresta"], certa: 1 },
             // CONTINUAÇÃO DO BANCO DE DADOS (QUESTÕES 11 A 20)
             { q: "Qual era o sobrenome da noiva viva de Victor?", alt: ["Everglot", "Van Dort", "Barkis", "Plum"], certa: 0 },
