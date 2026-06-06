@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stopart Cine - Frankenweenie</title>
+    <style>
+        /* --- CORE: PALETA FILME DE ÉPOCA SUAVEMENTE AJUSTADA --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: #b9bfc4; /* Escurecido sutilmente (antes era #cbd1d6) para dar mais profundidade */
+            color: #37383a; /* Grafite escuro cinematográfico */
+            overflow-x: hidden;
+            position: relative;
+            min-height: 100vh;
+            padding-bottom: 80px;
+        }
+
+        /* --- FIX CORRETO DO MOTOR DE SUPER TEMPESTADE (CANVAS) --- */
+        #lightningCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1; /* Mantido estritamente atrás do wrapper de conteúdo */
+            opacity: 0.95;
+        }
+
+        /* --- BARRA SUPERIOR DO PORTAL --- */
+        .top-navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #b9bfc4;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08); /* Linha divisória sutil e limpa */
+            padding: 18px 60px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-weight: 800;
+            font-size: 1.15rem;
+            letter-spacing: 1.5px;
+            color: #1d1e22;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo::before {
+            content: '🎬';
+        }
+
+        .btn-exit {
+            background: #e2e7ea;
+            color: #484c50;
+            border: 1px solid #7a7c7f;
+            padding: 7px 18px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-exit:hover {
+            background-color: #47d81a;
+            color: #000000;
+            border-color: #47d81a;
+            box-shadow: 0 0 15px rgba(71, 216, 26, 0.4);
+        }
+
+        /* --- WRAPPER CENTRAL SEM LINHAS VAZADAS --- */
+        .main-wrapper {
+            max-width: 1060px;
+            margin: 0 auto;
+            padding: 0 30px;
+            position: relative;
+            z-index: 10;
+        }
+        /* --- CARD DE APRESENTAÇÃO COM FOTO DE FUNDO LOCAL --- */
+        .movie-banner-card {
+            position: relative;
+            /* Carrega sua imagem local combinada com um degradê translúcido de cinema antigo */
+            background-image: linear-gradient(180deg, rgba(235, 238, 240, 0) 0%, rgba(215, 220, 224, 0.319) 100%), 
+                              url('assets/fundo-quadro.jpg');
+            background-size: cover;
+            background-position: center;
+            border: 1px solid rgba(16, 45, 7, 0.13); /* Borda fina e sutil no verde elétrico */
+            border-radius: 16px;
+            padding: 40px;
+            margin-top: 40px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            color: #1d1e22; /* Texto escuro/grafite de época */
+        }
+
+        /* --- CABEÇALHO DO TÍTULO --- */
+        .movie-header {
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .movie-quote {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #555a60; /* Grafite suave */
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .movie-title {
+            font-size: 3.8rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #47d81a; /* Verde Elétrico Tóxico do Pôster */
+            text-shadow: 0 0 10px rgba(71, 216, 26, 0.4), 0 0 20px rgba(71, 216, 26, 0.2);
+            font-family: 'Impact', 'Arial Black', sans-serif;
+        }
+
+        .movie-description {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #1d1e22;
+            max-width: 900px;
+            margin: 25px auto;
+            position: relative;
+            z-index: 2;
+            font-weight: 500;
+        }
+
+        /* --- GRADE DE METADADOS CINZA-GRAFITE --- */
+        .movie-meta-grid {
+            display: flex;
+            justify-content: flex-start;
+            gap: 60px;
+            margin-top: 35px;
+            padding-top: 25px;
+            border-top: 1px dashed rgba(29, 30, 34, 0.15);
+            position: relative;
+            z-index: 2;
+        }
+
+        .meta-item {
+            text-align: left;
+            border-left: 2px solid #47d81a; /* Detalhe lateral em verde elétrico */
+            padding-left: 14px;
+        }
+
+        .meta-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            color: #555a60;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+            font-weight: 700;
+        }
+
+        .meta-value {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #1d1e22;
+        }
+
+        /* --- TÍTULOS DE SEÇÃO EXTERNOS (LIVRES DE BORDAS GLOBAIS) --- */
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin: 55px 0 25px 0;
+            color: #1d1e22;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title::before {
+            content: '';
+            display: inline-block;
+            width: 4px;
+            height: 22px;
+            background-color: #47d81a;
+            border-radius: 2px;
+        }
+        /* --- CARROSSEL EM ESCALA DE CINZA CLARO --- */
+        .carousel-wrapper {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            border-radius: 14px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            background: #b9bfc4;
+            border: 2px solid #9fa4a9;
+        }
+
+        .carousel-container {
+            display: flex;
+            transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+            width: 100%;
+        }
+
+        .carousel-slide {
+            min-width: 100%;
+            position: relative;
+        }
+
+        .carousel-slide img {
+            width: 100%;
+            height: 480px;
+            object-fit: cover;
+            display: block;
+            filter: grayscale(100%) contrast(110%);
+        }
+
+        .carousel-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(235, 238, 240, 0.98));
+            color: #1d1e22;
+            padding: 30px 25px 20px 25px;
+            font-size: 0.9rem;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .carousel-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(235, 238, 240, 0.85);
+            color: #1d1e22;
+            border: 1px solid #9fa4a9;
+            font-size: 1.2rem;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .carousel-btn:hover {
+            background: #47d81a;
+            color: #000000;
+            border-color: #47d81a;
+            box-shadow: 0 0 15px rgba(71, 216, 26, 0.4);
+        }
+
+        .btn-prev { left: 20px; }
+        .btn-next { right: 20px; }
+
+        .carousel-dots {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            background: #9fa4a9;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .dot.active {
+            background: #47d81a;
+            transform: scale(1.3);
+            box-shadow: 0 0 8px #47d81a;
+        }
+
+        /* --- BASTIDORES --- */
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .tech-card {
+            background: #e2e7ea;
+            border: 2px solid #9fa4a9;
+            border-radius: 8px;
+            overflow: hidden;
+            padding: 15px;
+            transition: border-color 0.3s, transform 0.3s;
+            color: #1d1e22;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+        }
+
+        .tech-card:hover {
+            border-color: #47d81a;
+            transform: translateY(-3px);
+        }
+
+        .tech-card img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            filter: grayscale(100%);
+        }
+
+        .tech-card h3 {
+            font-size: 0.95rem;
+            color: #1d1e22;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .tech-card p {
+            font-size: 0.8rem;
+            line-height: 1.5;
+            color: #484c50;
+        }
+
+        /* --- EASTER EGGS --- */
+        .easter-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+        }
+
+        .easter-card {
+            background: #e2e7ea;
+            border-radius: 8px;
+            padding: 20px;
+            border: 2px solid #9fa4a9;
+            color: #1d1e22;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+        }
+
+        .easter-card h3 {
+            font-size: 0.95rem;
+            color: #1d1e22;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 700;
+        }
+
+        .easter-card p {
+            font-size: 0.8rem;
+            line-height: 1.5;
+            color: #484c50;
+        }
+
+        /* --- QUIZ TRACEJADO --- */
+        .quiz-box {
+            border: 2px dashed rgba(71, 216, 26, 0.5);
+            border-radius: 12px;
+            padding: 40px;
+            text-align: center;
+            background: #e2e7ea;
+            position: relative;
+            color: #1d1e22;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+        }
+
+        .quiz-counter {
+            font-size: 0.8rem;
+            color: #555a60;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .quiz-question {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #1d1e22;
+            margin-bottom: 25px;
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .quiz-opt-btn {
+            background: #ffffff;
+            border: 1px solid #9fa4a9;
+            color: #1d1e22;
+            padding: 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .quiz-opt-btn:hover {
+            background: #b9bfc4;
+            border-color: #47d81a;
+        }
+
+        .quiz-opt-btn.correct { background: #47d81a !important; border-color: #47d81a !important; color: #000000 !important; font-weight: bold; }
+        .quiz-opt-btn.wrong { background: #ff3333 !important; border-color: #ff3333 !important; color: #ffffff !important; }
+
+        /* --- POPUP RECOMPENSA --- */
+        .trophy-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.8);
+            background: #1d1e22;
+            border: 2px solid #47d81a;
+            border-radius: 16px;
+            padding: 40px;
+            text-align: center;
+            z-index: 1000;
+            box-shadow: 0 0 60px rgba(71, 216, 26, 0.4);
+            display: none;
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            max-width: 400px;
+            width: 90%;
+            color: #ffffff;
+        }
+
+        .trophy-popup.active {
+            display: block;
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .trophy-icon {
+            font-size: 4rem;
+            margin-bottom: 15px;
+            animation: float 2s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .storm-flash {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: #ffffff; z-index: 999; pointer-events: none;
+            display: none;
+        }
+
+        @media (max-width: 900px) {
+            .tech-grid, .easter-grid { grid-template-columns: 1fr; }
+            .top-navbar { padding: 18px 30px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Elemento gráfico para desenhar os raios de verdade na tela -->
+    <canvas id="lightningCanvas"></canvas>
+    <div class="storm-flash" id="stormFlash"></div>
+
+    <!-- BARRA SUPERIOR STOPART CINE -->
+    <nav class="top-navbar">
+        <div class="logo">STOPART CINE</div>
+        <!-- Retorna perfeitamente para home.html -->
+        <button class="btn-exit" onclick="window.location.href='home.html'">- Sair da Sala</button>
+    </nav>
+
+    <!-- WRAPPER DO CONTEÚDO CENTRALIZADO -->
+    <div class="main-wrapper">
+
+        <!-- CARD DE APRESENTAÇÃO DO FILME (COM FOTO DE FUNDO INTEGRADA AO QUADRO) -->
+        <div class="movie-banner-card">
+            <header class="movie-header">
+                <div class="movie-quote">"UM EXPERIMENTO ELÉTRICO PARA TRAZER DE VOLTA O SEU MELHOR AMIGO..."</div>
+                <h1 class="movie-title">Frankenweenie</h1>
+            </header>
+
+            <p class="movie-description">
+                Ei, prepare a pipoca! Você sabia que Victor Frankenstein conseguiu a proeza de reanimar seu amado cão Sparky após um trágico acidente? Utilizando o poder dos raios e da ciência elementar, o jovem cientista traz seu amigo de volta à vida, mas logo descobre que esconder um cãozinho remendado e elétrico da vizinhança de New Holland será um desafio monstruosamente divertido! ⚡🐶
+            </p>
+
+            <!-- GRADE DE DADOS TÉCNICOS EM CINZA EXPRESSIONISTA CLARO -->
+            <div class="movie-meta-grid">
+                <div class="meta-item">
+                    <div class="meta-label">Estúdio Criador</div>
+                    <div class="meta-value">Walt Disney / Tim Burton</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">Técnica de Arte</div>
+                    <div class="meta-value">Stop-Motion (P&B)</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">Tempo de Surto</div>
+                    <div class="meta-value">1h 27min</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">Aclamação</div>
+                    <div class="meta-value">Indicado ao Oscar</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SEÇÃO: CARROSSEL DE CENAS (APONTANDO PARA SEUS ARQUIVOS LOCAIS) -->
+        <h2 class="section-title">Cenas Marcantes: Um Pouco da História!</h2>
+        <div class="carousel-wrapper">
+            <button class="carousel-btn btn-prev" onclick="moveSlide(-1)">&#10094;</button>
+            <button class="carousel-btn btn-next" onclick="moveSlide(1)">&#10095;</button>
+            
+            <div class="carousel-container" id="carouselTrack">
+                <div class="carousel-slide">
+                    <img src="cena1.jpg" alt="O Laboratório no Sótão">
+                    <div class="carousel-caption">Cena 1: Victor Frankenstein monta seu laboratório improvisado e secreto no sótão de casa.</div>
+                </div>
+                <div class="carousel-slide">
+                    <img src="cena2.jpg" alt="A Tempestade">
+                    <div class="carousel-caption">Cena 2: A força devastadora dos raios é canalizada para o grande experimento de reanimação.</div>
+                </div>
+                <div class="carousel-slide">
+                    <img src="cena3.jpg" alt="Sparky Ganha Vida">
+                    <div class="carousel-caption">Cena 3: As primeiras faíscas de eletricidade correndo pelas costuras do pequeno Sparky.</div>
+                </div>
+                <div class="carousel-slide">
+                    <img src="cena4.jpg" alt="Moinho de New Holland">
+                    <div class="carousel-caption">Cena 4: O melancólico moinho de New Holland, um clássico tributo aos monstros de terror.</div>
+                </div>
+                <div class="carousel-slide">
+                    <img src="cena5.jpg" alt="Mutações descontroladas">
+                    <div class="carousel-caption">Cena 5: Outros alunos invejosos clonam a fórmula secreta, gerando monstros suburbanos bizarros.</div>
+                </div>
+                <div class="carousel-slide">
+                    <img src="cena6.jpg" alt="Bastidores Técnicos">
+                    <div class="carousel-caption">Cena 6: Detalhes minuciosos dos bonecos articulados sendo movidos milímetro a milímetro.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- INDICADORES DO CARROSSEL -->
+        <div class="carousel-dots">
+            <div class="dot active" onclick="goToSlide(0)"></div>
+            <div class="dot" onclick="goToSlide(1)"></div>
+            <div class="dot" onclick="goToSlide(2)"></div>
+            <div class="dot" onclick="goToSlide(3)"></div>
+            <div class="dot" onclick="goToSlide(4)"></div>
+            <div class="dot" onclick="goToSlide(5)"></div>
+        </div>
+        <!-- SEÇÃO: BASTIDORES EM TOM CLARO DE FOTOGRAFIA ANTIGA -->
+        <h2 class="section-title">6 Segredos Tecnológicos dos Bastidores</h2>
+        <div class="tech-grid">
+            <!-- Card 1 -->
+            <div class="tech-card">
+                <img src="https://unsplash.com" alt="Armaduras Internas">
+                <h3>1. Esqueletos Articulados</h3>
+                <p>O interior de cada boneco de Frankenweenie continha armaduras complexas de metal com juntas esféricas de alta precisão, permitindo que os animadores controlassem expressões faciais milímetro a milímetro através de engrenagens ocultas pelas orelhas.</p>
+            </div>
+            <!-- Card 2 -->
+            <div class="tech-card">
+                <img src="https://unsplash.com" alt="Pelagem com Microfios">
+                <h3>2. Pelagem Estruturada</h3>
+                <p>Para criar a textura perfeita dos animais em miniatura, os modeladores utilizaram pelos sintéticos mesclados com fios invisíveis de aço moldável. Isso evitava que a pele dos bonecos se movesse sozinha entre as fotos devido à estática do ar.</p>
+            </div>
+            <!-- Card 3 -->
+            <div class="tech-card">
+                <img src="https://unsplash.com" alt="Câmeras Digitais">
+                <h3>3. Revolução das DSLRs</h3>
+                <p>A produção de Frankenweenie utilizou câmeras fotográficas digitais comerciais de alta resolução (modelos Canon EOS) montadas em trilhos controlados por computador, mantendo a tradição digital iniciada em A Noiva Cadáver.</p>
+            </div>
+            <!-- Card 4 -->
+            <div class="tech-card">
+                <img src="https://unsplash.com" alt="Iluminação e Filtros">
+                <h3>4. Escala de Tons Cinzentos</h3>
+                <p>Mesmo sendo um filme em preto e branco, os cenários e figurinos foram pintados com cores reais! Os iluminadores usavam luzes coloridas específicas e filtros nas lentes para controlar perfeitamente o contraste e os tons de cinza na tela.</p>
+            </div>
+            <!-- Card 5 -->
+            <div class="tech-card">
+                <img src="https://unsplash.com" alt="Estúdios Simultâneos">
+                <h3>5. Linha de Montagem</h3>
+                <p>A produção contou com mais de 30 cenários e palcos montados simultaneamente em um galpão gigante na Inglaterra. Isso permitia que múltiplos animadores filmassem sequências diferentes do longa de forma paralela ao mesmo tempo.</p>
+            </div>
+            <!-- Card 6 -->
+            <div class="tech-card">
+                <img src="https://unsplash.com" alt="Vários Bonecos">
+                <h3>6. Duplicatas dos Bonecos</h3>
+                <p>Foram fabricados mais de 200 bonecos para o filme, incluindo cerca de 18 modelos idênticos do Victor e 15 do Sparky. Isso evitava que a produção parasse caso algum boneco sofresse desgaste ou quebrasse durante os meses de filmagem.</p>
+            </div>
+        </div>
+
+        <!-- SEÇÃO: EASTER EGGS (DETALHES ESCONDIDOS) -->
+        <h2 class="section-title">Os Detalhes Escondidos (Easter Eggs)</h2>
+        <div class="easter-grid">
+            <!-- Card 1 -->
+            <div class="easter-card">
+                <h3>🏠 O Pet Cemitério</h3>
+                <p>No cemitério de animais de New Holland, o túmulo onde Sparky é enterrado tem o formato clássico e remete diretamente à arquitetura expressionista usada nos filmes clássicos de terror da década de 1930.</p>
+            </div>
+            <!-- Card 2 -->
+            <div class="easter-card">
+                <h3>🐢 Christopher Lee</h3>
+                <p>O monstro tartaruga gigante que ataca a cidade (gerado pelo experimento do menino Toshio) chama-se Shelley. Trata-se de uma homenagem direta a Mary Shelley, a autora original do livro Frankenstein.</p>
+            </div>
+            <!-- Card 3 -->
+            <div class="easter-card">
+                <h3>🧛 Vincent Price</h3>
+                <p>O professor de ciências excêntrico, Sr. Rzykruski, teve seu visual e trejeitos totalmente inspirados no lendário ator de filmes de terror Vincent Price, que era um grande amigo pessoal de Tim Burton.</p>
+            </div>
+        </div>
+
+        <!-- SEÇÃO: QUIZ INTERATIVO COM PONTUAÇÃO -->
+        <h2 class="section-title">O Grande Teste da Bilheteria (Quiz)</h2>
+        <div class="quiz-box">
+            <div class="quiz-counter" id="quizCounter">Pergunta 1 de 5 • Acertos: 0</div>
+            <div class="quiz-question" id="quizQuestion">Carregando pergunta...</div>
+            <div class="quiz-options" id="quizOptions">
+                <!-- Os botões serão injetados dinamicamente via JavaScript -->
+            </div>
+        </div>
+
+    </div> <!-- Fim do .main-wrapper -->
+
+    <!-- POPUP DO TROFÉU SECRETO -->
+    <div class="trophy-popup" id="trophyPopup">
+        <div class="trophy-icon" style="filter: none;">🏆</div>
+        <h2 style="color: #ffffff; margin-bottom: 10px; font-size: 1.4rem;">Mestre da Reanimação!</h2>
+        <p style="color: #a4a9ad; font-size: 0.9rem; line-height: 1.5; margin-bottom: 25px;">
+            Impressionante! Seus conhecimentos elétricos trouxeram o Sparky de volta à vida com sucesso absoluto!
+        </p>
+        <button class="quiz-opt-btn" onclick="resetQuiz()" style="width: 100%; max-width: 200px; margin: 0 auto; display: block; background: #ffffff; color: #1d1e22; border-color: #ffffff;">Jogar Novamente</button>
+    </div>
+    <!-- SCRIPTS DE INTERATIVIDADE E MOTOR DE RAIOS VERDES (CANVAS) -->
+    <script>
+        // --- MOTOR DE RAIOS REALISTAS DE ALTA INTENSIDADE ---
+        const canvas = document.getElementById('lightningCanvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        function createLightningPath(x1, y1, x2, y2, segments) {
+            let path = [{ x: x1, y: y1 }];
+            let currX = x1;
+            let currY = y1;
+            
+            const dx = (x2 - x1) / segments;
+            const dy = (y2 - y1) / segments;
+
+            for (let i = 1; i < segments; i++) {
+                currX += dx + (Math.random() - 0.5) * 45; // Curvas laterais
+                currY += dy + (Math.random() - 0.2) * 20;
+                path.push({ x: currX, y: currY });
+            }
+            path.push({ x: x2, y: y2 });
+            return path;
+        }
+
+        function drawLightning(path, width, opacity, color = '#47d81a') {
+            ctx.beginPath();
+            ctx.moveTo(path.x, path.y);
+            for (let i = 1; i < path.length; i++) {
+                ctx.lineTo(path[i].x, path[i].y);
+            }
+            ctx.strokeStyle = color;
+            ctx.lineWidth = width;
+            ctx.shadowColor = color;
+            ctx.shadowBlur = 20; 
+            ctx.stroke();
+        }
+
+        let isStorming = false;
+
+        function triggerEnvironmentLightning() {
+            if (isStorming) return;
+            
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Frequência calibrada para gerar faíscas dinâmicas o tempo todo
+            if (Math.random() > 0.75) { 
+                const numRays = Math.floor(Math.random() * 3) + 1; 
+                
+                for (let i = 0; i < numRays; i++) {
+                    const startX = Math.random() * canvas.width;
+                    const endX = startX + (Math.random() - 0.5) * 350;
+                    const path = createLightningPath(startX, 0, endX, canvas.height, 14);
+                    
+                    const dynamicWidth = Math.random() * 2 + 1.5;
+                    const dynamicOpacity = Math.random() * 0.4 + 0.5;
+                    
+                    drawLightning(path, dynamicWidth, dynamicOpacity, '#47d81a');
+                    
+                    if (Math.random() > 0.4 && path.length > 6) {
+                        const branchIndex = Math.floor(path.length / 2);
+                        const bStartX = path[branchIndex].x;
+                        const bStartY = path[branchIndex].y;
+                        const bEndX = bStartX + (Math.random() - 0.5) * 200;
+                        const branchPath = createLightningPath(bStartX, bStartY, bEndX, canvas.height, 6);
+                        drawLightning(branchPath, dynamicWidth * 0.6, dynamicOpacity * 0.8, '#1d1e22'); // Ramificações grafite dão estilo de desenho à mão
+                    }
+                }
+
+                setTimeout(() => {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                }, 70);
+            }
+        }
+        setInterval(triggerEnvironmentLightning, 150);
+
+
+        // --- LOGICA DE CONTROLE DO CARROSSEL ---
+        let currentSlide = 0;
+        const totalSlides = 6;
+        const track = document.getElementById('carouselTrack');
+        const dots = document.querySelectorAll('.dot');
+
+        function updateCarousel() {
+            track.style.transform = `translateX(-${currentSlide * 100}%)`;
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentSlide);
+            });
+        }
+
+        function moveSlide(direction) {
+            currentSlide = (currentSlide + direction + totalSlides) % totalSlides;
+            updateCarousel();
+        }
+
+        function goToSlide(index) {
+            currentSlide = index;
+            updateCarousel();
+        }
+
+        setInterval(() => { moveSlide(1); }, 6000);
+        // --- BANCO DE DADOS E LOGICA DO QUIZ ---
+        const quizData = [
+            {
+                question: "Qual é o nome do cãozinho trazido de volta à vida por Victor?",
+                options: ["Scraps", "Zero", "Sparky", "Perky"],
+                correct: 2
+            },
+            {
+                question: "Qual força da natureza é utilizada para reanimar o cãozinho?",
+                options: ["Fogo de Moinho", "Raios de Tempestade", "Energia Nuclear", "Ondas de Rádio"],
+                correct: 1
+            },
+            {
+                question: "Em qual cidade fictícia se passa a história de Frankenweenie?",
+                options: ["Halloween Town", "New Holland", "Burtonville", "Green Hills"],
+                correct: 1
+            },
+            {
+                question: "O visual do professor Sr. Rzykruski foi inspirado em qual ator clássico?",
+                options: ["Vincent Price", "Christopher Lee", "Bela Lugosi", "Boris Karloff"],
+                correct: 0
+            },
+            {
+                question: "O monstro tartaruga gigante chamado Shelley faz referência a qual autora?",
+                options: ["Agatha Christie", "Mary Shelley", "Virginia Woolf", "J.K. Rowling"],
+                correct: 1
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+
+        function loadQuestion() {
+            const currentQuiz = quizData[currentQuestionIndex];
+            document.getElementById('quizCounter').innerText = `Pergunta ${currentQuestionIndex + 1} de ${quizData.length} • Acertos: ${score}`;
+            document.getElementById('quizQuestion').innerText = currentQuiz.question;
+            
+            const optionsContainer = document.getElementById('quizOptions');
+            optionsContainer.innerHTML = '';
+
+            currentQuiz.options.forEach((option, idx) => {
+                const button = document.createElement('button');
+                button.className = 'quiz-opt-btn';
+                button.innerText = option;
+                button.onclick = () => selectOption(button, idx);
+                optionsContainer.appendChild(button);
+            });
+        }
+
+        function selectOption(selectedButton, selectedIndex) {
+            const currentQuiz = quizData[currentQuestionIndex];
+            const buttons = document.querySelectorAll('.quiz-opt-btn');
+
+            buttons.forEach(btn => btn.style.pointerEvents = 'none');
+
+            if (selectedIndex === currentQuiz.correct) {
+                selectedButton.classList.add('correct');
+                score++;
+            } else {
+                selectedButton.classList.add('wrong');
+                buttons[currentQuiz.correct].classList.add('correct');
+            }
+
+            setTimeout(() => {
+                currentQuestionIndex++;
+                if (currentQuestionIndex < quizData.length) {
+                    loadQuestion();
+                } else {
+                    finishQuiz();
+                }
+            }, 2000);
+        }
+
+        function finishQuiz() {
+            document.getElementById('quizCounter').innerText = `Quiz Concluído!`;
+            document.getElementById('quizQuestion').innerText = `Você acertou ${score} de ${quizData.length} perguntas!`;
+            document.getElementById('quizOptions').innerHTML = '';
+
+            if (score >= 3) {
+                triggerStormEffect();
+            } else {
+                const failText = document.createElement('p');
+                failText.style.color = '#ff3333';
+                failText.style.marginTop = '15px';
+                failText.style.fontWeight = '600';
+                failText.innerText = "Não foi dessa vez! Você precisa de pelo menos 3 acertos para ganhar o troféu.";
+                
+                const retryBtn = document.createElement('button');
+                retryBtn.className = 'quiz-opt-btn';
+                retryBtn.style.marginTop = '20px';
+                retryBtn.innerText = "Tentar Novamente";
+                retryBtn.onclick = resetQuiz;
+                
+                document.getElementById('quizOptions').appendChild(failText);
+                document.getElementById('quizOptions').appendChild(retryBtn);
+            }
+        }
+
+        function triggerStormEffect() {
+            isStorming = true;
+            const flashOverlay = document.getElementById('stormFlash');
+            let flashCount = 0;
+
+            const stormInterval = setInterval(() => {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                flashOverlay.style.backgroundColor = flashCount % 2 === 0 ? '#ffffff' : '#47d81a';
+                flashOverlay.style.display = flashOverlay.style.display === 'block' ? 'none' : 'block';
+                
+                for (let k = 0; k < 5; k++) {
+                    let sX = Math.random() * canvas.width;
+                    let eX = sX + (Math.random() - 0.5) * 450;
+                    let path = createLightningPath(sX, 0, eX, canvas.height, 16);
+                    let lightningColor = Math.random() > 0.4 ? '#47d81a' : '#ffffff';
+                    drawLightning(path, 5.5, 0.95, lightningColor);
+                }
+
+                flashCount++;
+                if (flashCount >= 18) { 
+                    clearInterval(stormInterval);
+                    flashOverlay.style.display = 'none';
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    isStorming = false;
+                    document.getElementById('trophyPopup').classList.add('active');
+                }
+            }, 65);
+        }
+
+        function resetQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            document.getElementById('trophyPopup').classList.remove('active');
+            loadQuestion();
+        }
+
+        window.onload = () => {
+            loadQuestion();
+        };
+    </script>
+</body>
+</html>
