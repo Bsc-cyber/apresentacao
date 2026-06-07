@@ -4,11 +4,346 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mundo da Animação - Stop Motion</title>
-    <link rel="stylesheet" href="style.css">
     <!-- Fontes do Google (Cinzel para títulos góticos e Montserrat para os textos) -->
     <link rel="preconnect" href="https://googleapis.com">
     <link rel="preconnect" href="https://gstatic.com" crossorigin>
-    <link href="https://googleapis.com/css2?family=Cinzel:wght@400;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://googleapis.com" rel="stylesheet">
+    
+    <style>
+    /* ==========================================================================
+       1. CONFIGURAÇÕES GLOBAIS E VARIÁVEIS (PALETA ULTRA GÓTICA ROXA)
+       ========================================================================== */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    :root {
+        --bg-dark: #050307;
+        --purple-neon: #a65df2;
+        --purple-hover: #c18fff;
+        --purple-glass: rgba(166, 93, 242, 0.08);
+        --border-color: rgba(166, 93, 242, 0.25);
+        --text-light: #ffffff;
+        --text-muted: #958d9c;
+        --yellow-accent: #ff9d00;
+    }
+
+    body {
+        background-color: var(--bg-dark);
+        color: var(--text-light);
+        font-family: 'Montserrat', sans-serif;
+        line-height: 1.4;
+        overflow-x: hidden; /* Evita quebras de tela e barras de rolagem laterais */
+        overflow-y: auto;   /* Permite a rolagem vertical nativa em todas as telas */
+        min-height: 100vh;
+        width: 100%;
+    }
+
+    h1, h2, h3, h4, .logo {
+        font-family: 'Cinzel', serif;
+        letter-spacing: 1px;
+    }
+
+    a {
+        text-decoration: none;
+        transition: 0.3s;
+    }
+    /* ==========================================================================
+       2. TELA DE CONTAGEM REGRESSIVA ORIGINAL (SINCRO DE 7.5s)
+       ========================================================================== */
+    #countdown-screen {
+        position: fixed;
+        top: 0; left: 0; width: 100vw; height: 100vh;
+        background-color: #111111;
+        display: flex; justify-content: center; align-items: center;
+        z-index: 9999; overflow: hidden;
+        animation: fadeOutScreen 7.5s forwards;
+    }
+
+    .film-grain {
+        position: absolute; width: 100%; height: 100%;
+        background: radial-gradient(circle, rgba(255,255,255,0.15) 10%, transparent 11%);
+        background-size: 10px 10px; opacity: 0.25;
+        animation: grainMove 0.15s infinite steps(2);
+    }
+
+    .projector-lines {
+        position: absolute; width: 100%; height: 100%;
+        border-left: 2px solid rgba(0, 0, 0, 0.25);
+        border-right: 1px solid rgba(0, 0, 0, 0.3); opacity: 0.4;
+        animation: lineScratch 0.3s infinite linear;
+    }
+
+    .countdown-circle {
+        position: relative; width: 500px; height: 500px;
+        border: 6px solid #222; border-radius: 50%;
+        display: flex; justify-content: center; align-items: center;
+        box-shadow: 0 0 0 25px rgba(0,0,0,0.05), inset 0 0 0 25px rgba(0,0,0,0.05);
+    }
+
+    .countdown-circle::before, .countdown-circle::after { content: ''; position: absolute; background: #222; }
+    .countdown-circle::before { width: 150vw; height: 3px; left: -75vw; }
+    .countdown-circle::after { height: 150vh; width: 3px; top: -75vh; }
+
+    .radar-sweep {
+        position: absolute; width: 100%; height: 100%; border-radius: 50%;
+        background: conic-gradient(from 0deg, rgba(0,0,0,0.2) 0deg, transparent 90deg);
+        animation: radarSpin 1.2s linear infinite;
+    }
+
+    #countdown-text::after {
+        content: "LUZ...";
+        font-size: 4.5rem; color: #111; z-index: 10; letter-spacing: 4px;
+        text-shadow: 2px 2px 4px rgba(255,255,255,0.2);
+        animation: changeText 7.5s forwards, textFlicker 0.15s infinite alternate;
+    }
+
+    /* ==========================================================================
+       3. NOVO DEGRADÊ FECHADO NA ESQUERDA (REMOVE POLUIÇÃO VISUAL)
+       ========================================================================== */
+    #main-site {
+        opacity: 0;
+        min-height: 100vh;
+        width: 100%;
+        position: relative;
+        background-image: 
+            linear-gradient(to right, rgba(14, 7, 24, 1) 0%, rgba(14, 7, 24, 1) 32%, rgba(14, 7, 24, 0.85) 45%, rgba(14, 7, 24, 0) 68%), 
+            url('assets/fundo_principal.png'); 
+        background-size: cover;
+        background-position: center center;
+        background-repeat: no-repeat;
+        animation: fadeInSite 1.2s ease-in forwards 7.2s;
+        display: flex;
+        flex-direction: column;
+    }
+    /* ==========================================================================
+       4. CABEÇALHO (NAVBAR COM DIVISÓRIA NEON E BOTÃO ATIVO ROXO)
+       ========================================================================== */
+    .main-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 16px 60px;
+        background: #07040a;
+        border-bottom: 1px solid rgba(166, 93, 242, 0.3);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
+        position: fixed;
+        top: 0; left: 0; width: 100%;
+        z-index: 100;
+    }
+
+    .logo { font-size: 1.4rem; font-weight: 700; color: var(--text-light); display: flex; align-items: center; gap: 8px; }
+    .logo-badge { font-size: 0.65rem; background-color: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); padding: 2px 6px; border-radius: 4px; color: var(--text-muted); }
+
+    .nav-menu { display: flex; gap: 12px; align-items: center; }
+    .nav-menu a {
+        color: var(--text-muted); font-size: 0.82rem; font-weight: 600;
+        text-decoration: none; padding: 8px 16px; border-radius: 20px;
+        transition: all 0.3s ease; letter-spacing: 0.5px;
+    }
+    .nav-menu a:hover, .nav-menu a.active {
+        color: #ffffff !important;
+        background-color: #6a0dad;
+        box-shadow: 0 0 10px rgba(166, 93, 242, 0.3);
+    }
+
+    .btn-login-nav {
+        background: rgba(166, 93, 242, 0.15); border: 1px solid var(--purple-neon);
+        color: var(--text-light); padding: 7px 20px; cursor: pointer; border-radius: 6px;
+        font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 0.8rem;
+        transition: 0.3s; display: flex; align-items: center; gap: 6px;
+    }
+    .btn-login-nav:hover { background-color: var(--purple-neon); box-shadow: 0 0 15px rgba(166, 93, 242, 0.4); }
+    /* ==========================================================================
+       5. SEÇÃO HERO CENTRAL (COMPACTA E TEXTO ANIMAÇÃO ROXO NEON)
+       ========================================================================== */
+    .hero-section-clean {
+        flex: 1;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 120px 60px 20px 60px;
+        max-width: 1400px;
+        width: 100%;
+        margin: 0 auto;
+        position: relative;
+        z-index: 10;
+    }
+
+    .hero-left-content { 
+        width: 50%; /* Ocupa metade da tela em computadores */
+        text-align: left; 
+        display: flex; 
+        flex-direction: column; 
+        align-items: flex-start; 
+    }
+
+    .intro-tag {
+        font-size: 0.7rem; font-weight: 600; color: var(--text-light);
+        background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 5px 12px; border-radius: 4px; letter-spacing: 0.5px; margin-bottom: 20px;
+    }
+
+    .main-title-clean { font-size: 3.6rem; font-weight: 700; line-height: 1.05; color: var(--text-light); margin-bottom: 12px; letter-spacing: -1px; }
+
+    .title-purple {
+        color: var(--purple-hover) !important;
+        text-shadow: 0 0 15px rgba(166, 93, 242, 0.6);
+    }
+
+    .tagline-clean { color: var(--text-muted); font-size: 0.88rem; line-height: 1.5; margin-bottom: 25px; max-width: 480px; }
+
+    .action-buttons-container { 
+        display: flex; 
+        justify-content: flex-start; 
+        width: 100%; 
+        margin-bottom: 30px; 
+    }
+
+    .btn-action-purple { 
+        background-color: #6a0dad; 
+        border: none; 
+        color: #ffffff; 
+        width: 100%; 
+        max-width: 380px; 
+        display: flex; 
+        justify-content: center; 
+        align-items: center; 
+        text-align: center; 
+        padding: 14px 24px; 
+        border-radius: 6px; 
+        cursor: pointer; 
+        font-family: 'Montserrat', sans-serif; 
+        transition: background-color 0.2s ease-in-out; 
+        animation: respirarBotao 4s ease-in-out infinite alternate;
+    }
+    .btn-action-purple:hover { background-color: #8a2be2; }
+
+    .text-btn-wrapper { display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .text-btn-wrapper strong { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.5px; }
+
+    .hero-right-content { width: 35%; display: flex; flex-direction: column; align-items: flex-end; }
+    /* ==========================================================================
+       6. BARRA DA BASE COM OS BLOCOS INFORMATIVOS (GRID RESTRITO)
+       ========================================================================== */
+    .footer-info-row {
+        background-color: rgba(22, 11, 36, 0.45); 
+        border: 1px solid rgba(166, 93, 242, 0.25); border-radius: 12px;
+        backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+        padding: 14px 30px; 
+        width: 72%; 
+        margin: 0 0 45px 60px;
+        display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;
+        position: relative; z-index: 10;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6), inset 0 0 15px rgba(166, 93, 242, 0.1);
+    }
+
+    .info-block-item { display: flex; align-items: center; gap: 12px; text-align: left; }
+    .info-block-icon { font-size: 0.95rem; color: #ffffff; background: rgba(166, 93, 242, 0.15); width: 36px; height: 36px; border-radius: 6px; display: flex; justify-content: center; align-items: center; border: 1px solid rgba(166, 93, 242, 0.3); }
+    .info-block-text h4 { font-size: 0.78rem; color: #c18fff; margin-bottom: 2px; font-weight: 700; letter-spacing: 0.6px; text-shadow: 0 0 8px rgba(166, 93, 242, 0.3); }
+    .info-block-text p { font-size: 0.7rem; color: rgba(255, 255, 255, 0.85); }
+    /* ==========================================================================
+       7. MODAL DE LOGIN FLUTUANTE OCULTO (ESTILOS INTEGRADOS)
+       ========================================================================== */
+    .modal-overlay { 
+        position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
+        background-color: rgba(0, 0, 0, 0.85); z-index: 10000; 
+        display: none; justify-content: center; align-items: center; 
+        opacity: 0; visibility: hidden; transition: opacity 0.4s ease, visibility 0.4s ease; 
+    }
+    .modal-overlay.active { display: flex !important; opacity: 1 !important; visibility: visible !important; }
+
+    .login-card-floating { 
+        background-color: rgba(10, 6, 15, 0.95); border: 1px solid var(--purple-neon); 
+        padding: 45px 35px; width: 100%; max-width: 440px; position: relative; 
+        backdrop-filter: blur(12px); box-shadow: 0 15px 40px rgba(0,0,0,0.8); border-radius: 12px; 
+    }
+    .close-modal-btn { position: absolute; top: 12px; right: 18px; background: transparent; border: none; color: var(--text-muted); font-size: 1.8rem; cursor: pointer; line-height: 1; }
+    .close-modal-btn:hover { color: var(--purple-neon); }
+
+    .login-card-floating h2 { font-size: 1.3rem; color: var(--purple-neon); margin-bottom: 20px; border-left: 3px solid var(--purple-neon); padding-left: 10px; text-align: left; }
+    .login-card-floating .input-group { margin-bottom: 15px; text-align: left; }
+    .login-card-floating label { display: block; color: var(--text-muted); font-size: 0.8rem; margin-bottom: 6px; }
+    .login-card-floating input { width: 100%; padding: 12px 16px; background-color: rgba(0, 0, 0, 0.6); border: 1px solid rgba(255, 255, 255, 0.15); color: var(--text-light); border-radius: 4px; font-family: 'Montserrat', sans-serif; }
+    .login-card-floating input:focus { border-color: var(--purple-hover); outline: none; box-shadow: 0 0 10px rgba(166, 93, 242, 0.3); }
+
+    .forgot-password { display: inline-block; color: var(--purple-neon); font-size: 0.8rem; margin-bottom: 20px; text-decoration: none; }
+    .btn-primary { width: 100%; font-family: 'Cinzel', serif; font-size: 1rem; font-weight: bold; background-color: var(--purple-neon); color: var(--text-light); border: 2px dashed #000; padding: 12px; cursor: pointer; border-radius: 4px; transition: 0.3s; }
+    .btn-primary:hover { background-color: var(--purple-hover); }
+    .signup-text { margin-top: 15px; font-size: 0.8rem; color: var(--text-muted); text-align: center; }
+    .signup-text a { color: var(--purple-neon); font-weight: bold; text-decoration: none; }
+
+    /* ==========================================================================
+       8. RODAPÉ DO PORTAL
+       ========================================================================== */
+    .main-footer-clean { background-color: #030205; border-top: 1px solid rgba(255, 255, 255, 0.04); padding: 12px 60px; display: flex; justify-content: space-between; align-items: center; font-size: 0.75rem; color: var(--text-muted); width: 100%; position: relative; z-index: 10; }
+    .main-footer-clean span { color: var(--text-light); font-weight: bold; }
+    .footer-right { display: flex; align-items: center; gap: 30px; }
+    .footer-email { color: var(--text-muted); text-decoration: none; transition: 0.3s; }
+    .footer-email:hover { color: var(--purple-neon); }
+    /* ==========================================================================
+       9. ANIMAÇÕES CRONOMETRADAS E COMPLEMENTARES
+       ========================================================================== */
+    @keyframes changeText { 0%, 35% { content: "LUZ..."; } 38%, 70% { content: "CÂMERA..."; } 73%, 99% { content: "ANIMAÇÃO!"; color: #ff9d00; } }
+    @keyframes fadeOutScreen { 0%, 92% { opacity: 1; visibility: visible; } 100% { opacity: 0; visibility: hidden; } }
+    @keyframes fadeInSite { 100% { opacity: 1; } }
+    @keyframes radarSpin { 100% { transform: rotate(360deg); } }
+    @keyframes textFlicker { 0% { opacity: 0.85; } 100% { opacity: 1; } }
+    @keyframes grainMove { 0% { background-position: 0 0; } 100% { background-position: 10px 20px; } }
+    @keyframes lineScratch { 0% { transform: translateX(0); opacity: 0.2; } 50% { transform: translateX(30vw); opacity: 0.4; } 100% { transform: translateX(80vw); opacity: 0.1; } }
+    @keyframes floatAnimation { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-6px); } }
+
+    /* MICRO-ANIMATION: Efeito sutil e contínuo de respiração */
+    @keyframes respirarBotao {
+        0% { transform: scale(1); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4); }
+        100% { transform: scale(1.02); box-shadow: 0 6px 20px rgba(166, 93, 242, 0.2); }
+    }
+
+    /* SISTEMA DE NEVE SUTIL EM CAMADAS (CSS PURO) */
+    .snow { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 5; }
+    .layer1 { background-image: radial-gradient(2px 2px at 20px 30px, rgba(255,255,255,0.4) 100%, transparent), radial-gradient(3px 3px at 150px 50px, rgba(255,255,255,0.3) 100%, transparent), radial-gradient(2px 2px at 300px 120px, rgba(255,255,255,0.4) 100%, transparent); background-size: 400px 400px; animation: cairNeve 25s linear infinite; }
+    .layer2 { background-image: radial-gradient(3px 3px at 80px 200px, rgba(166, 93, 242, 0.22) 100%, transparent), radial-gradient(2px 2px at 250px 300px, rgba(255,255,255,0.3) 100%, transparent); background-size: 300px 300px; animation: cairNeve 18s linear infinite; animation-delay: -5s; }
+    .layer3 { background-image: radial-gradient(4px 4px at 50px 100px, rgba(255,255,255,0.2) 100%, transparent), radial-gradient(2px 2px at 380px 240px, rgba(255,255,255,0.4) 100%, transparent); background-size: 500px 500px; animation: cairNeve 35s linear infinite; animation-delay: -12s; }
+    @keyframes cairNeve { 0% { background-position: 0px 0px; } 100% { background-position: 0px 1000px; } }
+    /* ==========================================================================
+       10. REGRAS DE DESIGN RESPONSIVO (MEDIA QUERIES PARA ADAPTAÇÃO TOTAL)
+       ========================================================================== */
+    @media (max-width: 1024px) {
+        .main-header { padding: 16px 30px; }
+        .hero-section-clean { padding: 120px 30px 20px 30px; }
+        .footer-info-row { width: 90%; margin: 0 auto 40px auto; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+    }
+
+    @media (max-width: 768px) {
+        body { overflow-y: auto; height: auto; }
+        #main-site { height: auto; min-height: 100vh; background-image: linear-gradient(to bottom, rgba(14, 7, 24, 0.98) 0%, rgba(14, 7, 24, 0.95) 100%), url('assets/fundo_principal.png'); }
+        
+        .main-header { flex-direction: column; gap: 12px; padding: 15px; position: relative; text-align: center; }
+        .nav-menu { flex-wrap: wrap; justify-content: center; gap: 6px; }
+        .nav-menu a { padding: 6px 12px; font-size: 0.75rem; }
+        .btn-login-nav { width: 100%; max-width: 200px; justify-content: center; margin-top: 4px; }
+        
+        .hero-section-clean { flex-direction: column; padding: 40px 20px; text-align: center; gap: 30px; }
+        .hero-left-content { width: 100%; align-items: center; text-align: center; }
+        .main-title-clean { font-size: 2.4rem; }
+        .tagline-clean { font-size: 0.85rem; max-width: 100%; }
+        .action-buttons-container { justify-content: center; }
+        .hero-right-content { display: none; } /* Oculta espaço vazio no mobile */
+        
+        .footer-info-row { width: 100%; max-width: 100%; margin: 30px 0; grid-template-columns: 1fr; padding: 20px; border-radius: 0; border-left: none; border-right: none; }
+        .info-block-item { width: 100%; }
+        
+        .main-footer-clean { flex-direction: column; gap: 12px; text-align: center; padding: 20px; }
+        .footer-right { flex-direction: column; gap: 10px; }
+        
+        .countdown-circle { width: 280px; height: 280px; border-width: 4px; }
+        #countdown-text::after { font-size: 2.2rem; }
+        
+        .login-card-floating { padding: 30px 20px; width: 92%; }
+    }
+    </style>
 </head>
 <body>
 
@@ -41,7 +376,6 @@
             </nav>
             <button class="btn-login-nav" onclick="abrirLogin()">👤 LOGIN</button>
         </header>
-
         <!-- CONTAINER PRINCIPAL HERO (DIVIDIDO EM COLUNAS LATERAIS) -->
         <main class="hero-section-clean">
             
@@ -79,7 +413,6 @@
                     <p>Conteúdo estruturado para te guiar passo a passo.</p>
                 </div>
             </div>
-
             <div class="info-block-item">
                 <div class="info-block-icon">📖</div>
                 <div class="info-block-text">
@@ -135,288 +468,133 @@
         </footer>
 
     </div> <!-- FIM DO #main-site -->
-
     <!-- LÓGICA SCRIPT INTERATIVA COM SISTEMA DE MEMÓRIA DE VISITA -->
     <script>
+    // PARTE 1 DE 2: ABORTO ABSOLUTO E RECONHECIMENTO DE ATALHOS DO PORTAL
+    (function() {
+        const urlParametrosAtalhos = new URLSearchParams(window.location.search);
+        const comandoPuloContagem = urlParametrosAtalhos.get('pularContagem');
 
-// PARTE 1 DE 2: ABORTO ABSOLUTO E RECONHECIMENTO DE ATALHOS DO PORTAL
-(function() {
-    const urlParametrosAtalhos = new URLSearchParams(window.location.search);
-    const comandoPuloContagem = urlParametrosAtalhos.get('pularContagem');
+        if (comandoPuloContagem === 'true' || comandoPuloContagem === 'falsoApenasNavegacao') {
+            if (typeof intervaloContagem !== 'undefined') clearInterval(intervaloContagem);
+            if (typeof timeoutContagem !== 'undefined') clearTimeout(timeoutContagem);
+            if (typeof timerGoticoRelogio !== 'undefined') clearInterval(timerGoticoRelogio);
+            if (typeof intervaloRegressivo !== 'undefined') clearInterval(intervaloRegressivo);
 
-    if (comandoPuloContagem === 'true' || comandoPuloContagem === 'falsoApenasNavegacao') {
-        
-        // 1. Limpa agressivamente os cronômetros ativos do processador
-        if (typeof intervaloContagem !== 'undefined') clearInterval(intervaloContagem);
-        if (typeof timeoutContagem !== 'undefined') clearTimeout(timeoutContagem);
-        if (typeof timerGoticoRelogio !== 'undefined') clearInterval(timerGoticoRelogio);
-        if (typeof intervaloRegressivo !== 'undefined') clearInterval(intervaloRegressivo);
+            window.iniciarContagemRegressiva = function() { return false; };
+            window.dispararAnimacaoInicial = function() { return false; };
+            window.onload = null;
 
-        // 2. ENGENHARIA REVERSA: Sobrescreve e mata a função que dispara a contagem automática
-        // Altere o nome abaixo caso sua função de contagem automática se chame de outro jeito:
-        window.iniciarContagemRegressiva = function() { return false; };
-        window.dispararAnimacaoInicial = function() { return false; };
-        window.onload = null; // Zera gatilhos automáticos de carga de tela
-
-        // 3. Aguarda o HTML carregar na memória para ejetar a div demorada
-        window.addEventListener('DOMContentLoaded', function() {
-            const caixaContagemRegressiva = document.getElementById('container-contagem') || 
-                                            document.querySelector('.contagem-regressiva') || 
-                                            document.getElementById('timer-section');
-
-            if (caixaContagemRegressiva) {
-                caixaContagemRegressiva.removeAttribute('style'); // Reseta transições antigas
-                caixaContagemRegressiva.style.display = 'none';
-                caixaContagemRegressiva.style.opacity = '0';
-                caixaContagemRegressiva.style.visibility = 'hidden';
-            }
-
-            // Repassa o comando para o próximo bloco renderizar a tela limpa
-            processarAberturaDeModaisDiretos(comandoPuloContagem);
-        });
-    }
-})();
-
-
-// PARTE 2 DE 2: EXIBIÇÃO IMEDIATA DA HOME E ABERTURA FORÇADA DO MODAL ROXO
-function processarAberturaDeModaisDiretos(comandoAtivo) {
-    // 1. Garante na marra que o painel principal gótico do portal fique visível por trás do modal
-    const painelPrincipalHome = document.getElementById('main-dashboard') || 
-                                document.querySelector('.main-content') || 
-                                document.querySelector('.dashboard-container') ||
-                                document.getElementById('dashboard');
-    
-    if (painelPrincipalHome) {
-        painelPrincipalHome.style.display = 'block';
-        painelPrincipalHome.style.opacity = '1';
-        painelPrincipalHome.style.visibility = 'visible';
-    }
-
-    // Se o usuário veio apenas pelo botão "Sair", encerra aqui (ele vê a Home limpa sem a contagem)
-    if (comandoAtivo !== 'true') return;
-
-    // 2. Localiza o seu modal roxo por todas as variações de nomes possíveis do seu projeto
-    const modalFormularioLogin = document.getElementById('loginModal') || 
-                                 document.querySelector('.modal-login') || 
-                                 document.querySelector('.login-popup') || 
-                                 document.getElementById('container-login') ||
-                                 document.querySelector('[id*="login"]') || 
-                                 document.querySelector('[class*="login"]');
-
-    // Localiza a camada escura de fundo (Overlay) que costuma travar o clique por trás do modal
-    const camadaFundoEscura = document.querySelector('.modal-overlay') || 
-                              document.querySelector('.overlay') || 
-                              document.querySelector('.bg-modal') ||
-                              document.getElementById('overlay');
-
-    // 3. Tenta primeiro rodar a sua função de clique nativa original de abrir modal caso ela exista
-    if (typeof abrirLogin === 'function') { abrirLogin(); return; }
-    if (typeof openModal === 'function') { openModal(); return; }
-    if (typeof mostrarLogin === 'function') { mostrarLogin(); return; }
-
-    // 4. Se a função nativa sumiu, injeta o CSS diretamente para brotar o modal no centro
-    if (modalFormularioLogin) {
-        modalFormularioLogin.style.display = 'block';
-        modalFormularioLogin.style.opacity = '1';
-        modalFormularioLogin.style.visibility = 'visible';
-        modalFormularioLogin.classList.add('active', 'show', 'open');
-
-        // Centraliza milimetricamente no meio do monitor se ele iniciar com estilos negativos
-        const topComputado = window.getComputedStyle(modalFormularioLogin).top;
-        if (topComputado.includes('-') || topComputado === '0px') {
-            modalFormularioLogin.style.top = '50%';
-            modalFormularioLogin.style.left = '50%';
-            modalFormularioLogin.style.transform = 'translate(-50%, -50%)';
-            modalFormularioLogin.style.position = 'fixed';
-        }
-    }
-    
-    if (camadaFundoEscura) {
-        camadaFundoEscura.style.display = 'block';
-        camadaFundoEscura.style.opacity = '1';
-        camadaFundoEscura.style.visibility = 'visible';
-        camadaFundoEscura.classList.add('active', 'show', 'open');
-    }
-}
-
-
-
-// PARTE 1 DE 4: INTERCEPTADOR DE FUNIL DE INSCRIÇÃO E SEGURANÇA
-(function() {
-    // Lê se o usuário veio pelo botão de atalho "Inscrever" ou pelo botão de "Sair"
-    const urlParametrosAtalhos = new URLSearchParams(window.location.search);
-    const comandoPuloContagem = urlParametrosAtalhos.get('pularContagem');
-
-    // Se detectou qualquer um dos dois comandos, congela os motores de tempo antigos
-    if (comandoPuloContagem === 'true' || comandoPuloContagem === 'falsoApenasNavegacao') {
-        
-        // Destrói loops de relógio ativos para o processador não tentar rodar o relógio por trás
-        if (typeof intervaloContagem !== 'undefined') clearInterval(intervaloContagem);
-        if (typeof timeoutContagem !== 'undefined') clearTimeout(timeoutContagem);
-        if (typeof timerGoticoRelogio !== 'undefined') clearInterval(timerGoticoRelogio);
-        
-        // Dispara o monitoramento estrutural assim que o HTML carregar na memória
-        window.addEventListener('DOMContentLoaded', function() {
-            // Cria a ponte lógica para o próximo passo...
-            executarEjeçãoLimpaDeContagem(comandoPuloContagem);
-        });
-    }
-})();
-
-// PARTE 2 DE 4: MECANISMO DE OCULTAÇÃO VISUAL DA ANIMAÇÃO GÓTICA
-function executarEjeçãoLimpaDeContagem(comando) {
-    // Procura a div da contagem regressiva por todas as classes e IDs comuns do seu projeto
-    const caixaContagemRegressiva = document.getElementById('container-contagem') || 
-                                    document.querySelector('.contagem-regressiva') || 
-                                    document.getElementById('timer-section') ||
-                                    document.querySelector('.countdown-wrapper');
-
-    // Se encontrou a contagem, desliga a exibição dela na marra
-    if (caixaContagemRegressiva) {
-        caixaContagemRegressiva.style.display = 'none';
-        caixaContagemRegressiva.style.opacity = '0';
-        caixaContagemRegressiva.style.visibility = 'hidden';
-    }
-
-    // Passa o comando para o próximo bloco decidir se abre o Login ou se apenas exibe a Home
-    gerenciarAberturaDeModaisPortais(comando);
-}
-
-// PARTE 3 DE 4: CAPTURADOR E INJETOR AUTOMÁTICO DO MODAL ROXO DE LOGIN
-function gerenciarAberturaDeModaisPortais(comandoAtivo) {
-    // Se o usuário veio pelo botão de apenas Sair, encerra aqui para ele ver apenas a navegação livre
-    if (comandoAtivo !== 'true') return;
-
-    // Caça o modal de login por todas as combinações de nomes possíveis que você usou no HTML
-    const popupLoginModal = document.getElementById('loginModal') || 
-                            document.querySelector('.modal-login') || 
-                            document.querySelector('.login-popup') || 
-                            document.querySelector('[id*="login"]') || 
-                            document.querySelector('[class*="login"]');
-
-    // Caça a camada escura de fundo (Overlay) que costuma cobrir o site nos modais
-    const camadaFundoEscura = document.querySelector('.modal-overlay') || 
-                              document.querySelector('.overlay') || 
-                              document.querySelector('.bg-modal');
-
-    // Tenta primeiro rodar a sua função nativa de clique do botão caso você já a tenha no arquivo
-    if (typeof abrirLogin === 'function') { abrirLogin(); return; }
-    if (typeof openModal === 'function') { openModal(); return; }
-    if (typeof mostrarLogin === 'function') { mostrarLogin(); return; }
-
-    // Se as funções não existirem, força a abertura aplicando o CSS ativo diretamente
-    if (popupLoginModal) {
-        popupLoginModal.style.display = 'block';
-        popupLoginModal.style.opacity = '1';
-        popupLoginModal.style.visibility = 'visible';
-        popupLoginModal.classList.add('active', 'show', 'open'); // Injeta as classes comuns de animação
-    }
-    
-    if (camadaFundoEscura) {
-        camadaFundoEscura.style.display = 'block';
-        camadaFundoEscura.style.opacity = '1';
-        camadaFundoEscura.style.visibility = 'visible';
-        camadaFundoEscura.classList.add('active', 'show', 'open');
-    }
-
-    // Avança para o passo final de centralização de tela...
-    alinharPosicionamentoDoModalRoxo(popupLoginModal);
-}
-
-// PARTE 4 DE 4: CORRETOR DE EIXO ESPACIAL E ALINHAMENTO DO MODAL
-function alinharPosicionamentoDoModalRoxo(elementoModal) {
-    if (!elementoModal) return;
-
-    // Se o seu modal inicia escondido no topo da tela por CSS, força ele a centralizar no monitor
-    const topComputado = window.getComputedStyle(elementoModal).top;
-    if (topComputado.includes('-') || topComputado === '0px') {
-        elementoModal.style.top = '50%';
-        elementoModal.style.left = '50%';
-        elementoModal.style.transform = 'translate(-50%, -50%)';
-        elementoModal.style.position = 'fixed';
-    }
-    
-    // Garante que o fundo principal do site apareça montado por trás do modal aberto
-    const mainDashboardHome = document.getElementById('main-dashboard') || document.querySelector('.main-content');
-    if (mainDashboardHome) {
-        mainDashboardHome.style.display = 'block';
-        mainDashboardHome.style.opacity = '1';
-    }
-}
-
-
-// FORÇA O MODAL DE LOGIN A ABRIR NA MARRA AO DETECTAR O ATALHO DA SALA DE TESTES
-(function() {
-    const params = new URLSearchParams(window.location.search);
-    if (params.get('pularContagem') === 'true') {
-        window.addEventListener('DOMContentLoaded', function() {
-            // 1. Procura o modal e a camada escura de fundo por todas as combinações possíveis de nomes
-            const loginModal = document.getElementById('loginModal') || document.querySelector('.modal-login') || document.querySelector('.login-popup') || document.querySelector('[id*="login"]') || document.querySelector('[class*="login"]');
-            const overlayFundo = document.querySelector('.modal-overlay') || document.querySelector('.overlay') || document.querySelector('.bg-modal');
-
-            // 2. Tenta executar a sua função original de abrir caso ela exista no seu arquivo
-            if (typeof abrirLogin === 'function') { abrirLogin(); return; }
-            if (typeof openModal === 'function') { openModal(); return; }
-            if (typeof mostrarLogin === 'function') { mostrarLogin(); return; }
-
-            // 3. Se não achar a função, força a abertura aplicando os estilos CSS diretamente no elemento
-            if (loginModal) {
-                loginModal.style.display = 'block';
-                loginModal.style.opacity = '1';
-                loginModal.style.visibility = 'visible';
-                loginModal.classList.add('active', 'show', 'open'); // Garante todas as classes ativas possíveis
-            }
-            if (overlayFundo) {
-                overlayFundo.style.display = 'block';
-                overlayFundo.style.opacity = '1';
-                overlayFundo.style.visibility = 'visible';
-                overlayFundo.classList.add('active', 'show', 'open');
-            }
-
-            // 4. Se o seu projeto usar uma estrutura onde o modal inicia escondido no topo, empurra ele para o centro
-            if (loginModal && window.getComputedStyle(loginModal).top.includes('-')) {
-                loginModal.style.top = '50%';
-                loginModal.style.transform = 'translate(-50%, -50%)';
-            }
-        });
-    }
-})();
-        
-
-        function irParaMenu() { window.location.href = "home.html"; }
-        function abrirLogin() { document.getElementById('login-modal').classList.add('active'); }
-        function fecharLogin() { document.getElementById('login-modal').classList.remove('active'); }
-
-        window.onclick = function(event) {
-            const modal = document.getElementById('login-modal');
-            if (event.target == modal) { fecharLogin(); }
-        }
-
-        // Verifica se o botão de cadastro vindo da outra tela foi acionado
-        function checarParametroCadastro() {
-            const URLParametros = new URLSearchParams(window.location.search);
-            if (URLParametros.get('registrar') === 'true') {
-                abrirLogin();
-            }
-        }
-
-        // CONTROLADOR INTELIGENTE: Pula a abertura se o usuário já estiver navegando no site
-        window.onload = function() {
-            const telaContagem = document.getElementById('countdown-screen');
-            const sitePrincipal = document.getElementById('main-site');
-
-            if (sessionStorage.getItem('aberturaExibida') === 'true') {
-                if (telaContagem) telaContagem.style.display = 'none';
-                if (sitePrincipal) {
-                    sitePrincipal.style.opacity = '1';
-                    sitePrincipal.style.animation = 'none';
+            window.addEventListener('DOMContentLoaded', function() {
+                const caixaContagemRegressiva = document.getElementById('countdown-screen');
+                if (caixaContagemRegressiva) {
+                    caixaContagemRegressiva.removeAttribute('style');
+                    caixaContagemRegressiva.style.display = 'none';
+                    caixaContagemRegressiva.style.opacity = '0';
+                    caixaContagemRegressiva.style.visibility = 'hidden';
                 }
-            } else {
-                sessionStorage.setItem('aberturaExibida', 'true');
-            }
-
-            checarParametroCadastro();
+                processarAberturaDeModaisDiretos(comandoPuloContagem);
+            });
         }
+    })();
+
+    // PARTE 2 DE 2: EXIBIÇÃO IMEDIATA DA HOME E ABERTURA FORÇADA DO MODAL ROXO
+    function processarAberturaDeModaisDiretos(comandoAtivo) {
+        const painelPrincipalHome = document.getElementById('main-site');
+        if (painelPrincipalHome) {
+            painelPrincipalHome.style.display = 'flex';
+            painelPrincipalHome.style.opacity = '1';
+            painelPrincipalHome.style.visibility = 'visible';
+        }
+
+        if (comandoAtivo !== 'true') return;
+
+        const modalFormularioLogin = document.getElementById('login-modal');
+        if (modalFormularioLogin) {
+            modalFormularioLogin.classList.add('active');
+        }
+    }
+
+    // INTERCEPTADOR DE FUNIL DE INSCRIÇÃO E SEGURANÇA ADICIONAL
+    (function() {
+        const urlParametrosAtalhos = new URLSearchParams(window.location.search);
+        const comandoPuloContagem = urlParametrosAtalhos.get('pularContagem');
+
+        if (comandoPuloContagem === 'true' || comandoPuloContagem === 'falsoApenasNavegacao') {
+            if (typeof intervaloContagem !== 'undefined') clearInterval(intervaloContagem);
+            if (typeof timeoutContagem !== 'undefined') clearTimeout(timeoutContagem);
+            if (typeof timerGoticoRelogio !== 'undefined') clearInterval(timerGoticoRelogio);
+            
+            window.addEventListener('DOMContentLoaded', function() {
+                executarEjeçãoLimpaDeContagem(comandoPuloContagem);
+            });
+        }
+    })();
+
+    function ejecutarEjeçãoLimpaDeContagem(comando) {
+        const caixaContagemRegressiva = document.getElementById('countdown-screen');
+        if (caixaContagemRegressiva) {
+            caixaContagemRegressiva.style.display = 'none';
+            caixaContagemRegressiva.style.opacity = '0';
+            caixaContagemRegressiva.style.visibility = 'hidden';
+        }
+        gerenciarAberturaDeModaisPortais(comando);
+    }
+
+    function gerenciarAberturaDeModaisPortais(comandoAtivo) {
+        if (comandoAtivo !== 'true') return;
+        const popupLoginModal = document.getElementById('login-modal');
+        if (popupLoginModal) {
+            popupLoginModal.classList.add('active');
+        }
+    }
+
+    // FUNÇÕES INTERATIVAS INTERNAS DO PORTAL (CORRIGIDAS PARA RESPONSIVIDADE)
+    function irParaMenu() { 
+        window.location.href = "home.html"; 
+    }
+    
+    function abrirLogin() { 
+        const modal = document.getElementById('login-modal');
+        if (modal) modal.classList.add('active'); 
+    }
+    
+    function fecharLogin() { 
+        const modal = document.getElementById('login-modal');
+        if (modal) modal.classList.remove('active'); 
+    }
+
+    window.onclick = function(event) {
+        const modal = document.getElementById('login-modal');
+        if (event.target == modal) { 
+            fecharLogin(); 
+        }
+    }
+
+    function checarParametroCadastro() {
+        const URLParametros = new URLSearchParams(window.location.search);
+        if (URLParametros.get('registrar') === 'true') {
+            abrirLogin();
+        }
+    }
+
+    // CONTROLADOR INTELIGENTE DE VISITAS
+    window.onload = function() {
+        const telaContagem = document.getElementById('countdown-screen');
+        const sitePrincipal = document.getElementById('main-site');
+
+        if (sessionStorage.getItem('aberturaExibida') === 'true') {
+            if (telaContagem) telaContagem.style.display = 'none';
+            if (sitePrincipal) {
+                sitePrincipal.style.opacity = '1';
+                sitePrincipal.style.animation = 'none';
+            }
+        } else {
+            sessionStorage.setItem('aberturaExibida', 'true');
+        }
+
+        checarParametroCadastro();
+    }
     </script>
 </body>
 </html>
