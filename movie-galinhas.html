@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chicken Run - Stopart Cine</title>
+  <style>
+
+        /* ==============================================
+       BOTÃO FLUTUANTE DE CONTROLE DE ÁUDIO
+       ============================================== */
+    .btn-controle-audio {
+      position: fixed;
+      bottom: 25px;
+      left: 25px; /* Fica no canto inferior esquerdo para não cobrir as notificações do Xbox */
+      z-index: 9999;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background-color: #ff3300;
+      color: #ffffff;
+      border: 3px solid #ffffff;
+      font-size: 1.8rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 15px rgba(255, 51, 0, 0.5);
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .btn-controle-audio:hover {
+      transform: scale(1.1) rotate(15deg);
+      box-shadow: 0 6px 20px rgba(255, 51, 0, 0.8);
+    }
+
+    /* Estilo quando o som estiver mutado */
+    .btn-controle-audio.mutado {
+      background-color: #555555;
+      border-color: #aaaaaa;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+    }
+
+    /* ==============================================
+       1. TEMA NOTURNO MILITAR: GRANJA TWEEDY À NOITE
+       ============================================== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      /* Fundo noturno profundo misturando azul-escuríssimo com preto industrial */
+      background: linear-gradient(180deg, #050b14 0%, #0d131a 40%, #1c1610 80%, #0a0805 100%) no-repeat fixed;
+      color: #eeeeee;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* HOLOFOTES DE BUSCA BRANCOS CRUZANDO O CÉU DA GRANJA */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: 
+        linear-gradient(75deg, transparent 40%, rgba(255, 255, 255, 0.12) 50%, transparent 60%),
+        linear-gradient(-75deg, transparent 35%, rgba(255, 255, 255, 0.12) 45%, transparent 55%);
+      background-size: 200% 200%;
+      z-index: -2;
+      pointer-events: none;
+      animation: varrerHolofotes 6s ease-in-out infinite alternate;
+    }
+
+    /* SIRENES DE ALERTA VERMELHAS ATIVADAS NAS LATERAIS */
+    body::after {
+      content: "";
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: radial-gradient(circle at 5% 15%, rgba(255, 0, 0, 0.35), transparent 45%),
+                  radial-gradient(circle at 95% 85%, rgba(255, 0, 0, 0.35), transparent 45%);
+      z-index: -2;
+      pointer-events: none;
+      animation: piscarAlarme 1.2s infinite ease-in-out;
+    }
+
+    @keyframes varrerHolofotes {
+      0% { background-position: 0% 0%; }
+      100% { background-position: 100% 100%; }
+    }
+
+    @keyframes piscarAlarme {
+      0%, 100% { opacity: 0.2; }
+      50% { opacity: 1; }
+    }
+
+    /* CONFIGURAÇÃO EXCLUSIVA PARA EVITAR EMOJIS QUEBRADOS */
+    .torta-voadora {
+      position: fixed;
+      font-size: 35px;
+      top: -60px;
+      z-index: -1;
+      opacity: 0.9;
+      pointer-events: none;
+      user-select: none;
+      filter: drop-shadow(0 5px 10px rgba(0,0,0,0.6));
+      animation: cairObjeto linear infinite;
+    }
+
+    @keyframes cairObjeto {
+      0% { transform: translateY(-50px) translateX(0) rotate(0deg); }
+      50% { transform: translateY(50vh) translateX(50px) rotate(180deg); }
+      100% { transform: translateY(105vh) translateX(-30px) rotate(360deg); }
+    }
+    /* BARRA SUPERIOR NOTURNA */
+    .barra-superior {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: rgba(10, 14, 23, 0.95);
+      border-bottom: 3px solid #ff3300;
+      padding: 15px 40px;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.8);
+    }
+
+    .logo-site {
+      font-size: 1.4rem;
+      font-weight: 900;
+      color: #ffcc00; /* Amarelo vivo contra o fundo escuro */
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .btn-sair {
+      background: transparent;
+      color: #ffffff;
+      border: 2px solid #ff3300;
+      padding: 8px 20px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .btn-sair:hover {
+      background-color: #ff3300;
+      box-shadow: 0 0 15px rgba(255, 51, 0, 0.8);
+      transform: scale(1.05);
+    }
+
+    /* CONTAINER GERAL DO SITE */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 25px;
+    }
+
+    h2.titulo-secao {
+      text-align: center;
+      font-size: 2.8rem;
+      color: #ffffff;
+      text-transform: uppercase;
+      margin: 60px 0 30px 0;
+      letter-spacing: 2px;
+      text-shadow: 3px 3px 0px #ff3300, 5px 5px 0px #000;
+    }
+
+    /* FLUTUAÇÃO DO INGRESSO NA ESCURIDÃO */
+    @keyframes flutuarIngresso {
+      0% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-10px) rotate(0.5deg); }
+      100% { transform: translateY(0px) rotate(0deg); }
+    }
+
+    @keyframes pulsoAlarme {
+      0%, 100% { box-shadow: 0 0 25px rgba(255, 51, 0, 0.3), inset 0 0 15px rgba(0,0,0,0.6); }
+      50% { box-shadow: 0 0 55px rgba(255, 0, 0, 0.7), inset 0 0 30px rgba(255, 51, 0, 0.2); }
+    }
+
+    .ingresso-wrapper {
+      display: flex;
+      justify-content: center;
+      margin: 40px 0;
+      animation: flutuarIngresso 4s ease-in-out infinite;
+    }
+    .ingresso {
+      background: linear-gradient(135deg, #3d2516 0%, #24140b 100%); /* Tons de madeira velha da foto */
+      border: 4px solid #ffffff;
+      border-radius: 20px;
+      padding: 0;
+      width: 100%;
+      max-width: 850px;
+      overflow: hidden;
+      animation: pulsoAlarme 2.5s infinite;
+      color: #ffffff;
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .ingresso:hover {
+      transform: scale(1.03) rotate(-0.5deg);
+    }
+
+    /* BANNER DE IMAGEM DO INGRESSO */
+    .ingresso-banner {
+      width: 100%;
+      height: 280px;
+      position: relative;
+      background-image: url('img/galinhas/ingresso-galinhas.jpg');
+      background-size: cover;
+      background-position: center;
+      border-bottom: 5px solid #ff3300;
+    }
+
+    .ingresso-banner::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.75));
+    }
+
+    .ingresso-topo {
+      position: absolute;
+      bottom: 20px;
+      left: 0; right: 0;
+      text-align: center;
+      padding: 0 20px;
+      z-index: 2;
+    }
+
+    .ingresso-topo h1 {
+      font-size: 4rem;
+      color: #ffcc00; /* Amarelo ouro em destaque */
+      text-transform: uppercase;
+      letter-spacing: 5px;
+      text-shadow: 4px 4px 0px #ff3300, -2px -2px 0px #000, 2px -2px 0px #000;
+    }
+
+    .ingresso-corpo {
+      padding: 30px;
+    }
+
+    .ingresso-resumo {
+      font-size: 1.15rem;
+      line-height: 1.6;
+      text-align: justify;
+      margin-bottom: 25px;
+      font-weight: bold;
+      background: rgba(0, 0, 0, 0.4); /* Fundo escuro transparente para legibilidade */
+      color: #ffe6cc;
+      padding: 20px;
+      border-radius: 12px;
+      border-left: 8px solid #ff3300;
+      box-shadow: inset 0 2px 8px rgba(0,0,0,0.6);
+    }
+
+    .ingresso-dados {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      font-size: 1.1rem;
+    }
+
+    .dado-item {
+      background: rgba(255, 255, 255, 0.08);
+      border: 2px solid #ff3300;
+      color: #ffffff;
+      padding: 14px;
+      border-radius: 8px;
+      font-weight: bold;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    }
+
+    .dado-item span {
+      color: #ffcc00;
+      display: block;
+      font-size: 0.9rem;
+      letter-spacing: 1px;
+      margin-bottom: 3px;
+    }
+    /* ==============================================
+       4. ESTILOS DO CARROSSEL DE IMAGENS NOTURNO
+       ============================================== */
+    .carrossel-container {
+      position: relative;
+      max-width: 800px;
+      margin: 0 auto 50px auto;
+      overflow: hidden;
+      border: 5px solid #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.8);
+    }
+
+    .carrossel-slides {
+      display: flex;
+      transition: transform 0.5s ease-in-out;
+      width: 100%;
+    }
+
+    .slide {
+      min-width: 100%;
+      position: relative;
+    }
+
+    .slide img {
+      width: 100%;
+      height: 450px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .slide-legenda {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(10, 14, 23, 0.9);
+      color: #ffffff;
+      padding: 15px;
+      text-align: center;
+      font-size: 1.1rem;
+      border-top: 3px solid #ff3300;
+    }
+
+    .carrossel-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255, 51, 0, 0.95);
+      color: white;
+      border: 2px solid #ffffff;
+      font-size: 2rem;
+      padding: 10px 15px;
+      cursor: pointer;
+      border-radius: 5px;
+      z-index: 10;
+      transition: all 0.3s;
+    }
+
+    .carrossel-btn:hover {
+      background: #ffcc00;
+      color: #000000;
+      transform: translateY(-50%) scale(1.1);
+    }
+
+    .btn-prev { left: 15px; }
+    .btn-next { right: 15px; }
+    /* ==============================================
+       5. GRID DE CARDS EXPANSÍVEIS EM ALTO CONTRASTE
+       ============================================== */
+    .grid-segredos {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 25px;
+      margin-bottom: 50px;
+    }
+
+    .card-segredo {
+      background-color: #1a1512; /* Cor de madeira escura da imagem */
+      color: #f5f5f5;
+      border: 3px solid #ff5500;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.7);
+      cursor: pointer;
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s, border-color 0.3s;
+    }
+
+    /* Efeito de salto e brilho neon no tema noturno */
+    .card-segredo:hover {
+      transform: translateY(-10px) scale(1.02);
+      border-color: #ffffff;
+      box-shadow: 0 15px 30px rgba(255, 85, 0, 0.5);
+    }
+
+    .card-segredo img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-bottom: 3px solid #ff5500;
+    }
+
+    .card-segredo-conteudo { 
+      padding: 15px; 
+    }
+    
+    .card-segredo-conteudo h3 { 
+      color: #ffcc00; 
+      font-size: 1.25rem; 
+      margin-bottom: 8px; 
+      text-transform: uppercase; 
+      text-shadow: 1px 1px 2px #000;
+    }
+    
+    .card-segredo-conteudo p { 
+      font-size: 0.95rem; 
+      line-height: 1.4; 
+      color: #dddddd; 
+    }
+
+    /* Gaveta de expansão suave ao clicar */
+    .detalhe-extra {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease-out, margin-top 0.4s ease;
+      font-size: 0.9rem;
+      color: #ffcca3;
+      background: rgba(0, 0, 0, 0.4);
+      border-radius: 6px;
+      padding: 0 10px;
+    }
+
+    .card-segredo.expandido .detalhe-extra {
+      max-height: 150px;
+      margin-top: 10px;
+      padding: 10px;
+      border-left: 3px solid #ffcc00;
+    }
+    /* ==============================================
+       6. ESTILOS DOS EASTER EGGS E DA CENTRAL DE JOGOS
+       ============================================== */
+    .grid-easter-eggs {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 20px;
+      margin-bottom: 50px;
+    }
+
+    .card-easter {
+      background: rgba(10, 14, 23, 0.85);
+      border: 3px dashed #ffcc00;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+      transition: transform 0.3s;
+    }
+    .card-easter:hover { transform: scale(1.03); border-color: #ffffff; }
+    .card-easter h4 { color: #ff3300; margin-bottom: 8px; font-size: 1.1rem; text-transform: uppercase; border-bottom: 1px solid rgba(255,255,255,0.15); padding-bottom: 5px; text-shadow: 1px 1px 2px #000; }
+    .card-easter p { font-size: 0.95rem; color: #e0e0e0; line-height: 1.4; }
+
+    .central-jogos {
+      background: rgba(26, 21, 18, 0.7); /* Casando com o tom escuro do chão */
+      backdrop-filter: blur(10px);
+      border: 4px solid #ffffff;
+      border-radius: 15px;
+      padding: 25px;
+      margin-bottom: 50px;
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.8);
+    }
+
+    .menu-jogos { display: flex; justify-content: center; gap: 15px; margin-bottom: 30px; flex-wrap: wrap; }
+    
+    .btn-jogo {
+      background-color: #ff5500;
+      color: #fff;
+      border: 3px solid #ffffff;
+      padding: 12px 24px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      border-radius: 8px;
+      text-transform: uppercase;
+      font-weight: bold;
+      box-shadow: 0 5px 0px #993300;
+      transition: all 0.2s ease;
+    }
+    .btn-jogo.ativo, .btn-jogo:hover {
+      background-color: #ffcc00;
+      color: #331a00;
+      box-shadow: 0 5px 0px #cc9900;
+      transform: translateY(-2px);
+    }
+    .btn-jogo:active { transform: translateY(3px); box-shadow: none; }
+
+    .janela-jogo { background-color: rgba(0, 0, 0, 0.65); border: 2px solid rgba(255,255,255,0.15); border-radius: 10px; padding: 25px; min-height: 400px; display: none; }
+    .janela-jogo.ativa { display: block; }
+    .quiz-header { display: flex; justify-content: space-between; border-bottom: 2px solid rgba(255,255,255,0.2); padding-bottom: 10px; margin-bottom: 20px; font-size: 1.1rem; color: #ffcc00; font-weight: bold; }
+    .pergunta-texto { font-size: 1.4rem; margin-bottom: 25px; line-height: 1.4; font-weight: bold; color: #ffffff; }
+    .opcoes-container { display: grid; grid-template-columns: 1fr; gap: 15px; }
+
+    .opcao-btn {
+      background-color: rgba(255, 255, 255, 0.95);
+      color: #331a00;
+      border: 3px solid #ff5500;
+      padding: 15px;
+      text-align: left;
+      font-size: 1.1rem;
+      cursor: pointer;
+      border-radius: 8px;
+      font-weight: bold;
+      transition: all 0.2s;
+    }
+    .opcao-btn:hover { background-color: #ffcc00; border-color: #ffffff; padding-left: 25px; }
+
+    .quiz-resultado { text-align: center; padding: 30px 10px; }
+    .trofeu-container { position: relative; display: inline-block; margin: 20px 0; }
+    .trofeu-icone { font-size: 5rem; display: inline-block; position: relative; z-index: 2; filter: drop-shadow(0 0 15px rgba(255,204,0,0.6)); }
+
+    /* ARENAS DOS MINIJOGOS NOTURNOS */
+    .maquina-arena { position: relative; width: 100%; height: 300px; background: linear-gradient(to bottom, #050b14, #141923); border: 3px solid #ff3300; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: inset 0 0 20px rgba(0,0,0,0.8); }
+    .btn-acao { background-color: #ff5500; border: 2px solid #fff; color: white; padding: 10px 20px; border-radius: 5px; font-size: 1.1rem; font-weight: bold; cursor: pointer; margin-top: 15px; text-transform: uppercase; box-shadow: 0 4px 0 #993300; }
+    .btn-acao:hover { background-color: #ffcc00; color: #000; box-shadow: 0 4px 0 #cc9900; }
+    .obstaculo-maquina { font-size: 2.5rem; position: absolute; bottom: 20px; right: -50px; }
+    .ginger-player { font-size: 2.5rem; position: absolute; bottom: 20px; left: 50px; transition: bottom 0.2s cubic-bezier(0.1, 0.8, 0.3, 1); }
+    .score-maquina { position: absolute; top: 10px; right: 15px; font-size: 1.2rem; color: #ffcc00; font-weight: bold; }
+
+    .painel-cabos { display: grid; grid-template-columns: repeat(4, 70px); gap: 15px; justify-content: center; margin: 20px 0; }
+    .peca-cabo { width: 70px; height: 70px; background-color: #141923; border: 3px solid #ff5500; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; cursor: pointer; user-select: none; transition: all 0.2s; }
+    .peca-cabo:hover { border-color: #ffffff; background-color: #252d3d; }
+    .peca-alinhada { background-color: #1c3d1a !important; border-color: #00ff00 !important; }
+
+    .granja-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; max-width: 500px; margin: 20px auto; }
+    .galinheiro-toca { height: 110px; background-color: #24140b; border: 4px solid #ff7300; border-radius: 15px; position: relative; overflow: hidden; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+    .personagem-toca { position: absolute; bottom: -60px; left: 0; right: 0; text-align: center; font-size: 2.8rem; transition: bottom 0.2s ease-out; }
+    .toca-ativa .personagem-toca { bottom: 15px; }
+
+    /* NOTIFICAÇÃO ESTILO VIDEOGAME */
+    .notificacao-conquista { position: fixed; bottom: 20px; right: -350px; background: linear-gradient(135deg, #121620 0%, #1e2538 100%); border-left: 6px solid #ffcc00; padding: 15px 25px; border-radius: 6px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); display: flex; align-items: center; gap: 15px; z-index: 9999; transition: right 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+    .notificacao-conquista.mostrar { right: 20px; }
+    .notificacao-conquista .icone { font-size: 2.2rem; }
+    .notificacao-conquista .texto h5 { color: #ffcc00; margin-bottom: 2px; font-size: 1rem; text-transform: uppercase; }
+    .notificacao-conquista .texto p { color: #fff; font-size: 0.85rem; }
+  </style>
+</head>
+<body>
+
+  <!-- BOTÃO FLUTUANTE DE LIGAR/DESLIGAR SOM -->
+  <button id="btnAudio" class="btn-controle-audio" onclick="alternarSom()">🔊</button>
+
+    
+  <!-- EFEITOS SONOROS DA SALA DE FUGA -->
+  <audio id="somSirene" src="sirene.mp3" loop></audio>
+  <audio id="somCelas" src="celas.mp3"></audio>
+
+
+  <!-- BARRA SUPERIOR NOTURNA DA GRANJA TWEEDY -->
+  <div class="barra-superior">
+    <div class="logo-site">🎬 STOPART CINE</div>
+    <a href="home.html" class="btn-sair">− SAIR DA SALA</a>
+  </div>
+
+  <!-- SISTEMA DE CHUVA DE ENGENHARIA DA SALA (TORTAS E PENAS MISTURADAS) -->
+  <div class="torta-voadora" style="left: 6%; animation: cairObjeto 13s linear infinite;">🥧</div>
+  <div class="torta-voadora" style="left: 22%; animation: cairObjeto 16s linear infinite; animation-delay: 4.5s;">🐔</div>
+  <div class="torta-voadora" style="left: 45%; animation: cairObjeto 11s linear infinite; animation-delay: 1s;">🥧</div>
+  <div class="torta-voadora" style="left: 65%; animation: cairObjeto 15s linear infinite; animation-delay: 4.5s;">🏭</div>
+  <div class="torta-voadora" style="left: 82%; animation: cairObjeto 12s linear infinite; animation-delay: 3s;">🔦</div>
+  <div class="torta-voadora" style="left: 94%; animation: cairObjeto 14s linear infinite; animation-delay: 5.5s;">🐓</div>
+
+  <div class="container">
+
+    <!-- SEÇÃO 1: O NOVO INGRESSO INCENDIÁRIO COM BANNER DE CENÁRIO -->
+    <div class="ingresso-wrapper">
+      <div class="ingresso">
+        <!-- Banner de imagem do topo (Lembrete: salvar como ingresso-galinhas.jpg) -->
+        <div class="ingresso-banner">
+          <div class="ingresso-topo">
+            <h1>CHICKEN RUN</h1>
+            <p style="font-weight: bold; color: #ffcc00; font-size: 1.1rem; text-shadow: 3px 3px 0px #000;">Admissão Geral - Sala de Diversão</p>
+          </div>
+        </div>
+        
+        <div class="ingresso-corpo">
+          <!-- Resumo em alto contraste igual da imagem de referência -->
+          <div class="ingresso-resumo">
+            Ei, prepare a pipoca! Você sabia que a Ginger conseguiu a proeza de liderar uma rebelião inteira contra humanos para salvar suas amigas de virarem recheio? Pois é! Enquanto os donos da granja tentam transformar o galinheiro em uma fábrica industrial de tortas por puro interesse financeiro, o plano de fuga se revela uma gigantesca e bem-humorada aventura, onde as galinhas constroem um avião e a liberdade é muito mais viva e divertida! 
+          </div>
+
+          <div class="ingresso-dados">
+            <div class="dado-item"><span>ESTÚDIO CRIADOR:</span> Aardman Animations</div>
+            <div class="dado-item"><span>TÉCNICA DE ARTE:</span> Stop-Motion / Massinha</div>
+            <div class="dado-item"><span>TEMPO DE SUOR:</span> +3 Anos de Produção</div>
+            <div class="dado-item"><span>ACLAMAÇÃO:</span> Maior Bilheteria do Gênero</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- SEÇÃO 2: CARROSSEL DE IMAGENS DAS CENAS -->
+    <h2 class="titulo-secao">Cenas & Criação nos Bastidores</h2>
+    <div class="carrossel-container">
+      <button class="carrossel-btn btn-prev" onclick="mudarSlide(-1)">&#10094;</button>
+      <button class="carrossel-btn btn-next" onclick="mudarSlide(1)">&#10095;</button>
+      <div class="carrossel-slides" id="carrosselSlides">
+        <div class="slide"><img src="galinhas1.jpg" alt="Cena 1"><div class="slide-legenda">Ginger liderando os planos de fuga noturnos no galinheiro 17.</div></div>
+        <div class="slide"><img src="galinhas2.jpg" alt="Cena 2"><div class="slide-legenda">A chegada triunfal do galo Rocky voando sobre a cerca da granja.</div></div>
+        <div class="slide"><img src="galinhas3.jpg" alt="Cena 3"><div class="slide-legenda">O treinamento intenso de voo para fazer as galinhas decolarem.</div></div>
+        <div class="slide"><img src="galinhas4.jpg" alt="Cena 4"><div class="slide-legenda">A terrível chegada da máquina automática de tortas da Sra. Tweedy.</div></div>
+        <div class="slide"><img src="galinhas5.jpg" alt="Cena 5"><div class="slide-legenda">Ginger e Rocky presos por um fio dentro da máquina industrial de tortas.</div></div>
+        <div class="slide"><img src="galinhas6.jpg" alt="Cena 6"><div class="slide-legenda">Os ratos Nick e Fetcher negociando ferramentas ilegais por ovos frescos.</div></div>
+        <div class="slide"><img src="galinhas7.jpg" alt="Cena 7"><div class="slide-legenda">A montagem secreta do avião gigante 'Velozes e Penosos'.</div></div>
+        <div class="slide"><img src="galinhas8.jpg" alt="Cena 8"><div class="slide-legenda">O voo desesperado de decolagem enquanto o Sr. Tweedy tenta agir.</div></div>
+        <div class="slide"><img src="galinhas9.jpg" alt="Cena 9"><div class="slide-legenda">A liberdade conquistada no santuário das galinhas longe de qualquer torta.</div></div>
+        <div class="slide"><img src="galinhas10.jpg" alt="Cena 10"><div class="slide-legenda"><strong>Bastidores:</strong> Animadores ajustando as asas milimétricas com pinças.</div></div>
+      </div>
+    </div>
+
+    <!-- SEÇÃO 3: GRID DE SEGREDOS EXPANSÍVEIS (PARTE A: CARDS 1 A 6) -->
+    <h2 class="titulo-secao">Segredos de Produção da Granja</h2>
+    <div class="grid-segredos">
+      
+      <!-- Card 1 -->
+      <div class="card-segredo" onclick="expandirCard(this)">
+        <img src="galinhas11.jpg" alt="Troca de bocas" loading="lazy">
+        <div class="card-segredo-conteudo">
+          <h3>Centenas de Bocas</h3>
+          <p>As galinhas não tinham bocas fixas. Os animadores trocavam pequenas peças de massinha para cada sílaba ou expressão.</p>
+          <div class="detalhe-extra">
+            <strong>Bastidores Técnicos:</strong> Mais de 600 bocas diferentes foram esculpidas e catalogadas em gavetas organizadas para manter o ritmo labial perfeito de cada frase durante as filmagens semanais.
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="card-segredo" onclick="expandirCard(this)">
+        <img src="galinhas12.jpg" alt="O segredo dos lenços" loading="lazy">
+        <div class="card-segredo-conteudo">
+          <h3>O Truque dos Lenços</h3>
+          <p>Você reparou que quase todas as galinhas usam lenço ou colar? Eles serviam para um disfarce muito inteligente da equipe.</p>
+          <div class="detalhe-extra">
+            <strong>Segredo Técnico:</strong> A linha onde o pescoço se conectava ao corpo giratório ficava visível nas fotos. Os lenços esconderam essa emenda perfeitamente sem que precisassem retocar frame por frame.
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="card-segredo" onclick="expandirCard(this)">
+        <img src="galinhas13.jpg" alt="Tamanho dos bonecos" loading="lazy">
+        <div class="card-segredo-conteudo">
+          <h3>Tamanho Real</h3>
+          <p>Cada boneco principal de galinha tinha aproximadamente 30 centímetros de altura, o tamanho perfeito de manuseio.</p>
+          <div class="detalhe-extra">
+            <strong>Estrutura Interna:</strong> Por baixo da pele, existia um esqueleto complexo feito de junções de aço com parafusos reguláveis para aguentar posições pesadas e firmes sem ceder.
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="card-segredo" onclick="expandirCard(this)">
+        <img src="galinhas14.jpg" alt="A Maquete do Avião" loading="lazy">
+        <div class="card-segredo-conteudo">
+          <h3>Avião de Verdade</h3>
+          <p>A maquete do avião 'Velozes e Penosos' era tão grande e pesada que gerou uma dor de cabeça logística nos cenários.</p>
+          <div class="detalhe-extra">
+            <strong>Peso Real:</strong> O modelo pesava dezenas de quilos e exigiu a instalação oculta de cabos de aço rígidos presos no teto do estúdio para flutuar com estabilidade diante da lente.
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 5 -->
+      <div class="card-segredo" onclick="expandirCard(this)">
+        <img src="galinhas15.jpg" alt="A Gravidade e o Silicone" loading="lazy">
+        <div class="card-segredo-conteudo">
+          <h3>Corpos de Silicone</h3>
+          <p>Diferente do que muitos pensam, apenas as cabeças eram de massinha pura. Os corpos usavam borracha maleável.</p>
+          <div class="detalhe-extra">
+            <strong>Física Industrial:</strong> Massinha pura é pesada e deforma sob calor. O silicone moldado permitiu que os animadores manuseassem os corpos milhares de vezes sem deixar impressões digitais.
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 6 -->
+      <div class="card-segredo" onclick="expandirCard(this)">
+        <img src="galinhas16.jpg" alt="Cenários gigantes" loading="lazy">
+        <div class="card-segredo-conteudo">
+          <h3>A Granja Escalonada</h3>
+          <p>Para criar a ilusão de profundidade nos galinheiros distantes, a equipe aplicou uma técnica clássica de perspectiva visual.</p>
+          <div class="detalhe-extra">
+            <strong>Engenharia de Lentes:</strong> Os galinheiros de fundo eram maquetes minúsculas de apenas 5 cm colocados em mesas suspensas milimetricamente alinhadas para simular quilômetros de distância.
+          </div>
+        </div>
+      </div>
+      <!-- Card 7 -->
+      <div class="card-segredo" onclick="expandirCard(this)">
+        <img src="galinhas17.jpg" alt="A fita adesiva nos olhos" loading="lazy">
+        <div class="card-segredo-conteudo">
+          <h3>Olhos de Vidro</h3>
+          <p>Os olhos das galinhas eram feitos de miçangas de vidro polido, exigindo um ritual de limpeza rigoroso antes dos cliques.</p>
+          <div class="detalhe-extra">
+            <strong>Brilho Perfeito:</strong> Para dar o brilho perfeito da retina, os assistentes de estúdio limpavam cada olho com cotonete e álcool isopropílico antes de cada clique da câmera para remover qualquer poeira.
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 8 -->
+      <div class="card-segredo" onclick="expandirCard(this)">
+        <img src="galinhas18.jpg" alt="Quantidade de fotos" loading="lazy">
+        <div class="card-segredo-conteudo">
+          <h3>Recorde de Cliques</h3>
+          <p>Para gerar apenas 1 segundo de animação na tela, a equipe precisava movimentar as bonecas manualmente muitas vezes.</p>
+          <div class="detalhe-extra">
+            <strong>Paciência Extrema:</strong> Eram necessárias exatamente 24 fotos separadas para cobrir um único segundo. Um erro na foto 23 significava reiniciar todo o compasso da cena do dia.
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 9 -->
+      <div class="card-segredo" onclick="expandirCard(this)">
+        <img src="galinhas19.jpg" alt="Equipe de Dublagem" loading="lazy">
+        <div class="card-segredo-conteudo">
+          <h3>Vozes de Peso</h3>
+          <p>O galo Rocky foi dublado originalmente pelo astro Mel Gibson, o que mudou o ritmo das gravações no estúdio.</p>
+          <div class="detalhe-extra">
+            <strong>Estrelato:</strong> A presença do actor impulsionou massivamente o marketing do filme nos cinemas mundiais, abrindo portas para grandes bilheterias no mercado americano.
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 10 -->
+      <div class="card-segredo" onclick="expandirCard(this)">
+        <img src="galinhas20.jpg" alt="A Máquina de Tortas Prática" loading="lazy">
+        <div class="card-segredo-conteudo">
+          <h3>Gosma de Torta Real</h3>
+          <p>A substância espessa que cai sobre os personagens dentro da máquina industrial era real e totalmente comestível.</p>
+          <div class="detalhe-extra">
+            <strong>Mistura Caseira:</strong> Os efeitos visuais misturaram água quente, corante alimentar amarelo e quilos de amido de milho para criar uma textura grudenta perfeita que não estragasse o silicone dos bonecos.
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 11 -->
+      <div class="card-segredo" onclick="expandirCard(this)">
+        <img src="galinhas21.jpg" alt="Luzes de estúdio" loading="lazy">
+        <div class="card-segredo-conteudo">
+          <h3>Estufa de Filmagem</h3>
+          <p>O calor dos potentes refletores de estúdio era tão absurdo que gerava riscos imediatos às gravações de massinha.</p>
+          <div class="detalhe-extra">
+            <strong>Derretimento:</strong> Os rostos de massinha das galinhas começavam a derreter se a filmagem de um quadro demorasse mais de 10 minutos. O estúdio precisava ser resfriado constantemente.
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 12 -->
+      <div class="card-segredo" onclick="expandirCard(this)">
+        <img src="galinhas22.jpg" alt="Anos de Trabalho" loading="lazy">
+        <div class="card-segredo-conteudo">
+          <h3>Produção de Tartaruga</h3>
+          <p>Uma equipe inteira de animadores profissionais entregava uma quantidade de conteúdo surpreendentemente curta por semana.</p>
+          <div class="detalhe-extra">
+            <strong>Ritmo Exaustivo:</strong> Somando o trabalho diário de todos os cenários ativos em paralelo, conseguia-se produzir apenas de 10 a 12 segundos de animação finalizada por semana de esforço.
+          </div>
+        </div>
+      </div>
+    </div> <!-- Fim do Grid de Segredos -->
+    <!-- SEÇÃO 4: CARDS DE EASTER EGGS (APENAS TEXTO) -->
+    <h2 class="titulo-secao">Easter Eggs Escondidos</h2>
+    <div class="grid-easter-eggs">
+      <div class="card-easter"><h4>1. Indiana Jones</h4><p>A famosa cena onde Ginger segura a porta do galinheiro levantada no último segundo parodia Indiana Jones resgatando seu chapéu.</p></div>
+      <div class="card-easter"><h4>2. A Grande Fuga</h4><p>O conceito e ritmo do filme todo são baseados fielmente no clássico filme de guerra de 1963 estrelado por Steve McQueen.</p></div>
+      <div class="card-easter"><h4>3. Star Trek</h4><p>O galo Fowler costuma soltar frases militares antiquadas que brincam com falas clássicas da série de ficção científica espacial.</p></div>
+      <div class="card-easter"><h4>4. Wallace & Gromit</h4><p>Ferramentas icônicas criadas pela Aardman em Wallace & Gromit aparecem escondidas no fundo das caixas de tralhas dos ratos.</p></div>
+      <div class="card-easter"><h4>5. Número 17</h4><p>O número gravado no galinheiro principal da Ginger faz referência direta ao famoso filme de prisioneiros Stalag 17.</p></div>
+      <div class="card-easter"><h4>6. Sombras Invisíveis</h4><p>Se você olhar atentamente para as sombras das cercas no chão, elas simulam o padrão quadriculado de roupas de prisioneiros.</p></div>
+      <div class="card-easter"><h4>7. Propaganda de Guerra</h4><p>Os pôsteres colados dentro dos galinheiros que incentivam a botar ovos copiam cartazes reais de motivação da Segunda Guerra Mundial.</p></div>
+      <div class="card-easter"><h4>8. O Clique dos Ratos</h4><p>Toda vez que os ratos calculam lucros, o barulho metálico de fundo imita engrenagens de caixas registradoras antigas dos anos 40.</p></div>
+      <div class="card-easter"><h4>9. Silhueta do Dono</h4><p>As primeiras aparições do Sr. Tweedy na névoa escura prestam homenagem visual ao monstro clássico Frankenstein.</p></div>
+      <div class="card-easter"><h4>10. O Pulo da Cerca</h4><p>Quanndo Rocky faz o seu voo inaugural acrobático sobre a cerca da granja, a trilha sonora imita o compasso de filmes circenses antigos.</p></div>
+      <div class="card-easter"><h4>11. Expressões de Massa</h4><p>Em cenas muito rápidas de queda, se você pausar o frame, verá rostos deformados de propósito para dar mais velocidade à animação.</p></div>
+      <div class="card-easter"><h4>12. Dedos do Rato</h4><p>Nick, o rato de jaqueta, mexe as mãos de uma forma que esconde o fato de que os modelos de ratos da Aardman têm apenas quatro dedos.</p></div>
+    </div>
+
+    <!-- SEÇÃO 5: CENTRAL DE JOGOS E ELEMENTOS INTERATIVOS -->
+    <h2 class="titulo-secao">🕹️ Sala de Fuga: Central de Jogos 🕹️</h2>
+    
+    <!-- ELEMENTO FIXO DA CONQUISTA ESTILO CONSOLE -->
+    <div id="notificacaoXbox" class="notificacao-conquista">
+      <div class="icone" id="notifIcone">🏆</div>
+      <div class="texto">
+        <h5>Conquista Desbloqueada!</h5>
+        <p id="notifNome">Nome do Troféu</p>
+      </div>
+    </div>
+
+    <div class="central-jogos">
+      <div class="menu-jogos">
+        <button class="btn-jogo ativo" onclick="abrirJogo('quiz', this)">Super Quiz (20 Perguntas)</button>
+        <button class="btn-jogo" onclick="abrirJogo('maquina', this)">Fuja da Máquina!</button>
+        <button class="btn-jogo" onclick="abrirJogo('cabos', this)">Conecte o Avião</button>
+        <button class="btn-jogo" onclick="abrirJogo('tweedy', this)">Onde está o Sr. Tweedy?</button>
+      </div>
+
+      <!-- JANELA JOGO 1: QUIZ -->
+      <div id="jogo-quiz" class="janela-jogo ativa">
+        <div id="quiz-execucao">
+          <div class="quiz-header">
+            <span id="quiz-progresso">Pergunta: 1 / 20</span>
+            <span id="quiz-pontuacao">Acertos: 0</span>
+          </div>
+          <div class="pergunta-texto" id="quiz-pergunta">Carregando pergunta sobre o galinheiro...</div>
+          <div class="opcoes-container" id="quiz-opcoes"></div>
+        </div>
+        <div id="quiz-fim" class="quiz-resultado" style="display: none;">
+          <h3 style="font-size: 2rem; color: #ffcc00;" id="resultado-titulo">Fim da Fuga!</h3>
+          <div class="trofeu-container"><div class="trofeu-icone" id="resultado-trofeu">🥧</div></div>
+          <p style="font-size: 1.3rem; margin: 15px 0; font-weight: bold;" id="resultado-mensagem"></p>
+          <p style="font-size: 1.1rem; color: #ccc; margin-bottom: 25px;" id="resultado-placar"></p>
+          <button class="btn-jogo" onclick="reiniciarQuiz()">Tentar Novamente 🔄</button>
+        </div>
+      </div>
+
+      <div id="jogo-maquina" class="janela-jogo">
+        <div class="maquina-arena">
+          <div id="playerGinger" class="ginger-player">🐔</div>
+          <div id="fatiadorObstaculo" class="obstaculo-maquina">⚙️</div>
+          <div class="score-maquina" id="pontosMaquina">Pontos: 0</div>
+          <button class="btn-acao" id="btnIniciarRunner" onclick="iniciarRunner()">Iniciar Fuga</button>
+          <button class="btn-acao" id="btnPularFuga" onclick="pularRunner()" style="display: none;">Pular</button>
+        </div>
+      </div>
+
+      <div id="jogo-cabos" class="janela-jogo">
+        <div class="quiz-header" style="justify-content: center; gap: 15px; margin-bottom: 20px;">
+          <span>Monte os cabos do avião e alinhe todos.</span>
+        </div>
+        <div class="painel-cabos" id="tabuleiroCabos"></div>
+        <button class="btn-acao" onclick="iniciarJogoCabos()">Reiniciar Cabos</button>
+      </div>
+
+      <div id="jogo-tweedy" class="janela-jogo">
+        <div class="quiz-header" style="justify-content: space-between;">
+          <span id="tempoTweedy">Tempo: 15s</span>
+          <span id="pontosTweedy">Ferramentas: 0</span>
+        </div>
+        <div class="granja-grid">
+          <div class="galinheiro-toca" onclick="martelarToca(0)"><div class="personagem-toca" id="toca0">👨‍🌾</div></div>
+          <div class="galinheiro-toca" onclick="martelarToca(1)"><div class="personagem-toca" id="toca1">👨‍🌾</div></div>
+          <div class="galinheiro-toca" onclick="martelarToca(2)"><div class="personagem-toca" id="toca2">👨‍🌾</div></div>
+          <div class="galinheiro-toca" onclick="martelarToca(3)"><div class="personagem-toca" id="toca3">👨‍🌾</div></div>
+          <div class="galinheiro-toca" onclick="martelarToca(4)"><div class="personagem-toca" id="toca4">👨‍🌾</div></div>
+          <div class="galinheiro-toca" onclick="martelarToca(5)"><div class="personagem-toca" id="toca5">👨‍🌾</div></div>
+        </div>
+        <button class="btn-acao" onclick="iniciarJogoTweedy()">Iniciar Inspeção</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const todasAs60Perguntas = [
+      { p: "Onde Ginger e Rocky vão parar quando testam a máquina de tortas pela primeira vez?", o: ["No forno", "Dentro de uma torta gigante", "No triturador de legumes", "Na esteira de embalagem"], r: 1 },
+    { p: "Qual o prêmio que Ginger promete aos ratos se o avião funcionar?", o: ["Todos os ovos que conseguirem carregar", "A granja inteira só para eles", "Um estoque eterno de queijo", "Uma carona de avião"], r: 1 },
+    { p: "Por que o galo Fowler se recusa a pilotar o avião de início?", o: ["Porque tem medo de altura", "Porque diz que galinhas não são da Força Aérea", "Porque está muito velho", "Porque quebrou a asa"], r: 1 },
+    { p: "Como as galinhas impedem o Sr. Tweedy de avisar sua esposa sobre a fuga?", o: ["Trancam ele no armário", "Amarram ele com cordas", "Derrubam o galinheiro por cima dele", "Amordaçam ele com um lenço"], r: 2 },
+    { p: "De onde a Sra. Tweedy tira o dinheiro para comprar a máquina de tortas?", o: ["De uma herança", "De um empréstimo do banco", "Das economias de uma vida inteira", "Vendendo o trator"], r: 2 },
+    { p: "Qual a galinha Babs tricota quando está muito nervosa?", o: ["Cachecóis e meias gigantes", "Disquetes de lã", "Bolas de gude", "Uma réplica de galinha"], r: 0 },
+    { p: "Quantas semanas durou a dublagem de Mel Gibson para o filme?", o: ["Duas semanas", "Três meses", "Apenas alguns dias", "Um ano inteiro"], r: 0 },
+    { p: "Em qual estúdio físico britânico as maquetes de massinha foram gravadas?", o: ["Pinewood Studios", "Bristol Aardman HQ", "Leavesden", "Shepperton"], r: 1 },
+    { p: "O que acontece com a Sra. Tweedy no final do filme?", o: ["Ela vai presa", "Ela cai dentro da própria máquina e explode", "Ela fica presa no galinheiro", "Ela voa junto com as galinhas"], r: 1 },
+    { p: "Qual o maior desafio físico enfrentado pelos animadores de massinha?", o: ["O cansaço visual", "O derretimento dos bonecos pelo calor das luzes", "A falta de massinha colorida", "As câmeras digitais ruins"], r: 1 },
+    { p: "Qual o nome da sequência lançada na Netflix?", o: ["A Fuga das Galinhas: De Volta ao Galinheiro", "A Fuga das Galinhas: A Torta Suprema", "A Fuga das Galinhas: A Ameaça dos Nuggets", "A Fuga das Galinhas: O Resgate Noturno"], r: 2 },
+    { p: "Qual objeto a Ginger usa como quadro para desenhar as estratégias de fuga?", o: ["Uma folha de zinco", "Um pedaço de madeira velha da cerca", "Um prato de alumínio", "Um caderno roubado"], r: 1 },
+    { p: "O que Rocky faz para fingir que sua asa ainda está quebrada?", o: ["Usa uma tipoia de pano", "Fica deitado o dia todo", "Grita de dor quando encostam", "Manca de uma perna"], r: 0 },
+    { p: "Como as galinhas se camuflam na grama quando o Sr. Tweedy passa?", o: ["Fingem ser arbustos usando folhas", "Deitam de costas no chão", "Entram debaixo de bacias de metal", "Sobem nas cercas"], r: 0 },
+    { p: "De quem é a frase emblemática: 'Eu não quero ser uma torta!'?", o: ["Ginger", "Babs", "Bunty", "Mac"], r: 1 },
+    { p: "Qual o primeiro plano de fuga que vemos dar errado no início do filme?", o: ["O plano do túnel subterrâneo", "A catapulta de madeira", "O disfarce de Sra. Tweedy", "O voo com elásticos"], r: 0 },
+    { p: "O que o Sr. Tweedy faz com a Ginger após pegá-la tentando fugir no início?", o: ["Deixa ela sem milho", "Tranca ela na caixa de carvão", "Coloca ela no galinheiro isolado", "Prende ela no canil"], r: 1 },
+    { p: "O que os ratos usam para fazer as engrenagens do avião girarem?", o: ["Elásticos de borracha", "Pedais de bicicleta e correntes", "Corda de varal", "Um motor de liquidificador"], r: 1 },
+    { p: "Qual ferramenta Mac usa para fazer cálculos matemáticos e físicos?", o: ["Uma régua de cálculo de madeira", "Um ábaco de milho", "Um giz e uma parede", "Um bloco de notas amassado"], r: 0 },
+    { p: "Como Rocky consegue entrar na granja sem ser visto pelos cães?", o: ["Ele pula o portão principal", "Ele voa por cima da cerca após ser lançado pelo canhão", "Ele entra pelo túnel das galinhas", "Ele se disfarça de saco de ração"], r: 1 },
+    { p: "O que as galinhas fazem para comemorar quando acham que vão aprender a voar?", o: ["Uma festa com música", "Uma revoada coletiva", "Ciscam o chão em círculo", "Cantam o hino da granja"], r: 0 },
+    { p: "Qual o apelido que o galo Rocky dá para a Ginger?", o: ["Ruivinha", "Chefe", "Galinha de Fibra", "Pequena"], r: 0 },
+    { p: "De que cor é o famoso lenço que a Ginger usa no pescoço?", o: ["Azul", "Verde militar", "Vermelho", "Amarelo"], r: 2 },
+    { p: "Onde fica o santuário livre para onde as galinhas vão morar no final?", o: ["Em uma ilha verde no meio de um lago", "Em uma fazenda abandonada", "Na América", "Em uma floresta tropical"], r: 0 }
+  ];
+
+  let perguntasSorteadas = [];
+  let indiceAtual = 0;
+  let acertos = 0;
+  let slideIndex = 0;
+
+  function expandirCard(elemento) {
+    elemento.classList.toggle("expandido");
+  }
+
+  function abrirJogo(tipo, botao) {
+    document.querySelectorAll('.btn-jogo').forEach(btn => btn.classList.remove('ativo'));
+    document.querySelectorAll('.janela-jogo').forEach(janela => janela.classList.remove('ativa'));
+    botao.classList.add('ativo');
+    document.getElementById(`jogo-${tipo}`).classList.add('ativa');
+  }
+
+  function iniciarQuiz() {
+    perguntasSorteadas = [...todasAs60Perguntas].sort(() => Math.random() - 0.5).slice(0, 20);
+    indiceAtual = 0; acertos = 0;
+    document.getElementById("quiz-execucao").style.display = "block";
+    document.getElementById("quiz-fim").style.display = "none";
+    mostrarPergunta();
+  }
+
+  function mostrarPergunta() {
+    if (indiceAtual >= 20) { finalizarQuiz(); return; }
+    const dados = perguntasSorteadas[indiceAtual];
+    document.getElementById("quiz-progresso").innerText = `Pergunta: ${indiceAtual + 1} / 20`;
+    document.getElementById("quiz-pontuacao").innerText = `Acertos: ${acertos}`;
+    document.getElementById("quiz-pergunta").innerText = dados.p;
+    const conteinerOpcoes = document.getElementById("quiz-opcoes");
+    conteinerOpcoes.innerHTML = "";
+    dados.o.forEach((opcao, index) => {
+      const btn = document.createElement("button");
+      btn.className = "opcao-btn";
+      btn.innerText = opcao;
+      btn.onclick = () => verificarResposta(index);
+      conteinerOpcoes.appendChild(btn);
+    });
+  }
+
+  function verificarResposta(escolha) {
+    if (escolha === perguntasSorteadas[indiceAtual].r) acertos++;
+    indiceAtual++;
+    mostrarPergunta();
+  }
+
+  function finalizarQuiz() {
+    document.getElementById("quiz-execucao").style.display = "none";
+    const telaFim = document.getElementById("quiz-fim");
+    telaFim.style.display = "block";
+    const titulo = document.getElementById("resultado-titulo");
+    const trofeu = document.getElementById("resultado-trofeu");
+    const mensagem = document.getElementById("resultado-mensagem");
+    const placar = document.getElementById("resultado-placar");
+    placar.innerText = `Você acertou ${acertos} de 20 perguntas.`;
+
+    if (acertos <= 4) {
+      titulo.innerText = "Troféu Liberado!"; trofeu.innerText = "🥧";
+      mensagem.innerText = "Nem toda fuga dá certo na primeira tentativa.";
+      dispararNotificacao("🥧", "Galinha Perdida"); localStorage.setItem('conquistaTorta', 'true');
+    } else if (acertos >= 5 && acertos <= 19) {
+      titulo.innerText = "Troféu Liberado!"; trofeu.innerText = "🪶";
+      mensagem.innerText = "A fuga falhou, mas você chegou perto.";
+      dispararNotificacao("🪶", "Quase Livre"); localStorage.setItem('conquistaPena', 'true');
+    } else if (acertos === 20) {
+      titulo.innerText = "Lenda da Fuga!"; trofeu.innerText = "🐔";
+      mensagem.innerText = "Um dos maiores especialistas da história do galinheiro.";
+      dispararNotificacao("🐔", "Lenda da Fuga"); localStorage.setItem('conquistaGalinha', 'true');
+    }
+  }
+
+  function reiniciarQuiz() { iniciarQuiz(); }
+
+  function dispararNotificacao(icone, nomeTrofeu) {
+    const toast = document.getElementById("notificacaoXbox");
+    document.getElementById("notifIcone").innerText = icone;
+    document.getElementById("notifNome").innerText = nomeTrofeu;
+    toast.classList.add("mostrar");
+    setTimeout(() => { toast.classList.remove("mostrar"); }, 4000);
+  }
+
+  function mudarSlide(n) {
+    const slides = document.getElementById("carrosselSlides");
+    slideIndex = (slideIndex + n + 10) % 10;
+    slides.style.transform = `translateX(-${slideIndex * 100}%)`;
+  }
+
+  let pontosM = 0; let jogandoRunner = false; let runnerInterval;
+  function iniciarRunner() {
+    if(jogandoRunner) return;
+    jogandoRunner = true; pontosM = 0;
+    document.getElementById("btnIniciarRunner").style.display = "none";
+    document.getElementById("btnPularFuga").style.display = "block";
+    const obstaculo = document.getElementById("fatiadorObstaculo");
+    let posObstaculo = -50;
+    runnerInterval = setInterval(() => {
+      posObstaculo += 8;
+      if(posObstaculo > 850) { posObstaculo = -50; pontosM += 10; document.getElementById("pontosMaquina").innerText = `Pontos: ${pontosM}`; }
+      obstaculo.style.right = posObstaculo + "px";
+      const ginger = document.getElementById("playerGinger");
+      let noChao = (ginger.style.bottom === "20px" || ginger.style.bottom === "");
+      if(posObstaculo > 680 && posObstaculo < 740 && noChao) {
+        clearInterval(runnerInterval); jogandoRunner = false;
+        alert(`Fim de jogo! A Ginger virou torta! Pontuação obtida: ${pontosM}`);
+        document.getElementById("btnIniciarRunner").style.display = "block";
+        document.getElementById("btnPularFuga").style.display = "none";
+      }
+    }, 30);
+  }
+
+  function pularRunner() {
+    const ginger = document.getElementById("playerGinger");
+    if(ginger.style.bottom === "20px" || ginger.style.bottom === "") {
+      ginger.style.bottom = "120px"; setTimeout(() => { ginger.style.bottom = "20px"; }, 600);
+    }
+  }
+
+  let pecas = ["➖", "➕", "➖", "➕", "➕", "➖", "➕", "➖", "➕", "➖", "➖", "➕"];
+  function iniciarJogoCabos() {
+    const tabuleiro = document.getElementById("tabuleiroCabos"); 
+    tabuleiro.innerHTML = "";
+    pecas.sort(() => Math.random() - 0.5);
+    
+    pecas.forEach((simbolo) => {
+      const div = document.createElement("div"); 
+      div.className = "peca-cabo"; 
+      div.innerText = simbolo;
+      
+      if(simbolo === "➖") div.classList.add("peca-alinhada");
+      
+      div.onclick = () => {
+        if(div.innerText === "➕") { 
+          div.innerText = "➖"; 
+          div.classList.add("peca-alinhada"); 
+        } else { 
+          div.innerText = "➕"; 
+          div.classList.remove("peca-alinhada"); 
+        }
+        verificarVitoriaCabos();
+      };
+      tabuleiro.appendChild(div);
+    });
+  }
+
+  function verificarVitoriaCabos() {
+    let ganhou = true; 
+    document.querySelectorAll(".peca-cabo").forEach(p => { 
+      if(p.innerText !== "➖") ganhou = false; 
+    });
+    if(ganhou) alert("Logística concluída! Motores do avião ativados com sucesso!");
+  }
+
+  // JOGO 4: CADÊ O TWEEDY (MARTELO NOTURNO)
+  let pontosT = 0; let jogandoTweedy = false;
+  function iniciarJogoTweedy() {
+    if(jogandoTweedy) return;
+    jogandoTweedy = true; pontosT = 0;
+    let tempo = 15;
+    
+    const tLoop = setInterval(() => {
+      tempo--; 
+      document.getElementById("tempoTweedy").innerText = `Tempo: ${tempo}s`;
+      if(tempo <= 0) { 
+        clearInterval(tLoop); 
+        clearInterval(mLoop); 
+        jogandoTweedy = false; 
+        alert(`Inspeção encerrada! Ferramentas recuperadas: ${pontosT}`); 
+      }
+    }, 1000);
+
+    const mLoop = setInterval(() => {
+      const idx = Math.floor(Math.random() * 6); 
+      const item = Math.random() > 0.4 ? "🛠️" : "👨‍🌾";
+      const toca = document.getElementById(`toca${idx}`); 
+      toca.innerText = item;
+      toca.parentElement.classList.add("toca-ativa");
+      setTimeout(() => { 
+        toca.parentElement.classList.remove("toca-ativa"); 
+      }, 800);
+    }, 1000);
+  }
+
+  function martelarToca(id) {
+    if(!jogandoTweedy) return;
+    const toca = document.getElementById(`toca${id}`);
+    if(toca.parentElement.classList.contains("toca-ativa")) {
+      if(toca.innerText === "🛠️") { 
+        pontosT++; 
+        document.getElementById("pontosTweedy").innerText = `Ferramentas: ${pontosT}`; 
+      } else if(toca.innerText === "👨‍🌾") {
+        alert("O Sr. Tweedy te avistou com a lanterna!");
+      }
+      toca.parentElement.classList.remove("toca-ativa");
+    }
+  }
+
+  // ATIVAR PROCESSOS INICIAIS AO CARREGAR O SITE
+
+  // GATILHOS DE ÁUDIO AO CARREGAR A PÁGINA
+  window.onload = function() { 
+    iniciarQuiz(); 
+    iniciarJogoCabos(); 
+
+    // Toca o barulho de portas de metal batendo/fechando imediatamente
+    const celas = document.getElementById("somCelas");
+    celas.play().catch(e => console.log("Aguardando clique do usuário para tocar áudio."));
+
+    // Inicia a sirene de alarme de fundo em loop continuo
+    const sirene = document.getElementById("somSirene");
+    sirene.volume = 0.3; // Deixa o som de fundo mais suave para não irritar
+    sirene.play().catch(e => console.log("Aguardando clique do usuário para tocar áudio."));
+  };
+
+  // LÓGICA PARA LIGAR E DESLIGAR O ÁUDIO
+  let somLigado = true;
+
+  function alternarSom() {
+    const sirene = document.getElementById("somSirene");
+    const botao = document.getElementById("btnAudio");
+    
+    if (somLigado) {
+      sirene.pause();
+      botao.innerText = "🔇";
+      botao.classList.add("mutado");
+      somLigado = false;
+    } else {
+      sirene.play().catch(e => console.log("Erro ao reproduzir sirene."));
+      botao.innerText = "🔊";
+      botao.classList.remove("mutado");
+      somLigado = true;
+    }
+  }
+
+
+</script>
+</body>
+</html>

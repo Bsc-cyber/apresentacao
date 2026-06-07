@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Coraline - O Outro Mundo</title>
+  <style>
+    /* ==============================================
+       1. CORE VISUAL: TERREMOTOS E EFEITOS ESPECIAIS
+       ============================================== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    /* Animação que distorce a cor do site e faz tudo tremer (Supera Frankenweenie!) */
+    @keyframes tremerMundo {
+      0%, 100% { transform: translate(0, 0) rotate(0deg); filter: hue-rotate(0deg); }
+      25% { transform: translate(-3px, 2px) rotate(-0.3deg); }
+      50% { transform: translate(2px, -2px) rotate(0.3deg); filter: hue-rotate(40deg); }
+      75% { transform: translate(-1px, -1px) rotate(0deg); }
+    }
+
+    body {
+      background: linear-gradient(180deg, #090514 0%, #170b29 40%, #4a154b 80%, #1a052e 100%) no-repeat fixed;
+      color: #ffffff;
+      overflow-x: hidden;
+      position: relative;
+      animation: tremerMundo 6s infinite alternate ease-in-out;
+    }
+    /* IMAGEM DE TEIA DE ARANHA NEON SE FORMANDO NO FUNDO INTEIRO */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-image: url('img/coraline/fundo-teia.png'); /* Imagem da teia de aranha de fundo */
+      background-size: cover;
+      background-position: center;
+      z-index: -2;
+      pointer-events: none;
+      opacity: 0.25; /* Efeito misterioso translúcido */
+      animation: varrerTeias 10s linear infinite;
+    }
+
+    /* GARRAS REAIS DA BELDAM NAS DUAS LATERAIS DA TELA */
+    body::after {
+      content: "";
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-image: 
+        url('img/coraline/garra-esquerda.png'), /* Imagem da garra na borda esquerda */
+        url('img/coraline/garra-direita.png');  /* Imagem da garra na borda direita */
+      background-position: left center, right center;
+      background-repeat: no-repeat;
+      background-size: contain;
+      z-index: -2;
+      pointer-events: none;
+      animation: garrasFuga 3s infinite ease-in-out;
+    }
+
+    @keyframes varrerTeias {
+      0% { transform: scale(1); filter: hue-rotate(0deg); }
+      50% { transform: scale(1.05); filter: hue-rotate(45deg); }
+      100% { transform: scale(1); filter: hue-rotate(0deg); }
+    }
+
+    /* Faz as garras rasparem para dentro e para fora da tela */
+    @keyframes garrasFuga {
+      0%, 100% { transform: translateX(0); filter: brightness(100%); }
+      50% { transform: translateX(15px) scaleX(1.02); filter: brightness(130%) drop-shadow(0 0 15px #b82eff); }
+    }
+
+
+    /* SISTEMA DE ITENS VOADORES (BOTÕES E CAMUNDONGOS) */
+    .objeto-voador {
+      position: fixed;
+      font-size: 32px;
+      top: -60px;
+      z-index: -1;
+      opacity: 0.85;
+      pointer-events: none;
+      user-select: none;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.6));
+      animation: cairObjeto linear infinite;
+    }
+
+    @keyframes cairObjeto {
+      0% { transform: translateY(-50px) translateX(0) rotate(0deg); }
+      50% { transform: translateY(50vh) translateX(50px) rotate(180deg); }
+      100% { transform: translateY(105vh) translateX(-30px) rotate(360deg); }
+    }
+    /* BARRA SUPERIOR DO PALÁCIO ROSA */
+    .barra-superior {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: rgba(13, 8, 26, 0.95);
+      border-bottom: 3px solid #b82eff;
+      padding: 15px 40px;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.8);
+    }
+
+    .logo-site {
+      font-size: 1.4rem;
+      font-weight: 900;
+      color: #00ffff;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .btn-sair {
+      background: transparent;
+      color: #ffffff;
+      border: 2px solid #b82eff;
+      padding: 8px 20px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .btn-sair:hover {
+      background-color: #b82eff;
+      box-shadow: 0 0 15px rgba(184, 46, 255, 0.8);
+      transform: scale(1.05);
+    }
+
+    /* CONTÊINER GERAL */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 25px;
+    }
+
+    h2.titulo-secao {
+      text-align: center;
+      font-size: 2.8rem;
+      color: #ffffff;
+      text-transform: uppercase;
+      margin: 60px 0 30px 0;
+      letter-spacing: 2px;
+      text-shadow: 3px 3px 0px #b82eff, 5px 5px 0px #000;
+    }
+
+    /* INGRESSO FLUTUANTE COM PULSO LUMINESCENTE */
+    @keyframes flutuarIngresso {
+      0% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-12px) rotate(0.3deg); }
+      100% { transform: translateY(0px) rotate(0deg); }
+    }
+
+    @keyframes pulsoMistico {
+      0%, 100% { box-shadow: 0 0 25px rgba(184, 46, 255, 0.4), inset 0 0 15px rgba(0,0,0,0.6); }
+      50% { box-shadow: 0 0 55px rgba(0, 255, 255, 0.7), inset 0 0 30px rgba(184, 46, 255, 0.2); }
+    }
+
+    .ingresso-wrapper {
+      display: flex;
+      justify-content: center;
+      margin: 40px 0;
+      animation: flutuarIngresso 4.5s ease-in-out infinite;
+    }
+
+    .ingresso {
+      background: linear-gradient(135deg, #2b113d 0%, #150621 100%);
+      border: 4px solid #b82eff;
+      border-radius: 20px;
+      padding: 0;
+      width: 100%;
+      max-width: 850px;
+      overflow: hidden;
+      animation: pulsoMistico 3s infinite;
+      color: #ffffff;
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .ingresso:hover {
+      transform: scale(1.03) rotate(-0.5deg);
+      border-color: #00ffff;
+    }
+    /* BANNER DE IMAGEM DO INGRESSO DE CORALINE */
+    .ingresso-banner {
+      width: 100%;
+      height: 280px;
+      position: relative;
+      background-image: url('img/coraline/ingresso-coraline.jpg');
+      background-size: cover;
+      background-position: center;
+      border-bottom: 5px solid #b82eff;
+    }
+
+    .ingresso-banner::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.8));
+    }
+
+    .ingresso-topo {
+      position: absolute;
+      bottom: 20px;
+      left: 0; right: 0;
+      text-align: center;
+      padding: 0 20px;
+      z-index: 2;
+    }
+
+    .ingresso-topo h1 {
+      font-size: 4rem;
+      color: #00ffff;
+      text-transform: uppercase;
+      letter-spacing: 5px;
+      text-shadow: 4px 4px 0px #b82eff, -2px -2px 0px #000, 2px -2px 0px #000;
+    }
+
+    .ingresso-corpo {
+      padding: 30px;
+    }
+
+    .ingresso-resumo {
+      font-size: 1.15rem;
+      line-height: 1.6;
+      text-align: justify;
+      margin-bottom: 25px;
+      font-weight: bold;
+      background: rgba(0, 0, 0, 0.5);
+      color: #e2d5f0;
+      padding: 20px;
+      border-radius: 12px;
+      border-left: 8px solid #00ffff;
+      box-shadow: inset 0 2px 8px rgba(0,0,0,0.6);
+    }
+
+    .ingresso-dados {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      font-size: 1.1rem;
+    }
+
+    .dado-item {
+      background: rgba(184, 46, 255, 0.08);
+      border: 2px solid #b82eff;
+      color: #ffffff;
+      padding: 14px;
+      border-radius: 8px;
+      font-weight: bold;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    }
+
+    .dado-item span {
+      color: #00ffff;
+      display: block;
+      font-size: 0.9rem;
+      letter-spacing: 1px;
+      margin-bottom: 3px;
+    }
+
+    /* ==============================================
+       3. ESTILOS DO CARROSSEL MÍSTICO DE CORALINE
+       ============================================== */
+    .carrossel-container {
+      position: relative;
+      max-width: 800px;
+      margin: 0 auto 50px auto;
+      overflow: hidden;
+      border: 5px solid #b82eff;
+      border-radius: 12px;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.8);
+    }
+
+    .carrossel-slides {
+      display: flex;
+      transition: transform 0.5s ease-in-out;
+      width: 100%;
+    }
+
+    .slide {
+      min-width: 100%;
+      position: relative;
+    }
+
+    .slide img {
+      width: 100%;
+      height: 450px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .slide-legenda {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(13, 8, 26, 0.9);
+      color: #ffffff;
+      padding: 15px;
+      text-align: center;
+      font-size: 1.1rem;
+      border-top: 3px solid #00ffff;
+    }
+
+    .carrossel-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(184, 46, 255, 0.95);
+      color: white;
+      border: 2px solid #00ffff;
+      font-size: 2rem;
+      padding: 10px 15px;
+      cursor: pointer;
+      border-radius: 5px;
+      z-index: 10;
+      transition: all 0.3s;
+    }
+
+    .carrossel-btn:hover {
+      background: #00ffff;
+      color: #000000;
+      transform: translateY(-50%) scale(1.1);
+    }
+
+    .btn-prev { left: 15px; }
+    .btn-next { right: 15px; }
+    /* ==============================================
+       4. GRID DE CARDS EXPANSÍVEIS (OUTRO MUNDO)
+       ============================================== */
+    .grid-segredos {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 25px;
+      margin-bottom: 50px;
+    }
+
+    .card-segredo {
+      background-color: #1c0e2b;
+      color: #f5f5f5;
+      border: 3px solid #b82eff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.7);
+      cursor: pointer;
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s, border-color 0.3s;
+    }
+
+    .card-segredo:hover {
+      transform: translateY(-10px) scale(1.02);
+      border-color: #00ffff;
+      box-shadow: 0 15px 30px rgba(184, 46, 255, 0.5);
+    }
+
+    .card-segredo img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-bottom: 3px solid #b82eff;
+    }
+
+    .card-segredo-conteudo { 
+      padding: 15px; 
+    }
+    
+    .card-segredo-conteudo h3 { 
+      color: #00ffff; 
+      font-size: 1.25rem; 
+      margin-bottom: 8px; 
+      text-transform: uppercase; 
+      text-shadow: 1px 1px 2px #000;
+    }
+    
+    .card-segredo-conteudo p { 
+      font-size: 0.95rem; 
+      line-height: 1.4; 
+      color: #dddddd; 
+    }
+
+    .detalhe-extra {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease-out, margin-top 0.4s ease;
+      font-size: 0.9rem;
+      color: #e2d5f0;
+      background: rgba(0, 0, 0, 0.4);
+      border-radius: 6px;
+      padding: 0 10px;
+    }
+
+    .card-segredo.expandido .detalhe-extra {
+      max-height: 150px;
+      margin-top: 10px;
+      padding: 10px;
+      border-left: 3px solid #00ffff;
+    }
+
+    /* ==============================================
+       5. EASTER EGGS ESCONDIDOS (TEMATIZAÇÃO TEXTO)
+       ============================================== */
+    .grid-easter-eggs {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 20px;
+      margin-bottom: 50px;
+    }
+
+    .card-easter {
+      background: rgba(22, 13, 38, 0.85);
+      border: 3px dashed #b82eff;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+      transition: transform 0.3s;
+    }
+    .card-easter:hover { transform: scale(1.03); border-color: #00ffff; }
+    .card-easter h4 { color: #00ffff; margin-bottom: 8px; font-size: 1.1rem; text-transform: uppercase; border-bottom: 1px solid rgba(255,255,255,0.15); padding-bottom: 5px; text-shadow: 1px 1px 2px #000; }
+    .card-easter p { font-size: 0.95rem; color: #e0e0e0; line-height: 1.4; }
+    /* ==============================================
+       6. CENTRAL DE JOGOS: ABAS, ARENAS E CONQUISTAS
+       ============================================== */
+    .central-jogos {
+      background: rgba(36, 20, 54, 0.5);
+      backdrop-filter: blur(10px);
+      border: 4px solid #ffffff;
+      border-radius: 15px;
+      padding: 25px;
+      margin-bottom: 50px;
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.8);
+    }
+
+    .menu-jogos { display: flex; justify-content: center; gap: 15px; margin-bottom: 30px; flex-wrap: wrap; }
+    
+    .btn-jogo {
+      background-color: #b82eff;
+      color: #fff;
+      border: 3px solid #ffffff;
+      padding: 12px 24px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      border-radius: 8px;
+      text-transform: uppercase;
+      font-weight: bold;
+      box-shadow: 0 5px 0px #6e139c;
+      transition: all 0.2s ease;
+    }
+    .btn-jogo.ativo, .btn-jogo:hover {
+      background-color: #00ffff;
+      color: #150621;
+      box-shadow: 0 5px 0px #00b3b3;
+      transform: translateY(-2px);
+    }
+    .btn-jogo:active { transform: translateY(3px); box-shadow: none; }
+
+    .janela-jogo { background-color: rgba(0, 0, 0, 0.65); border: 2px solid rgba(255,255,255,0.15); border-radius: 10px; padding: 25px; min-height: 400px; display: none; }
+    .janela-jogo.ativa { display: block; }
+
+    .quiz-header { display: flex; justify-content: space-between; border-bottom: 2px solid rgba(255,255,255,0.2); padding-bottom: 10px; margin-bottom: 20px; font-size: 1.1rem; color: #00ffff; font-weight: bold; }
+    .pergunta-texto { font-size: 1.4rem; margin-bottom: 25px; line-height: 1.4; font-weight: bold; color: #ffffff; }
+    .opcoes-container { display: grid; grid-template-columns: 1fr; gap: 15px; }
+
+    .opcao-btn {
+      background-color: rgba(255, 255, 255, 0.95);
+      color: #150621;
+      border: 3px solid #b82eff;
+      padding: 15px;
+      text-align: left;
+      font-size: 1.1rem;
+      cursor: pointer;
+      border-radius: 8px;
+      font-weight: bold;
+      transition: all 0.2s;
+    }
+    .opcao-btn:hover { background-color: #00ffff; border-color: #ffffff; padding-left: 25px; }
+
+    .quiz-resultado { text-align: center; padding: 30px 10px; }
+    .trofeu-container { position: relative; display: inline-block; margin: 20px 0; }
+    .trofeu-icone { font-size: 5rem; display: inline-block; position: relative; z-index: 2; filter: drop-shadow(0 0 15px rgba(0,255,255,0.6)); }
+
+    /* ARENAS DO GAMEPLAY */
+    .maquina-arena { position: relative; width: 100%; height: 300px; background: linear-gradient(to bottom, #090514, #170b29); border: 3px solid #b82eff; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: inset 0 0 20px rgba(0,0,0,0.8); }
+    .btn-acao { background-color: #b82eff; border: 2px solid #fff; color: white; padding: 10px 20px; border-radius: 5px; font-size: 1.1rem; font-weight: bold; cursor: pointer; margin-top: 15px; text-transform: uppercase; box-shadow: 0 4px 0 #6e139c; }
+    .btn-acao:hover { background-color: #00ffff; color: #000; box-shadow: 0 4px 0 #00b3b3; }
+    .obstaculo-maquina { font-size: 2.5rem; position: absolute; bottom: 20px; right: -50px; }
+    .ginger-player { font-size: 2.5rem; position: absolute; bottom: 20px; left: 50px; transition: bottom 0.2s cubic-bezier(0.1, 0.8, 0.3, 1); }
+    .score-maquina { position: absolute; top: 10px; right: 15px; font-size: 1.2rem; color: #00ffff; font-weight: bold; }
+
+    .painel-cabos { display: grid; grid-template-columns: repeat(4, 70px); gap: 15px; justify-content: center; margin: 20px 0; }
+    .peca-cabo { width: 70px; height: 70px; background-color: #170b29; border: 3px solid #b82eff; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; cursor: pointer; user-select: none; transition: all 0.2s; }
+    .peca-cabo:hover { border-color: #ffffff; background-color: #24143a; }
+    .peca-alinhada { background-color: #1a4d38 !important; border-color: #00ff66 !important; }
+
+    .granja-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; max-width: 500px; margin: 20px auto; }
+    .galinheiro-toca { height: 110px; background-color: #150621; border: 4px solid #b82eff; border-radius: 15px; position: relative; overflow: hidden; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+    .personagem-toca { position: absolute; bottom: -60px; left: 0; right: 0; text-align: center; font-size: 2.8rem; transition: bottom 0.2s ease-out; }
+    .toca-ativa .personagem-toca { bottom: 15px; }
+
+    /* POPUP DE NOTIFICAÇÃO E AUDIO CONTROL */
+    .notificacao-conquista { position: fixed; bottom: 20px; right: -350px; background: linear-gradient(135deg, #0d081a 0%, #171026 100%); border-left: 6px solid #00ffff; padding: 15px 25px; border-radius: 6px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); display: flex; align-items: center; gap: 15px; z-index: 9999; transition: right 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+    .notificacao-conquista.mostrar { right: 20px; }
+    .notificacao-conquista .icone { font-size: 2.2rem; }
+    .notificacao-conquista .texto h5 { color: #00ffff; margin-bottom: 2px; font-size: 1rem; text-transform: uppercase; }
+    .notificacao-conquista .texto p { color: #fff; font-size: 0.85rem; }
+
+    .btn-controle-audio { position: fixed; bottom: 25px; left: 25px; z-index: 9999; width: 60px; height: 60px; border-radius: 50%; background-color: #b82eff; color: #ffffff; border: 3px solid #ffffff; font-size: 1.8rem; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(184, 46, 255, 0.5); transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+    .btn-controle-audio:hover { transform: scale(1.1) rotate(15deg); box-shadow: 0 6px 20px rgba(184, 46, 255, 0.8); }
+    .btn-controle-audio.mutado { background-color: #555555; border-color: #aaaaaa; box-shadow: 0 4px 15px rgba(0,0,0,0.4); }
+  </style>
+</head>
+<body>
+
+  <!-- ELEMENTOS DE AUDIO DE RETAGUARDA (OUTRO MUNDO) -->
+  <audio id="somSirene" src="outromundo.mp3" loop></audio>
+  <audio id="somCelas" src="porta-secreta.mp3"></audio>
+
+  <!-- BARRA SUPERIOR MÍSTICA -->
+  <div class="barra-superior">
+    <div class="logo-site">🎬 STOPART CINE</div>
+    <a href="home.html" class="btn-sair">− SAIR DA SALA</a>
+  </div>
+
+  <!-- BOTÃO FLUTUANTE DE CONTROLE DE ÁUDIO -->
+  <button id="btnAudio" class="btn-controle-audio" onclick="alternarSom()">🔊</button>
+
+  <!-- ELEMENTOS INTERATIVOS: APENAS BOTÕES E AGULHAS EM QUEDA LIVRE -->
+  <div class="objeto-voador" style="left: 7%; animation: cairObjeto 12s linear infinite;">⚫</div>
+  <div class="objeto-voador" style="left: 22%; animation: cairObjeto 15s linear infinite; animation-delay: 2s;">🎛️</div>
+  <div class="objeto-voador" style="left: 45%; animation: cairObjeto 10s linear infinite; animation-delay: 1s;">📍</div>
+  <div class="objeto-voador" style="left: 65%; animation: cairObjeto 16s linear infinite; animation-delay: 3s;">⚫</div>
+  <div class="objeto-voador" style="left: 83%; animation: cairObjeto 13s linear infinite; animation-delay: 1.5s;">🎛️</div>
+  <div class="objeto-voador" style="left: 94%; animation: cairObjeto 14s linear infinite; animation-delay: 4.5s;">📍</div>
+
+
+  <div class="container">
+
+    <!-- SEÇÃO 1: O INGRESSO VITORIANO COM RESUMO IMERSIVO -->
+    <div class="ingresso-wrapper">
+      <div class="ingresso">
+        <!-- Banner de imagem do topo (Lembrete: salvar como ingresso-coraline.jpg) -->
+        <div class="ingresso-banner">
+          <div class="ingresso-topo">
+            <h1>CORALINE</h1>
+            <p style="font-weight: bold; color: #00ffff; font-size: 1.1rem; text-shadow: 3px 3px 0px #000;">Admissão Geral - O Outro Mundo</p>
+          </div>
+        </div>
+        
+        <div class="ingresso-corpo">
+          <!-- Resumo adaptado e imersivo no tema do filme -->
+          <div class="ingresso-resumo">
+            Cuidado com o que você deseja! Ao cruzar uma pequena e misteriosa porta secreta em sua nova casa, Coraline Jones descobre uma versão alternativa de sua vida que parece infinitamente mais colorida e divertida. Lá, seus "Outros Pais" têm botões pretos costurados nos olhos e fazem todas as suas vontades. Mas o que parecia um sonho vitoriano encantador logo se transforma em uma armadilha mortal onde a Outra Mãe quer roubar sua alma! 👁️🗝️🕸️
+          </div>
+
+          <div class="ingresso-dados">
+            <div class="dado-item"><span>ESTÚDIO CRIADOR:</span> Laika Studios</div>
+            <div class="dado-item"><span>TÉCNICA DE ARTE:</span> Stop-Motion / Impressão 3D</div>
+            <div class="dado-item"><span>TEMPO DE SUOR:</span> +4 Anos de Gravação</div>
+            <div class="dado-item"><span>ACLAMAÇÃO:</span> Indicação ao Oscar de Animação</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- SEÇÃO 2: CARROSSEL DE IMAGENS MÍSTICO -->
+    <h2 class="titulo-secao">Cenas & Criação nos Bastidores</h2>
+    <div class="carrossel-container">
+      <button class="carrossel-btn btn-prev" onclick="mudarSlide(-1)">&#10094;</button>
+      <button class="carrossel-btn btn-next" onclick="mudarSlide(1)">&#10095;</button>
+      <div class="carrossel-slides" id="carrosselSlides">
+        <div class="slide"><img src="galinhas1.jpg" alt="Cena 1"><div class="slide-legenda">Coraline explorando os mistérios do Palácio Rosa com sua varinha de radiestesia.</div></div>
+        <div class="slide"><img src="galinhas2.jpg" alt="Cena 2"><div class="slide-legenda">A descoberta da pequena porta secreta escondida atrás do papel de parede.</div></div>
+        <div class="slide"><img src="galinhas3.jpg" alt="Cena 3"><div class="slide-legenda">A primeira refeição mágica e farta preparada pela Outra Mãe no Outro Mundo.</div></div>
+        <div class="slide"><img src="galinhas4.jpg" alt="Cena 4"><div class="slide-legenda">O incrível e acrobático show do Circo de Camundongos do Sr. Bobinsky.</div></div>
+        <div class="slide"><img src="galinhas5.jpg" alt="Cena 5"><div class="slide-legenda">O deslumbrante espetáculo teatral subaquático das atrizes Srta. Spink e Forcible.</div></div>
+        <div class="slide"><img src="galinhas6.jpg" alt="Cena 6"><div class="slide-legenda">O passeio de Coraline e Wybie pelo jardim luminoso moldado com o rosto dela.</div></div>
+        <div class="slide"><img src="galinhas7.jpg" alt="Cena 7"><div class="slide-legenda">A terrível revelação da verdadeira forma aracnídea e esquelética da Outra Mãe.</div></div>
+        <div class="slide"><img src="galinhas8.jpg" alt="Cena 8"><div class="slide-legenda">Coraline usando o olho de pedra furado para caçar os olhos das crianças fantasmas.</div></div>
+        <div class="slide"><img src="galinhas9.jpg" alt="Cena 9"><div class="slide-legenda">O confronto final e desesperado para fechar e trancar a porta secreta de vez.</div></div>
+        <div class="slide"><img src="galinhas10.jpg" alt="Cena 10"><div class="slide-legenda"><strong>Bastidores:</strong> Diretor Henry Selick ajustando milimetricamente o cabelo de silicone da boneca.</div></div>
+      </div>
+    </div>
+
+    <!-- SEÇÃO 3: GRID DE SEGREDOS EXPANSÍVEIS (PARTE A: CARDS 1 A 6) -->
+    <h2 class="titulo-secao">Segredos de Produção do Outro Mundo</h2>
+    <div class="grid-segredos">
+      
+      <!-- Card 1 -->
+      <div class="card-segredo" onclick="expandirCard(this)">
+        <img src="galinhas11.jpg" alt="Impressão 3D" loading="lazy">
+        <div class="card-segredo-conteudo">
+          <h3>Pioneirismo 3D</h3>
+          <p>Coraline foi o primeiro filme de stop-motion da história a usar impressoras 3D coloridas para criar as expressões faciais.</p>
+          <div class="detalhe-extra">
+            <strong>Bastidores Técnicos:</strong> Graças a essa tecnologia, a equipe conseguiu imprimir mais de 207.000 expressões faciais diferentes para os personagens, sendo 6.300 apenas para a Coraline.
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="card-segredo" onclick="expandirCard(this)">
+        <img src="galinhas12.jpg" alt="Troca de Rostos" loading="lazy">
+        <div class="card-segredo-conteudo">
+          <h3>A Linha Invisível</h3>
+          <p>Os rostos das bonecas eram divididos em duas partes (superior e inferior) para que os animadores combinassem olhos e bocas.</p>
+          <div class="detalhe-extra">
+            <strong>Segredo Técnico:</strong> Havia uma linha divisória bem no meio dos olhos dos bonecos. Essa emenda foi removida digitalmente frame por frame na pós-produção para parecer um rosto único.
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="card-segredo" onclick="expandirCard(this)">
+        <img src="galinhas13.jpg" alt="Mini Roupas" loading="lazy">
+        <div class="card-segredo-conteudo">
+          <h3>Tricô Microscópico</h3>
+          <p>Todas as roupas do filme foram costuradas e tricotadas à mão em uma escala minúscula inacreditável.</p>
+          <div class="detalhe-extra">
+            <strong>Estrutura Interna:</strong> Uma artista chamada Althea Crome usou agulhas finas como fios de cabelo para tricotar o famoso suéter de estrelas da Coraline. Cada peça demorava semanas.
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="card-segredo" onclick="expandirCard(this)">
+        <img src="galinhas14.jpg" alt="Cabelo de Fio" loading="lazy">
+        <div class="card-segredo-conteudo">
+          <h3>Cabelos Dinâmicos</h3>
+          <p>O cabelo azul brilhante da Coraline não era plástico estático; ele precisava se mover com o vento nas cenas.</p>
+          <div class="detalhe-extra">
+            <strong>Engenharia Visual:</strong> Os fios de cabelo foram moldados usando fios de arame ultrafinos revestidos com tinta e silicone, permitindo que os animadores dobrassem o cabelo milímetro por milímetro.
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 5 -->
+      <div class="card-segredo" onclick="expandirCard(this)">
+        <img src="galinhas15.jpg" alt="O Jardim Lindo" loading="lazy">
+        <div class="card-segredo-conteudo">
+          <h3>O Jardim de Fibra</h3>
+          <p>A magnífica cena do jardim luminoso no Outro Mundo foi um dos cenários mais complexos e caros construídos pela Laika.</p>
+          <div class="detalhe-extra">
+            <strong>Física Industrial:</strong> Milhares de flores foram feitas usando fios de fibra ótica para brilharem de verdade, e os botões de flores eram garras de plástico que se abriam acionadas por fios invisíveis embaixo da mesa.
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 6 -->
+      <div class="card-segredo" onclick="expandirCard(this)">
+        <img src="galinhas16.jpg" alt="O Nevoeiro" loading="lazy">
+        <div class="card-segredo-conteudo">
+          <h3>O Pomar de Pipoca</h3>
+          <p>Para criar as árvores floridas brancas do pomar ao redor do Palácio Rosa, a equipe usou um ingrediente de cozinha inusitado.</p>
+          <div class="detalhe-extra">
+            <strong>Solução Criativa:</strong> Os galhos das árvores foram decorados com centenas de pipocas reais de verdade, pintadas e coladas uma a uma para simular perfeitamente as pétalas de flores brancas.
+          </div>
+        </div>
+      </div>
+      <!-- Card 7 -->
+      <div class="card-segredo" onclick="expandirCard(this)">
+        <img src="galinhas17.jpg" alt="Cenário de Neve" loading="lazy">
+        <div class="card-segredo-conteudo">
+          <h3>Neve de Estúdio</h3>
+          <p>As cenas com neve caindo e acumulada exigiram que a equipe encontrasse um material que não derretesse nos refletores.</p>
+          <div class="detalhe-extra">
+            <strong>Solução Química:</strong> Toda a neve do Palácio Rosa foi feita usando uma mistura de bicarbonato de sódio com cola industrial e superglue. Ela criava o brilho de gelo perfeito sem deformar com o calor das lâmpadas.
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 8 -->
+      <div class="card-segredo" onclick="expandirCard(this)">
+        <img src="galinhas18.jpg" alt="A Boneca da Coraline" loading="lazy">
+        <div class="card-segredo-conteudo">
+          <h3>Múltiplas Coralines</h3>
+          <p>Diferente do que parece, a produção não utilizou apenas uma boneca da Coraline durante os 4 anos de gravação do longa.</p>
+          <div class="detalhe-extra">
+            <strong>Logística de Estúdio:</strong> Foram construídos exatamente 28 bonecos idênticos da Coraline em tamanhos e roupas levemente diferentes para que várias equipes pudessem filmar cenas distintas ao mesmo tempo.
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 9 -->
+      <div class="card-segredo" onclick="expandirCard(this)">
+        <img src="galinhas19.jpg" alt="O Gato Preto" loading="lazy">
+        <div class="card-segredo-conteudo">
+          <h3>O Gato de Silicone</h3>
+          <p>O enigmático Gato Preto que fala foi um dos personagens mais difíceis de manusear devido ao seu corpo esguio.</p>
+          <div class="detalhe-extra">
+            <strong>Mecânica Fina:</strong> A Laika usou uma armadura de metal revestida de silicone preto fosco. Seus bigodes eram fios de náilon cirúrgico ultrafinos movidos com pinças magnéticas especiais.
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 10 -->
+      <div class="card-segredo" onclick="expandirCard(this)">
+        <img src="galinhas20.jpg" alt="Insetos de Botão" loading="lazy">
+        <div class="card-segredo-conteudo">
+          <h3>Móveis Vivos</h3>
+          <p>Na sala da Outra Mãe, os móveis e decorações ganham vida e se transformam em insetos no clímax do filme.</p>
+          <div class="detalhe-extra">
+            <strong>Design Aracnídeo:</strong> O icônico tapete de inseto e as cadeiras que ganham pernas foram esculpidos com resina epóxi e continham minúsculas engrenagens de relógio para que suas patas tremessem de forma realista.
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 11 -->
+      <div class="card-segredo" onclick="expandirCard(this)">
+        <img src="galinhas21.jpg" alt="HENRY SELICK" loading="lazy">
+        <div class="card-segredo-conteudo">
+          <h3>Direção de Peso</h3>
+          <p>O diretor Henry Selick também dirigiu 'O Estranho Mundo de Jack'. Ele usou a mesma paciência extrema neste projeto.</p>
+          <div class="detalhe-extra">
+            <strong>Paciência de Monge:</strong> Selick liderou uma equipe de mais de 450 pessoas. Devido à complexidade do cenário e das luzes, a taxa média de produção era de apenas 1 a 2 segundos de filme por dia de trabalho exaustivo.
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 12 -->
+      <div class="card-segredo" onclick="expandirCard(this)">
+        <img src="galinhas22.jpg" alt="O Nevulo" loading="lazy">
+        <div class="card-segredo-conteudo">
+          <h3>Neblina Texturizada</h3>
+          <p>A neblina mística que cerca o mundo cinzento da Coraline não foi gerada por fumaça real, que se dissiparia rápido demais.</p>
+          <div class="detalhe-extra">
+            <strong>Efeito Prático:</strong> Os animadores esticaram e moveram camadas finas de algodão cirúrgico e fios de lã branca desfocados na frente da lente da câmera para criar um nevoeiro denso e controlado frame a frame.
+          </div>
+        </div>
+      </div>
+    </div> <!-- Fim do Grid de Segredos -->
+
+    <!-- SEÇÃO 4: CARDS DE EASTER EGGS DE CORALINE (APENAS TEXTO) -->
+    <h2 class="titulo-secao">Easter Eggs Escondidos</h2>
+    <div class="grid-easter-eggs">
+      <div class="card-easter"><h4>1. O Rosto do Diretor</h4><p>Preste atenção na nota de um dólar que o pai da Coraline dá como gorjeta para os entregadores: o rosto impresso nela é do diretor Henry Selick.</p></div>
+      <div class="card-easter"><h4>2. Moeda de Pinho</h4><p>A pedra furada que Coraline usa para ver os fantasmas faz alusão direta às lendas nórdicas sobre pedras de adder, usadas para enxergar fadas e bruxas.</p></div>
+      <div class="card-easter"><h4>3. O Estranho Mundo de Jack</h4><p>Quando a Outra Mãe está quebrando ovos para fazer o café da manhã, a gema de um dos ovos cai formando perfeitamente o rosto do Jack Skellington.</p></div>
+      <div class="card-easter"><h4>4. Estrelas Reais</h4><p>O teto do quarto da Coraline no Outro Mundo se transforma em uma galáxia viva. O padrão das estrelas imita constelações reais visíveis no Alasca.</p></div>
+      <div class="card-easter"><h4>5. Pintura Clássica</h4><p>O quadro no corredor do Palácio Rosa que mostra um garoto chorando e deixando cair o sorvete é uma paródia da famosa pintura 'O Menino Chorando'.</p></div>
+      <div class="card-easter"><h4>6. Mensagem Invisível</h4><p>As caixas de mudança que estão empilhadas na sala de estar da casa real têm o logotipo da marca de roupas que desenhou o suéter da protagonista.</p></div>
+      <div class="card-easter"><h4>7. Insetos Ocultos</h4><p>O papel de parede da sala da Outra Mãe parece ter um padrão floral vitoriano clássico, mas se olhar bem, o desenho é feito de silhuetas de insetos.</p></div>
+      <div class="card-easter"><h4>8. O Botão da Chave</h4><p>A pequena chave preta que abre a porta secreta tem o formato exato de um botão de costura de quatro furos em uma das suas extremidades metálicas.</p></div>
+      <div class="card-easter"><h4>9. O Doce das Atrizes</h4><p>Os doces antigos que as atrizes Spink e Forcible dão para a Coraline são guardados em latas datadas de anos reais de produções clássicas de teatro.</p></div>
+      <div class="card-easter"><h4>10. O Gato Sem Nome</h4><p>Ao longo de todo o longa-metragem, o Gato Preto nunca recebe um nome. Ele mesmo afirma que gatos não precisam de nomes para saber quem são.</p></div>
+      <div class="card-easter"><h4>11. Disfarce de Wybie</h4><p>A máscara de três lentes que o Wybie usa no início do filme imita o formato óptico de câmeras industriais antigas de estúdios fotográficos.</p></div>
+      <div class="card-easter"><h4>12. Mão de Agulha</h4><p>Na cena final do mundo real, a sombra que a mão esquelética da Outra Mãe projeta no chão lembra perfeitamente o formato de tesouras de costura.</p></div>
+    </div>
+    <!-- SEÇÃO 5: CENTRAL DE JOGOS E ELEMENTOS INTERATIVOS -->
+    <h2 class="titulo-secao">🕹️ Sala Secreta: Central de Jogos 🕹️</h2>
+
+    <div class="central-jogos">
+      <div class="menu-jogos">
+        <button class="btn-jogo ativo" onclick="abrirJogo('quiz')">Super Quiz (20 Perguntas)</button>
+        <button class="btn-jogo" onclick="abrirJogo('maquina')">Fuja da Outra Mãe!</button>
+        <button class="btn-jogo" onclick="abrirJogo('cabos')">Conecte o Inseto-Móvel</button>
+        <button class="btn-jogo" onclick="abrirJogo('tweedy')">O Circo do Bobinsky</button>
+      </div>
+
+      <!-- JANELA JOGO 1: QUIZ -->
+      <div id="jogo-quiz" class="janela-jogo ativa">
+        <div id="quiz-execucao">
+          <div class="quiz-header">
+            <span id="quiz-progresso">Pergunta: 1 / 20</span>
+            <span id="quiz-pontuacao">Acertos: 0</span>
+          </div>
+          <div class="pergunta-texto" id="quiz-pergunta">Carregando pergunta sobre o Outro Mundo...</div>
+          <div class="opcoes-container" id="quiz-opcoes"></div>
+        </div>
+        <div id="quiz-fim" class="quiz-resultado" style="display: none;">
+          <h3 style="font-size: 2rem; color: #00ffff;" id="resultado-titulo">Fim do Confronto!</h3>
+          <div class="trofeu-container"><div class="trofeu-icone" id="resultado-trofeu">⚫</div></div>
+          <p style="font-size: 1.3rem; margin: 15px 0; font-weight: bold;" id="resultado-mensagem"></p>
+          <p style="font-size: 1.1rem; color: #ccc; margin-bottom: 25px;" id="resultado-placar"></p>
+          <button class="btn-jogo" onclick="reiniciarQuiz()">Tentar Novamente 🔄</button>
+        </div>
+      </div>
+
+      <!-- JANELA JOGO 2: FUJA DA OUTRA MÃE -->
+      <div id="jogo-maquina" class="janela-jogo">
+        <h3 style="color:#00ffff; margin-bottom: 10px; text-transform: uppercase;">Fuja das Teias da Outra Mãe!</h3>
+        <p style="color:#ccc; margin-bottom: 15px; font-size: 0.95rem;">Clique no botão pular para desviar das agulhas e teias mortais da Outra Mãe!</p>
+        <div class="maquina-arena" id="arenaMaquina">
+          <div class="score-maquina" id="pontosMaquina">Pontos: 0</div>
+          <div class="ginger-player" id="playerGinger">👧</div>
+          <div class="obstaculo-maquina" id="fatiadorObstaculo">🕸️</div>
+          <button class="btn-acao" id="btnIniciarRunner" onclick="iniciarRunner()">Iniciar Fuga 跑</button>
+        </div>
+        <button class="btn-acao" style="display:none; margin: 15px auto 0 auto;" id="btnPularFuga" onclick="pularRunner()">PULAR! 🦘</button>
+      </div>
+
+      <!-- JANELA JOGO 3: CONECTE O INSETO-MÓVEL -->
+      <div id="jogo-cabos" class="janela-jogo">
+        <h3 style="color:#00ffff; margin-bottom: 10px; text-transform: uppercase;">Mecânica Viva: Conserte as Engrenagens!</h3>
+        <p style="color:#ccc; margin-bottom: 15px; font-size: 0.95rem;">Clique nas conexões para girá-las na posição horizontal ( ➖ ) para dar corda no sofá-inseto antes que o tempo acabe!</p>
+        <div style="text-align: center; font-size: 1.2rem; color: #b82eff; font-weight: bold; margin-bottom: 10px;" id="tempoCabos">Tempo Restante: 25s</div>
+        <div class="painel-cabos" id="tabuleiroCabos"></div>
+        <div style="text-align: center;"><button class="btn-acao" onclick="iniciarJogoCabos()">Dar Partida ⚡</button></div>
+      </div>
+
+      <!-- JANELA JOGO 4: O CIRCO DO BOBINSKY -->
+      <div id="jogo-tweedy" class="janela-jogo">
+        <h3 style="color:#00ffff; margin-bottom: 10px; text-transform: uppercase;">O Treinamento dos Camundongos Saltadores</h3>
+        <p style="color:#ccc; margin-bottom: 15px; font-size: 0.95rem;">Clique nos queijos (🧀) para alimentar os camundongos do circo. Se o Sr. Bobinsky (🧔) aparecer, NÃO CLIQUE nele!</p>
+        <div style="display: flex; justify-content: space-around; font-size: 1.2rem; color:#00ffff; margin-bottom: 15px; font-weight: bold;">
+          <span id="pontosTweedy">Queijos: 0</span>
+          <span id="tempoTweedy">Tempo: 30s</span>
+        </div>
+        <div class="granja-grid">
+          <div class="galinheiro-toca" onclick="martelarToca(0)"><div class="personagem-toca" id="toca0">🧀</div></div>
+          <div class="galinheiro-toca" onclick="martelarToca(1)"><div class="personagem-toca" id="toca1">🧀</div></div>
+          <div class="galinheiro-toca" onclick="martelarToca(2)"><div class="personagem-toca" id="toca2">🧀</div></div>
+          <div class="galinheiro-toca" onclick="martelarToca(3)"><div class="personagem-toca" id="toca3">🧀</div></div>
+          <div class="galinheiro-toca" onclick="martelarToca(4)"><div class="personagem-toca" id="toca4">🧀</div></div>
+          <div class="galinheiro-toca" onclick="martelarToca(5)"><div class="personagem-toca" id="toca5">🧀</div></div>
+        </div>
+        <div style="text-align: center;"><button class="btn-acao" id="btnIniciarTweedy" onclick="iniciarJogoTweedy()">Iniciar Espetáculo 🎪</button></div>
+      </div>
+    </div>
+  </div> <!-- Fim do Container Geral -->
+
+  <!-- NOTIFICAÇÃO DE TROFÉU ESTILO VIDEOGAME -->
+  <div id="notificacaoXbox" class="notificacao-conquista">
+    <div class="icone" id="notifIcone">🏆</div>
+    <div class="texto">
+      <h5>Conquista Desbloqueada!</h5>
+      <p id="notifNome">Nome do Troféu</p>
+    </div>
+  </div>
+<!-- ==============================================
+     LOGICA EM JAVASCRIPT (CÉREBRO DOS JOGOS CORRIGIDO)
+     ============================================== -->
+<script>
+  const todasAs60Perguntas = [
+    { p: "Qual é a cor marcante do cabelo da Coraline Jones?", o: ["Roxo", "Rosa", "Preto", "Azul"], r: 3 },
+    { p: "Como se chama o casarão antigo para onde Coraline se muda com os pais?", o: ["Palácio Rosa", "Mansão Sombria", "Casa da Colina", "Vila dos Botões"], r: 0 },
+    { p: "O que os moradores do Outro Mundo têm costurado no lugar dos olhos?", o: ["Moedas de ouro", "Botões pretos", "Miçangas de vidro", "Estrelas de lã"], r: 1 },
+    { p: "Qual objeto misterioso Coraline usa para tentar achar água ao redor da casa?", o: ["Um binóculo antigo", "Uma pedra furada", "Uma varinha de radiestesia", "Uma colher de metal"], r: 2 },
+    { p: "Como se chama o vizinho acrobático que comanda um circo secreto?", o: ["Henry Selick", "Sr. Bobinsky", "Wybie", "Neil Gaiman"], r: 1 },
+    { p: "Qual animal do mundo real consegue falar e guiar Coraline no Outro Mundo?", o: ["Um camundongo", "Um Gato Preto", "Um cachorro Terrier", "Uma coruja"], r: 1 },
+    { p: "Qual presente assustador Coraline recebe de Wybie no começo do filme?", o: ["Uma chave preta", "Uma caixa de doces", "Uma boneca idêntica a ela", "Uma pedra com furo"], r: 2 },
+    { p: "De que material é feita a pequena chave que abre a porta secreta?", o: ["Prata velha", "Ferro fundido com formato de botão", "Ouro envelhecido", "Madeira esculpida"], r: 1 },
+    { p: "As vizinhas Srta. Spink e Forcible eram famosas por qual profissão no passado?", o: ["Costureiras profissionais", "Atrizes de teatro vitoriano", "Cozinheiras imperiais", "Escultoras de argila"], r: 1 },
+    { p: "Qual o nome do estúdio de animação que produziu Coraline?", o: ["Aardman Animations", "Laika Studios", "Studio Ghibli", "Pixar"], r: 1 },
+    { p: "Qual técnica revolucionária a Laika usou para criar as expressões faciais?", o: ["Computação Gráfica pura", "Pintura em vidro", "Impressão 3D colorida", "Recortes de papel"], r: 2 },
+    { p: "O que a Outra Mãe exige de Coraline para que ela possa ficar no Outro Mundo?", o: ["Entregar sua boneca", "Costurar botões nos olhos", "Trancar seus pais reais", "Cozinhar para o circo"], r: 1 },
+    { p: "Qual o nome do diretor de animação que comandou o filme Coraline?", o: ["Henry Selick", "Tim Burton", "Steven Spielberg", "Guillermo del Toro"], r: 0 },
+    { p: "O que o pai de Coraline faz profissionalmente junto com a mãe dela?", o: ["Escrevem catálogos de jardinagem", "Ilustram livros infantis", "Cozinham em restaurantes", "Costuram roupas de teatro"], r: 0 },
+    { p: "O filme Coraline é baseado no livro de sucesso de qual autor?", o: ["Stephen King", "Neil Gaiman", "Rick Riordan", "J.K. Rowling"], r: 1 },
+    { p: "Quantas expressões faciais individuais foram criadas para a boneca da Coraline?", o: ["Cerca de 200", "Mais de 6.000", "Exatamente 50", "Mais de 200.000"], r: 3 },
+    { p: "Qual ingrediente real de cozinha foi usado para decorar as árvores do pomar?", o: ["Açúcar cristal", "Pipocas pintadas à mão", "Farinha de trigo", "Sal grosso"], r: 1 },
+    { p: "Aproximadamente quantos bonecos idênticos da Coraline foram feitos para o estúdio?", o: ["Apenas 1", "Exatamente 28", "Mais de 100", "Cerca de 5"], r: 1 },
+    { p: "Qual técnica de animação frame por frame dá vida ao filme?", o: ["Desenho 2D", "Computação Gráfica 3D", "Stop-Motion", "Rotoscopia"], r: 2 },
+    { p: "O que as atrizes idosas lêem nas folhas de chá para dar um aviso a Coraline?", o: ["Um futuro rico", "A chegada de um amigo", "Um perigo grave e uma mão", "Uma viagem longa"], r: 2 },
+    { p: "Quem criou as teias gigantescas que decoram o clímax do Outro Mundo?", o: ["A Outra Mãe em sua forma de aranha", "Os camundongos acrobatas", "O Outro Pai no trator", "Wybie fantasma"], r: 0 },
+    { p: "O que os animadores usaram para simular a neblina densa ao redor da casa?", o: ["Fumaça de gelo seco", "Camadas finas de algodão e lã desfiada", "Efeito digital 3D", "Spray de água"], r: 1 },
+    { p: "Como o Outro Pai se desloca pelo jardim luminoso na cena do passeio?", o: ["Voando com asas de inseto", "Montado em um trator em forma de louva-a-deus", "Caminhando sobre as flores", "Em um monociclo"], r: 1 },
+    { p: "Qual doce misterioso e antigo a Coraline ganha das vizinhas idosas?", o: ["Balas de menta vitorianas", "Goma de mascar de maçã", "Chocolates importados", "Doces ingleses antigos em latas"], r: 3 },
+    { p: "De quem são os três pares de olhos que Coraline precisa encontrar para quebrar o feitiço?", o: ["Das crianças fantasmas presas no espelho", "Dos seus pais reais", "Do Gato Preto", "Das vizinhas Spink e Forcible"], r: 0 },
+    { p: "O que o Wybie usa para cobrar o rosto quando anda em sua moto no início?", o: ["Um capacete de corrida", "Uma máscara de três lentes ópticas", "Um lenço preto", "Um quepe militar"], r: 1 },
+    { p: "Qual o nome da avó do Wybie, dona do Palácio Rosa?", o: ["Sra. Lovat", "Srta. Spink", "Outra Mãe", "Mel Jones"], r: 0 },
+    { p: "O que a Outra Mãe usa para prender Coraline atrás do espelho como castigo?", o: ["Cabos de aço", "Teias de aranha", "Uma tranca mágica", "Uma chave reserva"], r: 1 },
+    { p: "Qual o acessório que Coraline ganha de presente da mãe no final do filme no mercado?", o: ["Um casaco amarelo", "As luvas listradas que ela tanto queria", "Um chapéu preto", "Uma mochila nova"], r: 1 },
+    { p: "A quais estúdios Coraline pertence oficialmente desde seu lançamento?", o: ["Laika Studios", "DreamWorks", "Aardman", "Disney"], r: 0 },
+    { p: "Qual é o verdadeiro nome da Outra Mãe no universo de Coraline?", o: ["Beldam", "Spink", "Lovat", "Mel"], r: 0 },
+    { p: "O que o Gato Preto deixa para trás quando desaparece pelas sombras?", o: ["Seu colar", "Sua cauda", "Apenas o brilho dos olhos", "Um miado ecoando"], r: 2 },
+    { p: "Que tipo de inseto decora o papel de parede da sala da Outra Mãe?", o: ["Borboletas", "Formigas", "Traças e besouros ocultos", "Abelhas"], r: 2 },
+    { p: "O que os ratos usam como palco no show do Sr. Bobinsky?", o: ["Uma lona de circo", "O teto do Palácio Rosa", "Instrumentos musicais gigantes", "Uma mesa de jantar"], r: 2 },
+    { p: "O que o pai da Coraline faz quando ela reclama que a comida é ruim?", o: ["Faz uma janta nova", "Pede uma pizza", "Diz que é receita de chef", "Briga com ela"], r: 2 },
+    { p: "Qual o formato do pingente que a pedra furada imita sutilmente?", o: ["Uma moeda", "Uma estrela", "Um olho", "Um coração"], r: 2 },
+    { p: "Onde os pais reais de Coraline ficam presos pela Outra Mãe?", o: ["No porão", "Dentro de um globo de neve no espelho", "No sótão do Bobinsky", "No jardim voador"], r: 1 },
+    { p: "Qual o prêmio que Coraline oferece à Outra Mãe em seu jogo de caça?", o: ["A chave da porta", "Sua boneca antiga", "Ficar para sempre e costurar os botões", "Dar o gato preto de presente"], r: 2 },
+    { p: "Por que o Wybie se recusa a acreditar na Coraline de início?", o: ["Porque acha que ela é mentirosa", "Porque acha que ela está brincando", "Porque sua avó nunca contou nada", "Formatou o poço"], r: 1 },
+    { p: "Como as crianças fantasmas ajudam Coraline a escapar da teia?", o: ["Elas cortam as cordas", "Elas sopram o vento", "Elas dão dicas de onde estão os olhos", "Elas seguram a Outra Mãe"], r: 2 },
+    { p: "De onde a Outra Mãe tira as almas das crianças que ela aprisionou?", o: ["De um baú de metal", "De trás do espelho", "De dentro dos botões pretos", "De uma caixa de costura"], r: 1 },
+    { p: "O que o Wybie usa para salvar Coraline da mão esquelética no poço?", o: ["Uma corda de escalada", "Sua moto e uma pedra pesada", "Um pedaço de madeira velha", "Uma rede de caçar borboletas"], r: 1 },
+    { p: "Quantos anos durou a produção total do filme nos estúdios da Laika?", o: ["Apenas 1 ano", "Cerca de 2 anos", "Mais de 4 anos", "Exatamente 6 anos"], r: 2 },
+    { p: "Qual o nome da sequência de Coraline lançada nos cinemas?", o: ["Coraline 2", "O Retorno do Palácio Rosa", "Não existe sequência oficial", "Coraline e o Espelho Mágico"], r: 2 },
+    { p: "O que acontece com o Outro Pai quando o mundo começa a se desfazer?", o: ["Ele foge com o gato", "Ele se transforma em uma criatura de abóbora e desbota", "Ele ajuda Coraline de propósito", "Ele vira fumaça roxa"], r: 1 },
+    { p: "Qual o maior desafio dos animadores com o jardim da Outra Mãe?", o: ["A falta de espaço", "Fazer as flores de fibra ótica acenderem frame a frame", "O peso das plantas", "A tinta derreter"], r: 1 },
+    { p: "Qual o pet de estimação que as vizinhas Spink e Forcible empalhavam?", o: ["Gatos persas", "Cachorros escoceses (Terriers)", "Papagaios coloridos", "Hamsters de laboratório"], r: 1 },
+    { p: "Qual objeto a mãe da Coraline usa para trancar a porta secreta no início?", o: ["Uma barra de ferro", "O próprio papel de parede", "Uma chave preta simples", "Um cadeado de bicicleta"], r: 2 },
+    { p: "O que o Wybie faz para tentar se desculpar com a Coraline no mercado?", o: ["Dá um abraço nela", "Leva um doce antigo", "Ajuda a carregar as compras", "Conta a verdade sobre sua tia desaparecida"], r: 3 },
+    { p: "Como os camundongos do circo se transformam no final do Outro Mundo?", o: ["Viram poeira brilhante", "Transformam-se em ratos cinzentos e magros cheios de serragem", "Viram borboletas roxas", "Fogem para a floresta"], r: 1 },
+    { p: "De quem é a frase: 'As pessoas normais acham que sou louco'?", o: ["Wybie", "Sr. Bobinsky", "Pai da Coraline", "O Gato Preto"], r: 1 },
+    { p: "Qual o primeiro presente mágico que Coraline vê no seu quarto do Outro Mundo?", o: ["Um brinquedo de corda", "Fotos que se mexem e falam", "Um tapete voador", "Uma caixa de música vitoriana"], r: 1 },
+    { p: "O que o Sr. Jones (Pai) está fazendo quando Coraline pede atenção?", o: ["Cozinhando", "Digitando em seu computador trabalhando", "Lendo o jornal do dia", "Dormindo no sofá"], r: 1 },
+    { p: "O que os ratos acrobatas roubam da Coraline no mundo real?", o: ["A pedra furada", "A chave preta da porta", "Sua boneca de pano", "Suas luvas listradas"], r: 1 },
+    { p: "Qual ferramenta as vizinhas usam para prever o futuro no chá?", o: ["Uma bola de cristal", "As borras que sobram no fundo da xícara", "Cartas de tarô antigas", "Runas de madeira"], r: 1 },
+    { p: "Como o Gato Preto consegue entrar e sair do Outro Mundo livremente?", o: ["Ele usa uma chave reserva", "Ele passa por fendas e buracos naturais sem precisar da porta", "Ele voa pelas nuvens", "Ele é um fantasma"], r: 1 },
+    { p: "Qual a cor das luvas que Coraline tanto pede para a mãe comprar?", o: ["Laranjas com listras", "Azuis brilhantes", "Verdes com listras pretas", "Roxas vitorianas"], r: 2 },
+    { p: "O que a Outra Mãe oferece para Coraline comer no primeiro jantar?", o: ["Torta de frango", "Frango assado dourado com purê", "Doces mágicos de menta", "Sopa de legumes"], r: 1 },
+    { p: "De que cor é a capa de chuva clássica que Coraline usa?", o: ["Vermelha", "Azul marinho", "Amarela viva", "Roxa mística"], r: 2 },
+    { p: "Onde Coraline joga a chave preta no final para se livrar dela para sempre?", o: ["No fundo do poço profundo trancado", "No meio da floresta escura", "Atrás do papel de parede", "No lixo da cidade"], r: 0 }
+  ];
+
+  let perguntasSorteadas = [];
+  let indiceAtual = 0;
+  let acertos = 0;
+  let slideIndex = 0;
+
+  function expandirCard(elemento) {
+    elemento.classList.toggle("expandido");
+  }
+
+  function abrirJogo(tipo) {
+    document.querySelectorAll('.btn-jogo').forEach(btn => btn.classList.remove('ativo'));
+    document.querySelectorAll('.janela-jogo').forEach(janela => janela.classList.remove('ativa'));
+    if(event && event.target) event.target.classList.add('ativo');
+    document.getElementById(`jogo-${tipo}`).classList.add('ativa');
+  }
+
+  function iniciarQuiz() {
+    perguntasSorteadas = [...todasAs60Perguntas].sort(() => Math.random() - 0.5).slice(0, 20);
+    indiceAtual = 0; acertos = 0;
+    document.getElementById("quiz-execucao").style.display = "block";
+    document.getElementById("quiz-fim").style.display = "none";
+    mostrarPergunta();
+  }
+
+  function mostrarPergunta() {
+    if (indiceAtual >= 20) { finalizarQuiz(); return; }
+    const dados = perguntasSorteadas[indiceAtual];
+    document.getElementById("quiz-progresso").innerText = `Pergunta: ${indiceAtual + 1} / 20`;
+    document.getElementById("quiz-pontuacao").innerText = `Acertos: ${acertos}`;
+    document.getElementById("quiz-pergunta").innerText = dados.p;
+    const conteinerOpcoes = document.getElementById("quiz-opcoes");
+    conteinerOpcoes.innerHTML = "";
+    dados.o.forEach((opcao, index) => {
+      const btn = document.createElement("button");
+      btn.className = "opcao-btn";
+      btn.innerText = opcao;
+      btn.onclick = () => verificarResposta(index);
+      conteinerOpcoes.appendChild(btn);
+    });
+  }
+
+  function verificarResposta(escolha) {
+    if (escolha === perguntasSorteadas[indiceAtual].r) acertos++;
+    indiceAtual++;
+    mostrarPergunta();
+  }
+  function finalizarQuiz() {
+    document.getElementById("quiz-execucao").style.display = "none";
+    const telaFim = document.getElementById("quiz-fim");
+    telaFim.style.display = "block";
+    const titulo = document.getElementById("resultado-titulo");
+    const trofeu = document.getElementById("resultado-trofeu");
+    const mensagem = document.getElementById("resultado-mensagem");
+    const placar = document.getElementById("resultado-placar");
+    placar.innerText = `Você acertou ${acertos} de 20 perguntas.`;
+
+    if (acertos <= 4) {
+      titulo.innerText = "Troféu Liberado!"; trofeu.innerText = "🕸️";
+      mensagem.innerText = "Nem toda fuga dá certo na primeira tentativa contra a Beldam.";
+      dispararNotificacao("🕸️", "Preso na Teia"); localStorage.setItem('conquistaTorta', 'true');
+    } else if (acertos >= 5 && acertos <= 19) {
+      titulo.innerText = "Troféu Liberado!"; trofeu.innerText = "🗝️";
+      mensagem.innerText = "Você chegou perto da porta secreta, mas a Outra Mãe te pegou.";
+      dispararNotificacao("🗝️", "Chave de Prata"); localStorage.setItem('conquistaPena', 'true');
+    } else if (acertos === 20) {
+      titulo.innerText = "Lenda do Outro Mundo!"; trofeu.innerText = "👁️";
+      mensagem.innerText = "Um verdadeiro especialista em derrotar a Outra Mãe e libertar as almas.";
+      dispararNotificacao("👁️", "Olho de Pedra"); localStorage.setItem('conquistaGalinha', 'true');
+    }
+  }
+
+  function reiniciarQuiz() { iniciarQuiz(); }
+
+  function dispararNotificacao(icone, nomeTrofeu) {
+    const toast = document.getElementById("notificacaoXbox");
+    document.getElementById("notifIcone").innerText = icone;
+    document.getElementById("notifNome").innerText = nomeTrofeu;
+    toast.classList.add("mostrar");
+    setTimeout(() => { toast.classList.remove("mostrar"); }, 4000);
+  }
+
+  function mudarSlide(n) {
+    const slides = document.getElementById("carrosselSlides");
+    slideIndex = (slideIndex + n + 10) % 10;
+    slides.style.transform = `translateX(-${slideIndex * 100}%)`;
+  }
+
+  let pontosM = 0; let jogandoRunner = false; let runnerInterval;
+  function iniciarRunner() {
+    if(jogandoRunner) return;
+    jogandoRunner = true; pontosM = 0;
+    document.getElementById("btnIniciarRunner").style.display = "none";
+    document.getElementById("btnPularFuga").style.display = "block";
+    const obstaculo = document.getElementById("fatiadorObstaculo");
+    let posObstaculo = -50;
+    runnerInterval = setInterval(() => {
+      posObstaculo += 8;
+      if(posObstaculo > 850) { posObstaculo = -50; pontosM += 10; document.getElementById("pontosMaquina").innerText = `Pontos: ${pontosM}`; }
+      obstaculo.style.right = posObstaculo + "px";
+      const ginger = document.getElementById("playerGinger");
+      let noChao = (ginger.style.bottom === "20px" || ginger.style.bottom === "");
+      if(posObstaculo > 680 && posObstaculo < 740 && noChao) {
+        clearInterval(runnerInterval); jogandoRunner = false;
+        alert(`Fim de jogo! A Outra Mãe capturou a Coraline! Pontos: ${pontosM}`);
+        document.getElementById("btnIniciarRunner").style.display = "block";
+        document.getElementById("btnPularFuga").style.display = "none";
+      }
+    }, 30);
+  }
+
+  function pularRunner() {
+    const ginger = document.getElementById("playerGinger");
+    if(ginger.style.bottom === "20px" || ginger.style.bottom === "") {
+      ginger.style.bottom = "120px"; setTimeout(() => { ginger.style.bottom = "20px"; }, 600);
+    }
+  }
+
+  let pecas = ["➖", "➕", "➖", "➕", "➕", "➖", "➕", "➖", "➕", "➖", "➖", "➕"];
+  function iniciarJogoCabos() {
+    const tabuleiro = document.getElementById("tabuleiroCabos"); tabuleiro.innerHTML = "";
+    pecas.sort(() => Math.random() - 0.5);
+    pecas.forEach((simbolo) => {
+      const div = document.createElement("div"); div.className = "peca-cabo"; div.innerText = simbolo;
+      if(simbolo === "➖") div.classList.add("peca-alinhada");
+      div.onclick = () => {
+        if(div.innerText === "➕") { div.innerText = "➖"; div.classList.add("peca-alinhada"); }
+        else { div.innerText = "➕"; div.classList.remove("peca-alinhada"); }
+        verificarVitoriaCabos();
+      };
+      tabuleiro.appendChild(div);
+    });
+  }
+
+  function verificarVitoriaCabos() {
+    let ganhou = true; document.querySelectorAll(".peca-cabo").forEach(p => { if(p.innerText !== "➖") ganhou = false; });
+    if(ganhou) alert("Engrenagens alinhadas! O inseto-sofá ganhou corda com sucesso!");
+  }
+
+  let pontosT = 0; let jogandoTweedy = false;
+  function iniciarJogoTweedy() {
+    if(jogandoTweedy) return;
+    jogandoTweedy = true; pontosT = 0;
+    let tempo = 15;
+    const tLoop = setInterval(() => {
+      tempo--; document.getElementById("tempoTweedy").innerText = `Tempo: ${tempo}s`;
+      if(tempo <= 0) { clearInterval(tLoop); clearInterval(mLoop); jogandoTweedy = false; alert(`Espetáculo encerrado! Queijos coletados: ${pontosT}`); }
+    }, 1000);
+    const mLoop = setInterval(() => {
+      const idx = Math.floor(Math.random() * 6); const item = Math.random() > 0.4 ? "🧀" : "🧔";
+      const toca = document.getElementById(`toca${idx}`); toca.innerText = item;
+      toca.parentElement.classList.add("toca-ativa");
+      setTimeout(() => { toca.parentElement.classList.remove("toca-ativa"); }, 800);
+    }, 1000);
+  }
+
+  function martelarToca(id) {
+    if(!jogandoTweedy) return;
+    const toca = document.getElementById(`toca${id}`);
+    if(toca.parentElement.classList.contains("toca-ativa")) {
+      if(toca.innerText === "🧀") { pontosT++; document.getElementById("pontosTweedy").innerText = `Queijos: ${pontosT}`; }
+      else if(toca.innerText === "🧔") alert("O Sr. Bobinsky interrompeu o treino dos camundongos!");
+      toca.parentElement.classList.remove("toca-ativa");
+    }
+  }
+
+  let somLigado = true;
+  function alternarSom() {
+    const sirene = document.getElementById("somSirene");
+    const botao = document.getElementById("btnAudio");
+    if (somLigado) {
+      sirene.pause(); botao.innerText = "🔇"; botao.classList.add("mutado"); somLigado = false;
+    } else {
+      sirene.play().catch(e => console.log("Erro ao ligar som.")); botao.innerText = "🔊"; botao.classList.remove("mutado"); somLigado = true;
+    }
+  }
+
+  window.onload = function() { 
+    iniciarQuiz(); 
+    iniciarJogoCabos(); 
+    document.getElementById("somCelas").play().catch(e => console.log("Áudio aguardando clique inicial."));
+    const sirene = document.getElementById("somSirene");
+    sirene.volume = 0.25;
+    sirene.play().catch(e => console.log("Áudio aguardando clique inicial."));
+  };
+</script>
+</body>
+</html>
